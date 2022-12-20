@@ -1,10 +1,10 @@
 module.exports = {
   database: {
-    host: "localhost",
-    port: '5432',
+    host: "dev-postgres.prsdev.club",
+    port: '58000',
     database: "feed",
-    user: "feed",
-    password: "39f12851f5275222e8b50fddddf04ee4",
+    user: "postgres",
+    password: "48ac0d2661bb5b8644fdcc",
     dialect: "postgres"
   },
 
@@ -13,11 +13,9 @@ module.exports = {
     maxIndexingUnloadedGroup: 3,
   },
 
-  origin: 'http://192.168.31.120:3000',
+  origin: 'http://localhost:3000',
 
-  serverOrigin: 'http://192.168.31.120:9000',
-
-  defaultGroupId: 'df2920c7-7f07-4550-9be0-d01d70e6a5e9',
+  serverOrigin: 'http://localhost:9000',
 
   userRelation: {
     visible: true,
