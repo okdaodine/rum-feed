@@ -81,7 +81,6 @@ const startJob = async (groupId, duration) => {
         const contents = await QuorumLightNodeSDK.chain.Content.list(listOptions);
         console.log(`${group.groupName} 请求回来了，获得 ${contents.length} 条`);
         while (jobShareData.handling) {
-          console.log(`${group.groupName}: 别人正在 handling，我等待 ...`);
           await sleep(200);
         }
         jobShareData.handling = true;
