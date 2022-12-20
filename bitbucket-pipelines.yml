@@ -1,0 +1,15 @@
+definitions:
+  services:
+    docker:
+      memory: 4096
+
+pipelines:
+  branches:
+    feed:
+      - step:
+          name: build
+          size: 2x
+          services:
+            - docker
+          script:
+            - ssh -tt huoju@103.61.37.242 "cd /data/deploy/build-server/build_shortcuts && git pull && ./10_build_feed.sh"

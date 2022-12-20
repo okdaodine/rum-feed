@@ -1,0 +1,30 @@
+.textarea-autosize {
+  color: rgba(0, 0, 0, 0.87);
+  font-size: 14px;
+  padding: 14px;
+  font-weight: normal;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  resize: none;
+}
+.dark .textarea-autosize {
+  background: #181818;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+.textarea-autosize.sm {
+  font-size: 13px;
+  padding: 10px 14px;
+}
+.textarea-autosize:focus {
+  border-color: #333 !important;
+  outline: none;
+}
+.dark .textarea-autosize:focus {
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+.textarea-autosize.min-rows-1 {
+  min-height: 41px !important;
+}
+.textarea-autosize.min-rows-2 {
+  min-height: 72px !important;
+}

@@ -1,0 +1,13 @@
+#comment-section .comment-badge {
+  font-size: 12px;
+  top: -3px;
+  left: 38px;
+}
+#comment-section .like-badge {
+  font-size: 12px;
+  top: -3px;
+  left: 37px;
+}
+#comment-section .entry {
+  z-index: 1001;
+}

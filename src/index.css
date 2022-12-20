@@ -1,0 +1,285 @@
+@tailwind base;
+
+@tailwind components;
+
+@tailwind utilities;
+
+/************************************** HTML STYLES **************************************/
+html.dark {
+  background: #181818;
+}
+
+/************************************** BODY STYLES **************************************/
+body {
+  font-family: Nunito Sans, PingFang SC, Hiragino Sans GB, Heiti SC, Microsoft YaHei, WenQuanYi Micro Hei, sans-serif;
+  font-size: 14px;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  line-height: 1.5;
+  overflow-y: auto;
+  -webkit-font-smoothing: auto;
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+/************************************** BUTTON STYLES **************************************/
+div, button {
+  outline: none !important;
+}
+
+/************************************** ANCHOR STYLES **************************************/
+a {
+  outline: none !important;
+}
+
+/************************************** OL, UL STYLES **************************************/
+ol {
+  list-style-type: decimal;
+}
+ul {
+  list-style-type: disc;
+}
+
+/************************************** SVG STYLES **************************************/
+.MuiSvgIcon-root:not(.MuiSelect-icon) {
+  font-size: inherit !important;
+}
+
+/************************************** TAB STYLES **************************************/
+.MuiTab-textColorPrimary.Mui-selected {
+  color: #96c02d !important;
+}
+
+.MuiTab-textColorInherit {
+  color: #6f6f6f !important;
+}
+
+.dark .MuiTab-textColorInherit {
+  color: #a8a3a3 !important;
+}
+
+.MuiTab-textColorInherit.Mui-selected {
+  color: #000 !important;
+}
+
+.dark .MuiTab-textColorInherit.Mui-selected {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.MuiTabs-indicator {
+  background: #000 !important;
+}
+
+.dark .MuiTabs-indicator {
+  background: rgba(255, 255, 255, 0.8) !important;
+}
+
+.MuiTab-root {
+  overflow: visible !important;
+}
+
+.MuiTabs-root {
+  min-height: auto !important;
+}
+
+.MuiTabs-root.with-border {
+  border-bottom: 1px solid #ececec;
+}
+
+.dark .MuiTabs-root.with-border {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.MuiTabs-root .MuiTabs-indicator {
+  height: 3px;
+}
+
+.MuiTabs-root .MuiTab-root {
+  min-width: 0;
+  max-width: 100%;
+  font-size: 14px;
+  min-height: 0;
+  margin-right: 30px;
+  height: 40px;
+  padding-left: 5px !important;
+  padding-right: 5px !important;
+  background: none !important;
+}
+
+.MuiTabs-root.small .MuiTab-root {
+  margin-right: 20px;
+  height: 41px;
+  padding-left: 4px !important;
+  padding-right: 4px !important;
+}
+
+.MuiTabs-root.disable-transition .MuiTabs-indicator {
+  transition: none !important;
+}
+
+.MuiTabs-root .MuiTab-textColorInherit.Mui-selected {
+  font-weight: bold;
+}
+
+/************************************** INPUT STYLES **************************************/
+.MuiTextField-root label, .MuiTextField-root input, .MuiTextField-root textarea {
+  font-size: 14px !important;
+}
+.MuiTextField-root div::after {
+  border-bottom: #888;
+}
+.MuiTextField-root div::after:hover {
+  border-bottom: #888;
+}
+.MuiTextField-root fieldset {
+  border-color: rgba(0, 0, 0, 0.23) !important;
+}
+.dark .MuiTextField-root fieldset {
+  border-color: rgba(255, 255, 255, 0.23) !important;
+}
+.MuiTextField-root .MuiOutlinedInput-input {
+  padding: 12px;
+}
+.MuiTextField-root .Mui-focused fieldset {
+  border-color: #63b3ed !important;
+}
+.MuiTextField-root .MuiOutlinedInput-multiline {
+  padding: 0 !important;
+}
+.dark .MuiFormLabel-root {
+  color: rgba(255, 255, 255, 0.54);
+}
+.MuiFormLabel-root.Mui-focused {
+  color: #63b3ed !important;
+}
+.MuiInput-underline:hover:not(.Mui-disabled):before, .MuiInput-underline:after {
+  border-bottom-color: #63b3ed !important;
+}
+.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: #63b3ed !important;
+}
+.MuiTextField-root.rounded fieldset {
+  border-radius: 100px;
+}
+.dark .MuiOutlinedInput-root {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/************************************** MODAL STYLES **************************************/
+.MuiPaper-rounded {
+  border-radius: 12px !important;
+}
+
+/************************************** SWITCH STYLES **************************************/
+.MuiSwitch-colorPrimary.Mui-checked {
+  color: #63b3ed !important;
+}
+.MuiSwitch-colorPrimary.Mui-checked + .MuiSwitch-track {
+  background-color: #63b3ed !important;
+}
+
+/************************************** TOOLTIP STYLES **************************************/
+.MuiTooltip-tooltip {
+  font-size: 12px !important;
+  font-family: inherit !important;
+  background: #000 !important;
+  border-radius: 5px !important;
+}
+.dark .MuiTooltip-tooltip {
+  color: #000;
+  background: rgba(255, 255, 255, 0.8) !important;
+}
+.MuiTooltip-arrow {
+  color: #000 !important;
+}
+.dark .MuiTooltip-arrow {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+.MuiTooltip-tooltip.no-style {
+  background: none !important;
+  padding: 0;
+  margin: 0;
+}
+
+/************************************** TAB HIGHLIGHT STYLES **************************************/
+* {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -moz-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+/************************************** SCROLL BAR STYLES **************************************/
+.overflow-x-auto,
+.overflow-y-auto,
+body {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+}
+.overflow-x-auto::-webkit-scrollbar,
+.overflow-y-auto::-webkit-scrollbar,
+body::-webkit-scrollbar { /* WebKit */
+  width: 0;
+  height: 0;
+  display: none;  /* Safari and Chrome */
+  background: transparent;
+}
+
+/************************************** MENU **************************************/
+.MuiMenuItem-root {
+  font-size: 14px !important;
+  min-height: auto;
+}
+.MuiMenuItem-root.Mui-focusVisible {
+  background: none !important;
+}
+.MuiMenuItem-root:hover {
+  background: rgba(0, 0, 0, 0.08) !important;
+}
+
+/************************************** PAGINATION **************************************/
+.MuiPaginationItem-page {
+  color: #888888 !important;
+}
+.MuiPaginationItem-page.Mui-selected, .MuiPaginationItem-page.Mui-selected:hover {
+  background: #63b3ed !important;
+  color: rgba(255, 255, 255, 0.8) !important;
+  border-color: #63b3ed;
+}
+.MuiPaginationItem-page:hover {
+  background: none !important;
+  color: #63b3ed !important;
+  border-color: #63b3ed;
+}
+
+
+/************************************** BADGE **************************************/
+.MuiBadge-root.lower .MuiBadge-anchorOriginTopRightRectangular {
+  top: 5px !important;
+}
+
+/************************************** Backdrop **************************************/
+.dark .MuiBackdrop-root {
+  background-color: rgba(132, 134, 135, 0.35);
+}
+
+/************************************** Paper **************************************/
+.dark .MuiPaper-root {
+  background: #181818;
+  color: rgba(255, 255, 255, 0.8);
+}
+.dark .MuiPopover-paper  {
+  box-shadow: rgb(255 255 255 / 20%) 0px 0px 15px, rgb(255 255 255 / 15%) 0px 0px 3px 1px;
+}
+.dark .popover-paper  {
+  box-shadow: rgb(255 255 255 / 20%) 0px 0px 15px, rgb(255 255 255 / 15%) 0px 0px 3px 1px;
+}
+
+
+/************************************** IOS SAFE AREA **************************************/
+.ios-safe-area-margin {
+  margin-bottom: constant(safe-area-inset-bottom) !important;
+  margin-bottom: env(safe-area-inset-bottom) !important;
+}
+.ios-safe-area-padding {
+  padding-bottom: constant(safe-area-inset-bottom) !important;
+  padding-bottom: env(safe-area-inset-bottom) !important;
+}

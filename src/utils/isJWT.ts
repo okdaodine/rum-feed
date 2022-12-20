@@ -1,0 +1,1 @@
+export default (token: string) => (token || '').split('.').length === 3;

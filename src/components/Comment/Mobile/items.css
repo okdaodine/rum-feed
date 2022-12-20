@@ -1,0 +1,11 @@
+.top-comment-height {
+  height: calc(92vh - 49px);
+}
+
+.highlight {
+  background: #e2f6ff;
+}
+
+.dark .highlight {
+  background: #1c313a;
+}

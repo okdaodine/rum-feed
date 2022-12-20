@@ -1,0 +1,99 @@
+.image-editor .shift-hidden {
+  position: absolute;
+  top: 0;
+  left: -2999px;
+}
+.image-editor .form-item {
+  max-width: 320px;
+}
+.image-editor .slider-box {
+  padding: 14px 0;
+  display: flex;
+  align-items: center;
+  font-size: 28px;
+}
+.image-editor .slider-box .zoom-icon {
+  font-size: 26px !important;
+}
+.image-editor .save-button {
+  margin: 14px;
+  align-self: center;
+}
+.image-editor .avatar-edit-bo1x {
+  cursor: pointer;
+  overflow: hidden;
+  position: relative;
+  border: 2px solid hsl(212, 12%, 90%);
+}
+.image-editor .avatar-edit-box {
+  cursor: pointer;
+  overflow: hidden;
+  position: relative;
+  border: 2px solid hsl(212, 12%, 90%);
+}
+.image-editor .avatar-edit-box img {
+  height: 100%;
+  width: 100%;
+}
+.image-editor .avatar-edit-box .edit-button-wrap {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 2;
+}
+.image-editor .avatar-edit-box .edit-button {
+  color: white;
+  padding: 5px 8px;
+  background: #262b32;
+  opacity: 0.9;
+  width: 100%;
+}
+/* .image-editor .avatar-edit-box .edit-button {
+  position: absolute;
+  bottom: 7px;
+  left: 8px;
+  color: white;
+  border-radius: 6px;
+  padding: 5px 8px;
+  background: #262B32;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+} */
+
+.setting-avatar-crop-dialog .canvas-container {
+  transform-origin: top;
+}
+
+.preset-image .img-box {
+  width: 90vw;
+  max-width: 584px;
+  max-height: 400px;
+}
+
+.preset-image .img-grid-box {
+  grid-template-columns: repeat(auto-fill, 80px);
+}
+
+.image-lib .image {
+  background-size: cover;
+  background-position: center center;
+}
+.image-lib .grid-container {
+  padding: 10px 4px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: minmax(62px, 62px);
+  row-gap: 24px;
+  column-gap: 0;
+  align-items: center;
+  justify-items: center;
+}
+.image-lib .grid-container.sm {
+  padding: 10px 12px;
+  grid-template-columns: repeat(2, 1fr);
+  row-gap: 38px;
+}

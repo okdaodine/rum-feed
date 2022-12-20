@@ -1,0 +1,13 @@
+.MuiDrawer-paper {
+  background: none !important;
+}
+.drawer-modal.custom-z-index {
+  z-index: 1000 !important;
+}
+.drawer-modal .content {
+  border-radius: 16px 16px 0 0;
+  overflow: hidden !important;
+}
+.drawer-modal .content.small-radius {
+  border-radius: 10px 10px 0 0;
+}

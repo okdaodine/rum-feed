@@ -1,0 +1,12 @@
+.post-item .fold {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 8;
+  -webkit-box-orient: vertical;
+  display: -webkit-box;
+}
+
+.post-item .expandContent {
+  max-height: unset !important;
+  -webkit-line-clamp: unset !important;
+}

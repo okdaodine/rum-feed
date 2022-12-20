@@ -1,0 +1,16 @@
+.snackbar {
+  z-index: 999999;
+}
+.snackbar .content {
+  max-width: 150px;
+  min-width: 98px;
+}
+.snackbar .content.md {
+  max-width: 200px;
+}
+.snackbar .mask {
+  background-color: rgba(0, 0, 0, 0.88);
+}
+.dark .snackbar .mask {
+  background-color: rgba(0, 0, 0, 1);
+}

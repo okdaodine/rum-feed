@@ -1,0 +1,50 @@
+.button.mini {
+  min-width: 45px;
+  font-size: 12px;
+  padding: 6px 8px;
+}
+.button.mini.outline {
+  padding: 5px 7px;
+}
+.button.small {
+  min-width: 60px;
+  font-size: 13px;
+  padding: 9px 12px;
+}
+.button.small.outline {
+  padding: 8px 11px;
+}
+.button.normal {
+  font-size: 14px;
+  padding: 9px 24px;
+}
+.button.normal.w-full {
+  font-size: 15px;
+  padding: 11px 24px;
+}
+.button.normal.outline {
+  padding: 8px 23px;
+}
+.button.normal.w-full.mobile {
+  font-size: 15px;
+  padding: 14px 24px;
+}
+.button.large {
+  font-size: 14px;
+  padding: 10px 24px;
+}
+.button.large.w-full {
+  font-size: 15px;
+  padding: 12px 24px;
+}
+.button.large.outline {
+  padding: 9px 23px;
+}
+.button[disabled] {
+  color: rgba(0, 0, 0, 0.26);
+  background-color: rgba(0, 0, 0, 0.12);
+}
+.dark .button[disabled] {
+  color: rgba(255, 255, 255, 0.26);
+  background-color: rgba(255, 255, 255, 0.12);
+}

@@ -1,0 +1,45 @@
+.comment-item.highlight {
+  background: #e2f6ff;
+}
+.dark .comment-item.highlight {
+  background: #1c313a;
+}
+.comment-item .gray {
+  color: #8b8b8b;
+}
+.comment-item .dark {
+  color: #404040;
+}
+.comment-item .comment-body {
+  line-height: 1.625;
+}
+.comment-item .comment-fold {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 6;
+  -webkit-box-orient: vertical;
+  display: -webkit-box;
+}
+.comment-item .comment-expand {
+  max-height: unset !important;
+  -webkit-line-clamp: unset !important;
+}
+.comment-item .more {
+  height: 18px;
+}
+.comment-item .top-label {
+  top: -2px;
+  right: -42px;
+}
+.comment-item .top-label.md {
+  right: -48px;
+}
+.comment-item {
+  transition-property: background-color;
+}
+.comment-item .more-entry.md {
+  display: none;
+}
+.comment-item:hover .more-entry.md {
+  display: flex;
+}
