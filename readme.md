@@ -1,31 +1,22 @@
-# Light Timeline
+基于 [Quorum](https://github.com/rumsystem/quorum) 实现的社交产品
 
-It's a decentralized social networking service running on the web. It has microblogging features similar to Twitter. It uses and stores [ActivityPub](https://www.w3.org/TR/activitypub/) data by [Quorum](https://github.com/rumsystem/quorum).
+live 版本：https://feed.base.one
 
-## Installing
-
-```
-yarn
-
-cd server && yarn
-```
-
-## Frontend server
-
-To run a frontend server 
+## 启动前端服务
 
 ```
+yarn install
 yarn dev
 ```
 
-Now it's running at localhost:3000.
-
-## Backend server
-
-To run a backend server 
+## 启动后端服务
 
 ```
-cd server && yarn dev
+cd server
+yarn install
+yarn dev
 ```
 
-Now it's running at localhost:9000.
+## 访问服务
+
+http://localhost:3000
