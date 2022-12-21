@@ -1,4 +1,4 @@
-基于 [Quorum](https://github.com/rumsystem/quorum) 实现的社交产品
+基于 [Rum](https://github.com/rumsystem/quorum) 实现的社交产品
 
 live 版本：https://feed.base.one
 
