@@ -11,6 +11,8 @@ yarn dev
 
 ## 启动后端服务
 
+另外起一个终端界面，执行：
+
 ```
 cd server
 yarn install
