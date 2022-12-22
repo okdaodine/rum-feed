@@ -34,3 +34,7 @@ rum://seed?v=1&e=0&n=0&b=IvYddBwqSo6cMvYolA3S7w&c=hpeU3tZkNxsVZ3PPNjs2GsFC2X1KvL
 ## 反馈和交流
 
 可以直接提 [Issues](https://github.com/okdaodine/rum-feed/issues)
+
+## 想自己部署一个 feed ？
+
+可以来看看这个仓库，一键就可以部署 feed，https://github.com/okdaodine/rum-feed-setup
