@@ -3,4 +3,5 @@ export interface IConfig {
   logo: string
   version: string
   defaultGroupId: string
+  repo: string
 }

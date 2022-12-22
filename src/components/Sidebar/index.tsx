@@ -17,7 +17,7 @@ import { useLocation } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
 import { isPc, isMobile } from 'utils/env';
 import { RiSearchLine, RiSearchFill } from 'react-icons/ri';
-import { AiOutlineHome, AiFillHome, AiOutlineSearch } from 'react-icons/ai';
+import { AiOutlineHome, AiFillHome, AiOutlineSearch, AiOutlineGithub } from 'react-icons/ai';
 import Badge from '@material-ui/core/Badge';
 import classNames from 'classnames';
 import openLoginModal from 'components/openLoginModal';
@@ -298,6 +298,19 @@ export default observer(() => {
                 onClick={scrollToTop}
               >
                 <MdArrowUpward className="text-20 dark:text-white dark:text-opacity-80 text-gray-af" />
+              </div>
+            </Fade>
+          )}
+
+          {configStore.config.repo && (
+            <Fade in={true} timeout={350}>
+              <div
+                className='mt-10 w-10 h-10 mx-auto rounded-full hidden md:flex items-center justify-center cursor-pointer border dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] border-gray-c4'
+                onClick={() => {
+                  window.open(configStore.config.repo);
+                }}
+              >
+                <AiOutlineGithub className="text-20 dark:text-white dark:text-opacity-80 text-gray-af" />
               </div>
             </Fade>
           )}

@@ -8,7 +8,8 @@ async function get(ctx) {
     title: config.title || '',
     logo: config.logo || '',
     version: config.version || '1.0.0',
-    defaultGroupId: config.defaultGroupId || ''
+    defaultGroupId: config.defaultGroupId || '',
+    repo: config.repo || ''
   };
 }
 
