@@ -1,5 +1,7 @@
 基于 [Rum](https://github.com/rumsystem/quorum) 实现的社交产品
 
+所有的功能实现参考 Quorum 官方推荐的 [ActivityPub](https://docs.rumsystem.net/docs/data-format-and-examples/) 格式。
+
 live 版本：https://feed.base.one
 
 ## 启动前端服务
