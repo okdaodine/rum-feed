@@ -64,17 +64,17 @@ const UserCard = observer((props: IUserCardProps) => {
     }
     state.submitting = true;
     try {
-      const res = await TrxApi.createObject({
-        groupId: groupStore.relationGroup.groupId,
+      const res = await TrxApi.createActivity({
+        type: type === 'follow' ? 'Follow' : 'Ignore',
         object: {
-          type: 'Note',
-          content: JSON.stringify({
-            groupId: groupStore.defaultGroup.groupId,
-            type,
-            to: props.userAddress
-          })
+          type: 'Person',
+          id: props.userAddress,
         },
-      });
+        target: {
+          type: 'Group',
+          id: groupStore.defaultGroup.groupId,
+        }
+      }, groupStore.relationGroup.groupId);
       console.log(res);
       userStore.updateUser(props.userAddress, {
         followerCount: user.followerCount + (type === 'follow' ? 1 : -1),

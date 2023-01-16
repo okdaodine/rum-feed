@@ -72,7 +72,7 @@ export default observer((props: RouteChildrenProps) => {
       state.fetched = false;
       state.fetchingPosts = true;
       state.postPage = 1;
-      postStore.resetUserTrxIds();
+      postStore.resetUserIds();
       await Promise.all([
         fetchProfile(),
         fetchPosts(),
@@ -131,7 +131,7 @@ export default observer((props: RouteChildrenProps) => {
     state.fetchingPosts = true;
     try {
       if (state.postPage === 1) {
-        postStore.resetUserTrxIds();
+        postStore.resetUserIds();
       }
       const limit = 10;
       const posts = await PostApi.list({
@@ -142,7 +142,7 @@ export default observer((props: RouteChildrenProps) => {
       });
       state.hasMorePosts = posts.length === limit;
       postStore.addUserPosts(posts);
-      const showImageSmoothly = !state.fetched && postStore.userTrxIds.slice(0, 5).some((trxId) => (postStore.map[trxId].images || []).length > 0);
+      const showImageSmoothly = !state.fetched && postStore.userIds.slice(0, 5).some((id) => (postStore.map[id].images || []).length > 0);
         if (showImageSmoothly) {
           runInAction(() => {
             state.invisibleOverlay = true;
@@ -192,18 +192,34 @@ export default observer((props: RouteChildrenProps) => {
     }
     state.submitting = true;
     try {
-      const res = await TrxApi.createObject({
-        groupId: groupStore.relationGroup.groupId,
-        object: {
-          type: 'Note',
-          content: JSON.stringify({
-            groupId: groupStore.defaultGroup.groupId,
-            type,
-            to: userAddress
-          })
-        },
-      });
-      console.log(res);
+      if (['follow', 'unfollow'].includes(type)) {
+        const res = await TrxApi.createActivity({
+          type: type === 'follow' ? 'Follow' : 'Ignore',
+          object: {
+            type: 'Person',
+            id: userAddress,
+          },
+          target: {
+            type: 'Group',
+            id: groupStore.defaultGroup.groupId,
+          }
+        }, groupStore.relationGroup.groupId);
+        console.log(res);
+      }
+      if (['mute', 'unmute'].includes(type)) {
+        const res = await TrxApi.createActivity({
+          type: type === 'mute' ? 'Block' : 'Unblock',
+          object: {
+            type: 'Person',
+            id: userAddress,
+          },
+          target: {
+            type: 'Group',
+            id: groupStore.defaultGroup.groupId,
+          }
+        }, groupStore.relationGroup.groupId);
+        console.log(res);
+      }
       if (type.includes('follow')) {
         userStore.updateUser(userAddress, {
           followerCount: user.followerCount + (type === 'follow' ? 1 : -1),
@@ -454,7 +470,7 @@ export default observer((props: RouteChildrenProps) => {
             'opacity-0': state.invisibleOverlay|| !state.fetched || user.postCount === 0
           }, "md:mt-5 w-full box-border dark:md:border-t dark:md:border-l dark:md:border-r dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] md:rounded-12 overflow-hidden")}>
             {postStore.userPosts.map((post) => (
-              <div key={post.trxId}>
+              <div key={post.id}>
                 <PostItem
                   post={post}
                   where="postList"

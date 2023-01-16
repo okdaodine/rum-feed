@@ -6,7 +6,7 @@ import { GoChevronRight } from 'react-icons/go';
 import BottomLine from 'components/BottomLine';
 import { BsFillCaretDownFill } from 'react-icons/bs';
 import { lang } from 'utils/lang';
-import { IObject } from 'quorum-light-node-sdk';
+import { IActivity } from 'rum-sdk-browser';
 import { IPost, IComment } from 'apis/types';
 import { TrxStorage } from 'apis/common';
 import sleep from 'utils/sleep';
@@ -18,7 +18,8 @@ import Editor from 'components/Editor';
 import Query from 'utils/query';
 import { useHistory } from 'react-router-dom';
 import openLoginModal from 'components/openLoginModal';
-import Base64 from 'utils/base64';
+import { v4 } from 'uuid';
+import base64 from 'utils/base64';
 
 interface IProps {
   post: IPost
@@ -28,7 +29,7 @@ interface IProps {
 }
 
 interface ISelectedCommentOptions {
-  trxId: string
+  id: string
   scrollBlock?: 'center' | 'start' | 'end'
   disabledHighlight?: boolean
   duration?: number
@@ -40,16 +41,16 @@ const PREVIEW_SUB_COMMENT_COUNT = 2;
 
 export default observer((props: IProps) => {
   const { userStore, commentStore, groupStore, postStore } = useStore();
-  const draftKey = `COMMENT_DRAFT_${props.post.trxId}`;
+  const draftKey = `COMMENT_DRAFT_${props.post.id}`;
   const inPostDetail = props.where.startsWith('postDetail');
   const state = useLocalObservable(() => ({
     value: localStorage.getItem(draftKey) || '',
     showSubCommentsMap: {} as Record<string, boolean>,
-    highlightTrxId: '',
+    highlightId: '',
     fetched: false,
   }));
   const history = useHistory();
-  const comments = commentStore.commentsGroupMap[props.post.trxId] || [];
+  const comments = commentStore.commentsGroupMap[props.post.id] || [];
   const topComments = comments.filter(
     (comment) => !comment.threadId,
   );
@@ -57,14 +58,14 @@ export default observer((props: IProps) => {
     (topComment, index) =>
       inPostDetail
       || index < PREVIEW_TOP_COMMENT_COUNT
-      || commentStore.newCommentIdsSet.has(topComment.trxId),
+      || commentStore.newCommentIdsSet.has(topComment.id),
   )
 
   React.useEffect(() => {
     (async () => {
       try {
         const comments = await CommentApi.list({
-          objectId: props.post.trxId,
+          objectId: props.post.id,
           viewer: userStore.address,
           offset: 0,
           limit: 1000
@@ -78,25 +79,23 @@ export default observer((props: IProps) => {
     })();
   }, []);
 
-  const submit = async (payload: IObject) => {
+  const submit = async (activity: IActivity) => {
     if (!userStore.isLogin) {
       openLoginModal();
       return;
     }
-    const res = await TrxApi.createObject({
-      groupId: props.post.groupId,
-      object: payload,
-    });
+    const res = await TrxApi.createActivity(activity, props.post.groupId);
     console.log(res);
     const comment: IComment = {
-      content: payload.content || '',
-      images: (payload.image || []).map(image => Base64.getUrl(image)),
-      objectId: props.post.trxId,
+      content: activity.object?.content || '',
+      images: activity.object?.image?.map(image => image.content!) ?? [],
+      objectId: props.post.id,
       threadId: '',
       replyId: '',
       userAddress: userStore.address,
       groupId: groupStore.defaultGroup.groupId,
       trxId: res.trx_id,
+      id: activity.object?.id ?? '',
       storage: TrxStorage.cache,
       commentCount: 0,
       hotCount: 0,
@@ -106,17 +105,17 @@ export default observer((props: IProps) => {
         userProfile: toJS(userStore.profile)
       }
     };
-    const { inreplyto } = payload;
+    const { inreplyto } = activity.object!;
     if (inreplyto) {
-      const toCommentTrxId = inreplyto.trxid;
-      if (toCommentTrxId) {
-        const toComment = commentStore.map[toCommentTrxId];
+      const toCommentId = inreplyto.id;
+      if (toCommentId) {
+        const toComment = commentStore.map[toCommentId];
         if (toComment) {
           if (toComment.threadId) {
             comment.threadId = toComment.threadId;
-            comment.replyId = toComment.trxId;
+            comment.replyId = toComment.id;
           } else {
-            comment.threadId = toComment.trxId;
+            comment.threadId = toComment.id;
           }
         }
       }
@@ -135,13 +134,13 @@ export default observer((props: IProps) => {
       commentCount: props.post.commentCount + 1
     });
     selectComment({
-      trxId: comment.trxId
+      id: comment.id
     });
   };
 
   const selectComment = async (options: ISelectedCommentOptions) => {
     await sleep(options.sleep || 10);
-    const domElementId = `${props.where}_comment_${options.trxId}`;
+    const domElementId = `${props.where}_comment_${options.id}`;
     const comment = document.querySelector(`#${domElementId}`);
     if (!comment) {
       console.error('selected comment not found');
@@ -154,23 +153,23 @@ export default observer((props: IProps) => {
     if (options.disabledHighlight) {
       return;
     }
-    state.highlightTrxId = options.trxId;
+    state.highlightId = options.id;
     await sleep(options.duration || 1500);
-    state.highlightTrxId = '';
+    state.highlightId = '';
   }
 
   React.useEffect(() => {
     if (!state.fetched) {
       return;
     }
-    const trxId = Query.get('commentId');
-    if (trxId) {  
-      const comment = commentStore.map[trxId];
+    const id = Query.get('commentId');
+    if (id) {  
+      const comment = commentStore.map[id];
       if (comment && comment.threadId) {
         state.showSubCommentsMap[comment.threadId] = true;
       }
       selectComment({
-        trxId,
+        id,
         sleep: 300
       });
       Query.remove('commentId');
@@ -208,22 +207,30 @@ export default observer((props: IProps) => {
       <div className="mt-[14px]">
         <Editor
           groupId={groupStore.defaultGroup.groupId}
-          editorKey={`comment_${props.post.trxId}`}
+          editorKey={`comment_${props.post.id}`}
           minRows={
             inPostDetail && comments.length === 0 ? 3 : 1
           }
           placeholder={lang.publishYourComment}
           submit={async (data) => {
-            const payload: IObject = {
-              type: 'Note',
-              content: data.content,
-              inreplyto: {
-                trxid: props.post.trxId
+            const payload: IActivity = {
+              type: 'Create',
+              object: {
+                id: v4(),
+                type: 'Note',
+                content: data.content,
+                inreplyto: {
+                  type: 'Note',
+                  id: props.post.id,
+                },
+                ...data.images ? {
+                  image: data.images.map(v => ({
+                    type: 'Image',
+                    content: base64.getUrl(v),
+                  }))
+                } : {}
               }
             };
-            if (data.images) {
-              payload.image = data.images;
-            }
             const comment = await submit(payload);
             if (comment) {
               addComment(comment);
@@ -244,16 +251,16 @@ export default observer((props: IProps) => {
         <div id="comments" className="mt-4">
           <div>
             {visibleTopComments.map((comment) => {
-              const subComments = commentStore.subCommentsGroupMap[comment.trxId];
+              const subComments = commentStore.subCommentsGroupMap[comment.id];
               const hasSubComments = subComments && subComments.length > 0;
               const visibleSubComments = (subComments || []).filter(
                 (subComment, index) =>
-                  state.showSubCommentsMap[comment.trxId]
+                  state.showSubCommentsMap[comment.id]
                   || index < PREVIEW_SUB_COMMENT_COUNT
-                  || commentStore.newCommentIdsSet.has(subComment.trxId),
+                  || commentStore.newCommentIdsSet.has(subComment.id),
               );
               return (
-                <div key={comment.trxId}>
+                <div key={comment.id}>
                   <CommentItem
                     comment={comment}
                     postUserAddress={props.post.userAddress}
@@ -267,7 +274,7 @@ export default observer((props: IProps) => {
                         }, 200);
                       }
                     }}
-                    highlight={comment.trxId === state.highlightTrxId}
+                    highlight={comment.id === state.highlightId}
                   />
                   {hasSubComments && (
                     <div className="mt-[-1px]">
@@ -277,7 +284,7 @@ export default observer((props: IProps) => {
                             <div>
                               {visibleSubComments.map(
                                 (subComment: IComment) => (
-                                  <div key={subComment.trxId}>
+                                  <div key={subComment.id}>
                                     <CommentItem
                                       comment={subComment}
                                       postUserAddress={props.post.userAddress}
@@ -290,19 +297,19 @@ export default observer((props: IProps) => {
                                           }, 200);
                                         }
                                       }}
-                                      highlight={subComment.trxId === state.highlightTrxId}
+                                      highlight={subComment.id === state.highlightId}
                                     />
                                   </div>
                                 ),
                               )}
                             </div>
                           </Fade>
-                          {!state.showSubCommentsMap[comment.trxId]
+                          {!state.showSubCommentsMap[comment.id]
                             && visibleSubComments.length < subComments.length && (
                             <span
                               className="text-sky-500 cursor-pointer text-13 flex items-center pl-8 ml-[2px] mt-[6px]"
                               onClick={() => {
-                                state.showSubCommentsMap[comment.trxId] = !state.showSubCommentsMap[comment.trxId];
+                                state.showSubCommentsMap[comment.id] = !state.showSubCommentsMap[comment.id];
                               }}
                             >
                               {lang.totalReply(subComments.length)}{' '}
@@ -321,7 +328,7 @@ export default observer((props: IProps) => {
               && visibleTopComments.length < topComments.length && (
               <div className="pt-10">
                 <div className="text-center border-t dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] dark:text-white dark:text-opacity-[0.75] text-black text-opacity-80 tracking-widest border-gray-f2 pt-2 leading-[26px] bg-white dark:bg-[#181818] cursor-pointer flex items-center justify-center absolute bottom-3 left-0 w-full" onClick={() => {
-                  history.push(`/posts/${props.post.trxId}?scrollIntoView=1`);
+                  history.push(`/posts/${props.post.id}?scrollIntoView=1`);
                 }}>
                   {lang.checkMoreComments(comments.length)}
                   <GoChevronRight className="text-14 ml-1" />

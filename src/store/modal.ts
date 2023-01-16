@@ -1,14 +1,14 @@
 import { IComment } from 'apis/types';
-import { IObject } from 'quorum-light-node-sdk';
+import { IActivity } from 'rum-sdk-browser';
 
 export interface IPostDetail {
-  trxId: string
+  id: string
 }
 
 export interface ICommentReplyData {
   postUserAddress: string
   comment: IComment
-  submit: (payload: IObject) => void
+  submit: (payload: IActivity) => void
   where: 'postList' | 'postDetail' | 'postDetailModal'
 }
 

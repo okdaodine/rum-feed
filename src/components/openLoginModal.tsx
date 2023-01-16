@@ -11,7 +11,7 @@ import KeystoreModal from './KeystoreModal';
 import Button from 'components/Button';
 import sleep from 'utils/sleep';
 import * as Vault from 'utils/vault';
-import QuorumLightNodeSDK from 'quorum-light-node-sdk';
+import rumsdk from 'rum-sdk-browser';
 import { VaultApi } from 'apis';
 import { lang } from 'utils/lang';
 
@@ -71,7 +71,7 @@ const Main = observer(() => {
             }
             state.loadingMetaMask = true;
             try {
-              const { typeTransform } = QuorumLightNodeSDK.utils;
+              const { typeTransform } = rumsdk.utils;
               const PREFIX = '\x19Ethereum Signed Message:\n';
               const message = `Rum 身份认证 | ${Math.round(Date.now() / 1000)}`;
               const provider = new ethers.providers.Web3Provider((window as any).ethereum);

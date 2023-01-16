@@ -1,6 +1,6 @@
 const router = require('koa-router')();
 const { assert, Errors } = require('../utils/validator');
-const QuorumLightNodeSDK = require('quorum-light-node-sdk-nodejs');
+const rumsdk = require('rum-sdk-nodejs');
 const Group = require('../database/sequelize/group');
 const Seed = require('../database/sequelize/seed');
 const config = require('../config');
@@ -27,7 +27,7 @@ const createSeed = async (url) => {
     }
   });
   assert(!existGroup, Errors.ERR_IS_DUPLICATED('url'));
-  const { groupId, chainAPIs, groupName } = QuorumLightNodeSDK.utils.seedUrlToGroup(url);
+  const { groupId, chainAPIs, groupName } = rumsdk.utils.seedUrlToGroup(url);
   assert(chainAPIs.length > 0, Errors.ERR_IS_REQUIRED('chainAPIs'));
   await Seed.create({
     url,
@@ -42,7 +42,7 @@ const createSeed = async (url) => {
   const baseSeedUrl = seeds[0].url.split('&u=')[0];
   const apiMap = {};
   for (const seed of seeds) {
-    const group = QuorumLightNodeSDK.utils.seedUrlToGroup(seed.url);
+    const group = rumsdk.utils.seedUrlToGroup(seed.url);
     for (const api of group.chainAPIs) {
       const origin = new URL(api).origin;
       apiMap[origin] = api;
@@ -73,8 +73,8 @@ const createSeed = async (url) => {
       contentCount: 0
     });
   }
-  QuorumLightNodeSDK.cache.Group.remove(groupId);
-  QuorumLightNodeSDK.cache.Group.add(combinedSeedUrl);
+  rumsdk.cache.Group.remove(groupId);
+  rumsdk.cache.Group.add(combinedSeedUrl);
   return groupId;
 }
 

@@ -11,6 +11,7 @@ export interface IPost extends IPostContent {
   userAddress: string
   groupId: string
   trxId: string
+  id: string
   latestTrxId: string
   storage: TrxStorage
   timestamp: number

@@ -1,18 +1,35 @@
 const Relation = require('../database/sequelize/relation');
 const Group = require('../database/sequelize/group');
 const Notification = require('../database/notification');
-const QuorumLightNodeSDK = require('quorum-light-node-sdk-nodejs');
+const rumsdk = require('rum-sdk-nodejs');
 const { trySendSocket } = require('../socket');
 
 module.exports = async (item) => {
-  const relation = pack(item);
-  const { type, groupId } = relation;
-  delete relation.groupId;
-  if (type === 'follow') {
+  const {
+    Data: {
+      type,
+      object: {
+        id: to,
+      },
+      target: {
+        id: groupId,
+      },
+    },
+    SenderPubkey,
+  } = item;
+  const from = rumsdk.utils.pubkeyToAddress(SenderPubkey)
+  console.log({
+    type,
+    from,
+    to,
+  })
+
+  if (type === 'Follow') {
     await Relation.findOrCreate({
       where: {
-        ...relation,
-        type: 'following'
+        type: 'following',
+        from,
+        to,
       }
     });
     const group = await Group.findOne({
@@ -27,8 +44,8 @@ module.exports = async (item) => {
         type: 'follow',
         toObjectId: '',
         toObjectType: '',
-        to: relation.to,
-        from: relation.from,
+        to: to,
+        from: from,
         fromObjectId: '',
         fromObjectType: '',
         timestamp: Date.now()
@@ -39,44 +56,39 @@ module.exports = async (item) => {
       }
     }
   }
-  if (type === 'unfollow') {
+
+  if (type === 'Ignore') {
     await Relation.destroy({
       where: {
-        ...relation,
-        type: 'following'
+        type: 'following',
+        from,
+        to,
       }
     });
     await Notification.destroy({
       type: 'follow',
-      to: relation.to,
-      from: relation.from,
+      to: to,
+      from: from,
     })
   }
-  if (type === 'mute') {
+
+  if (type === 'Block') {
     await Relation.findOrCreate({
       where: {
-        ...relation,
-        type: 'muted'
+        type: 'muted',
+        from,
+        to,
       }
     });
   }
-  if (type === 'unmute') {
+
+  if (type === 'Unblock') {
     await Relation.destroy({
       where: {
-        ...relation,
-        type: 'muted'
+        type: 'muted',
+        from,
+        to,
       }
     });
   }
-}
-
-const pack = (item) => {
-  const { groupId, to, type } = JSON.parse(item.Data.content);
-  const data = {
-    groupId,
-    type,
-    to,
-    from: QuorumLightNodeSDK.utils.pubkeyToAddress(item.SenderPubkey)
-  };
-  return data;
 }

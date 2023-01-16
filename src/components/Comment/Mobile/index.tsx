@@ -6,7 +6,6 @@ import { toJS } from 'mobx';
 import Comments from './items';
 import { useStore } from 'store';
 import { TrxStorage } from 'apis/common';
-import { IObject } from 'quorum-light-node-sdk';
 import { IComment, IPost } from 'apis/types';
 import openLoginModal from 'components/openLoginModal';
 import { CommentApi, TrxApi } from 'apis';
@@ -18,13 +17,14 @@ import Loading from 'components/Loading';
 import TopItemPageModal from './TopItemPageModal';
 import FixedCommentEntry from './FixedCommentEntry';
 import EditorModal from './EditorModal';
-import Base64 from 'utils/base64';
 
 import './index.css';
+import { IActivity } from 'rum-sdk-browser';
+import { v4 } from 'uuid';
 
 interface IProps {
   post: IPost;
-  updateCounter: (trxId: string) => any
+  updateCounter: (id: string) => any
 }
 
 export default observer((props: IProps) => {
@@ -54,7 +54,7 @@ export default observer((props: IProps) => {
     (async () => {
       try {
         const comments = await CommentApi.list({
-          objectId: props.post.trxId,
+          objectId: props.post.id,
           viewer: userStore.address,
           offset: 0,
           limit: 1000
@@ -72,12 +72,12 @@ export default observer((props: IProps) => {
     if (state.isFetching) {
       return;
     }
-    const selectedTrxId = Query.get('commentId');
-    if (!selectedTrxId) {
+    const selectedId = Query.get('commentId');
+    if (!selectedId) {
       return;
     }
     (async () => {
-      const selectedComment = commentStore.map[selectedTrxId];
+      const selectedComment = commentStore.map[selectedId];
       if (!selectedComment) {
         modalStore.pageLoading.hide();
         await sleep(200);
@@ -98,7 +98,7 @@ export default observer((props: IProps) => {
         commentStore.mobile.topCommentPage.setTopComment(comment);
         commentStore.mobile.topCommentPage.setOpen(true);
         await sleep(500);
-        selectComment(selectedTrxId, {
+        selectComment(selectedId, {
           useScrollIntoView: true,
         });
         await sleep(200);
@@ -109,7 +109,7 @@ export default observer((props: IProps) => {
         await sleep(100);
       } else {
         await sleep(400);
-        selectComment(selectedTrxId, {
+        selectComment(selectedId, {
           useScrollIntoView: true,
         });
       }
@@ -132,25 +132,23 @@ export default observer((props: IProps) => {
     };
   }, []);
 
-  const _submit = async (payload: IObject) => {
+  const _submit = async (activity: IActivity) => {
     if (!userStore.isLogin) {
       openLoginModal();
       return;
     }
-    const res = await TrxApi.createObject({
-      groupId: props.post.groupId,
-      object: payload,
-    });
+    const res = await TrxApi.createActivity(activity, props.post.groupId);
     console.log(res);
     const comment: IComment = {
-      content: payload.content || '',
-      images: (payload.image || []).map(image => Base64.getUrl(image)),
-      objectId: props.post.trxId,
+      content: activity.object?.content || '',
+      images: activity.object?.image?.map(image => image.content!) ?? [],
+      objectId: props.post.id,
       threadId: '',
       replyId: '',
       userAddress: userStore.address,
       groupId: groupStore.defaultGroup.groupId,
       trxId: res.trx_id,
+      id: activity.object?.id ?? '',
       storage: TrxStorage.cache,
       commentCount: 0,
       hotCount: 0,
@@ -160,17 +158,17 @@ export default observer((props: IProps) => {
         userProfile: toJS(userStore.profile)
       }
     };
-    const { inreplyto } = payload;
+    const { inreplyto } = activity.object!;
     if (inreplyto) {
-      const toCommentTrxId = inreplyto.trxid;
-      if (toCommentTrxId) {
-        const toComment = commentStore.map[toCommentTrxId];
+      const toCommentId = inreplyto.id;
+      if (toCommentId) {
+        const toComment = commentStore.map[toCommentId];
         if (toComment) {
           if (toComment.threadId) {
             comment.threadId = toComment.threadId;
-            comment.replyId = toComment.trxId;
+            comment.replyId = toComment.id;
           } else {
-            comment.threadId = toComment.trxId;
+            comment.threadId = toComment.id;
           }
         }
       }
@@ -189,19 +187,21 @@ export default observer((props: IProps) => {
     forceBlur();
     state.isCreating = true;
     try {
-      const payload: IObject = {
-        type: 'Note',
-        content: value,
-        inreplyto: {
-          trxid: ''
-        }
+      const activity: IActivity = {
+        type: 'Create',
+        object: {
+          id: v4(),
+          type: 'Note',
+          content: value,
+          inreplyto: {
+            type: 'Note',
+            id: state.replyingComment
+              ? state.replyingComment.id
+              : props.post.id,
+          },
+        },
       };
-      if (state.replyingComment) {
-        payload.inreplyto!.trxid = state.replyingComment.trxId;
-      } else {
-        payload.inreplyto!.trxid = props.post.trxId;
-      }
-      const newComment = (await _submit(payload))!;
+      const newComment = (await _submit(activity))!;
       commentStore.addComment(newComment);
       postStore.updatePost({
         ...props.post,
@@ -218,7 +218,7 @@ export default observer((props: IProps) => {
       );
       if (silent) {
         await sleep(100);
-        selectComment(newComment.trxId, {
+        selectComment(newComment.id, {
           useScrollIntoView: true,
           isNewComment: true,
         });
@@ -240,10 +240,10 @@ export default observer((props: IProps) => {
     }
   };
 
-  const selectComment = async (trxId: string, options: any) => {
+  const selectComment = async (id: string, options: any) => {
     await sleep(options.sleep || 10);
-    const domElementId = `comment_${trxId}`;
-    const comment = commentStore.map[trxId];
+    const domElementId = `comment_${id}`;
+    const comment = commentStore.map[id];
     if (!comment) {
       console.error('selected comment not found');
       return;

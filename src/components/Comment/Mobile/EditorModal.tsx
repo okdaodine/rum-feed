@@ -25,7 +25,7 @@ const Editor = observer((props: IProps) => {
   React.useEffect(() => {
     setTimeout(() => {
       if (replyingComment) {
-        const cachedContent = localStorage.getItem(`COMMENT_REPLY:${replyingComment.trxId}_CONTENT`) || '';
+        const cachedContent = localStorage.getItem(`COMMENT_REPLY:${replyingComment.id}_CONTENT`) || '';
         const replyValue = cachedContent ? cachedContent : state.value;
         state.value = replyValue;
       } else {
@@ -37,7 +37,7 @@ const Editor = observer((props: IProps) => {
   const handleEditorChange = (e: any) => {
     state.value = e.target.value;
     if (replyingComment) {
-      localStorage.setItem(`COMMENT_REPLY:${replyingComment.trxId}_CONTENT`, e.target.value);
+      localStorage.setItem(`COMMENT_REPLY:${replyingComment.id}_CONTENT`, e.target.value);
     } else {
       localStorage.setItem(`COMMENT_CONTENT_${groupStore.defaultGroup.groupId}`, e.target.value);
     }
@@ -96,7 +96,7 @@ const Editor = observer((props: IProps) => {
                     state.value = '';
                     localStorage.removeItem(`COMMENT_CONTENT_${groupStore.defaultGroup.groupId}`);
                     if (props.replyingComment) {
-                      localStorage.removeItem(`COMMENT_REPLY:${props.replyingComment.trxId}_CONTENT`);
+                      localStorage.removeItem(`COMMENT_REPLY:${props.replyingComment.id}_CONTENT`);
                     }
                   }
                 } catch (err) {}

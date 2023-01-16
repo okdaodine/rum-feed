@@ -14,8 +14,11 @@ import { toJS } from 'mobx';
 import { isMobile, isPc } from 'utils/env';
 import Modal from 'components/Modal';
 import openLoginModal from 'components/openLoginModal';
-import { IObject } from 'quorum-light-node-sdk';
+import { IActivity } from 'rum-sdk-browser';
 import Base64 from 'utils/base64';
+import { IImage } from 'apis/image';
+import { v4 as uuidv4 } from 'uuid';
+import base64 from 'utils/base64';
 
 const PostEditor = observer((props: {
   post?: IPost
@@ -25,28 +28,26 @@ const PostEditor = observer((props: {
   const matchedGroupId = window.location.pathname.split('/groups/')[1];
   const groupId = matchedGroupId ? matchedGroupId : groupStore.defaultGroup.groupId;
   const group = groupStore.map[groupId];
-  const submit = async (payload: IObject) => {
+  const submit = async (activity: IActivity) => {
     if (!userStore.isLogin) {
       openLoginModal();
       return;
     }
-    const res = await TrxApi.createObject({
-      groupId: group.groupId,
-      object: payload,
-    });
+    const res = await TrxApi.createActivity(activity, group.groupId);
     console.log(res);
     const post: IPost = {
-      content: payload.content || '',
-      images: (payload.image || []).map(image => Base64.getUrl(image)),
+      content: activity.object?.content || '',
+      images: (activity.object?.image || []).map(image => Base64.getUrl(image as any as IImage)),
       userAddress: userStore.address,
       groupId: group.groupId,
       trxId: res.trx_id,
+      id: activity.object?.id ?? '',
       latestTrxId: '',
       storage: TrxStorage.cache,
       commentCount: 0,
       hotCount: 0,
       likeCount: 0,
-      imageCount: (payload.image || []).length,
+      imageCount: (activity.image || []).length,
       timestamp: Date.now(),
       extra: {
         userProfile: toJS(userStore.profile),
@@ -78,16 +79,20 @@ const PostEditor = observer((props: {
           autoFocusDisabled={isMobile}
           minRows={isPc ? 3 : 5}
           submit={(data) => {
-            const payload: IObject = {
-              type: 'Note',
-              content: data.content,
+            const payload: IActivity = {
+              type: 'Create',
+              object: {
+                id: uuidv4(),
+                type: 'Note',
+                content: data.content,
+                ...data.images ? {
+                  image: data.images.map(v => ({
+                    type: 'Image',
+                    content: base64.getUrl(v),
+                  }))
+                } : {}
+              },
             };
-            if (data.images) {
-              payload.image = data.images;
-            }
-            if (props.post) {
-              payload.id = props.post.trxId;
-            }
             return submit(payload);
           }}
           enabledImage

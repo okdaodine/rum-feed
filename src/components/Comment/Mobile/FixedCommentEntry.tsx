@@ -9,7 +9,7 @@ import { RiThumbUpLine, RiThumbUpFill } from 'react-icons/ri';
 interface IProps {
   replyTo: (comment: IComment) => void
   replyToPost: () => void
-  likePost: (postTrxId: string) => void
+  likePost: (postId: string) => void
   post: IPost
 }
 
@@ -84,7 +84,7 @@ export default observer((props: IProps) => {
               <div
                 onClick={async () => {
                   state.likeAnimating = !props.post.extra.liked;
-                  await props.likePost(props.post.trxId);
+                  await props.likePost(props.post.id);
                   state.likeAnimating = false;
                 }}
                 className={classNames({

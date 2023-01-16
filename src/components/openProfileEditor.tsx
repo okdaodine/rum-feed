@@ -8,15 +8,14 @@ import { useStore } from 'store';
 import { toJS } from 'mobx';
 import { IProfile } from 'apis/types';
 import { TrxApi } from 'apis';
-import { IPerson } from 'quorum-light-node-sdk';
 import ImageEditor from 'components/ImageEditor';
 import { lang } from 'utils/lang';
 import { TextField } from '@material-ui/core';
 import { runInAction } from 'mobx';
 import openLoginModal from 'components/openLoginModal';
-import Base64 from 'utils/base64';
 import sleep from 'utils/sleep';
 import Modal from 'components/Modal';
+import store from 'store2';
 
 interface IModalProps extends IProps {
   rs: () => void
@@ -57,20 +56,23 @@ const ModalWrapper = observer((props: IModalProps) => {
         return;
       }
       state.loading = true;
-      const person: IPerson = {
-        name: state.profile.name
-      };
-      if (state.profile.avatar && state.profile.avatar.startsWith('data:')) {
-        person.image = {
-          mediaType: Base64.getMimeType(state.profile.avatar),
-          content: Base64.getContent(state.profile.avatar),
+      const res = await TrxApi.createActivity({
+        type: "Create",
+        object: {
+          type: "Person",
+          id: store('address'),
+          name: state.profile.name,
+          ...(state.profile.avatar && state.profile.avatar.startsWith('data:'))
+            ? {
+              image: [{
+                type: 'Image',
+                content: state.profile.avatar,
+              } as any],
+            }
+            : {}
         }
-      }
-      const res = await TrxApi.createPerson({
-        groupId: groupStore.defaultGroup.groupId,
-        person,
-      });
-      console.log(res);
+      }, groupStore.defaultGroup.groupId);
+      console.log(res)
       const profile: IProfile = {
         name: state.profile.name,
         avatar: state.profile.avatar,

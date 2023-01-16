@@ -16,8 +16,8 @@ export default observer(() => {
   const state = useLocalObservable(() => ({
     loading: true,
   }));
-  const { trxId } = useParams() as { trxId: string };
-  const post = postStore.map[trxId];
+  const { id } = useParams() as { id: string };
+  const post = postStore.map[id];
   const history = useHistory();
 
   React.useEffect(() => {
@@ -28,7 +28,7 @@ export default observer(() => {
     }
     (async () => {
       try {
-        const post = await PostApi.get(trxId, {
+        const post = await PostApi.get(id, {
           viewer: userStore.address
         });
         if (post.latestTrxId) {

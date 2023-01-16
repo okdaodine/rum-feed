@@ -102,16 +102,16 @@ export default observer((props: IMessagesProps) => {
                         }
                         if (isMobile) {
                           const objectId = (notification.extra.fromObject as IComment).objectId;
-                          const commentId = (notification.extra.fromObject as IComment).trxId;
+                          const commentId = (notification.extra.fromObject as IComment).id;
                           props.close();
                           await sleep(400);
                           toPost(`/posts/${objectId}?commentId=${commentId}`);
                         } else {
                           Query.set({
-                            commentId: (notification.extra.fromObject as IComment).trxId
+                            commentId: (notification.extra.fromObject as IComment).id
                           });
                           modalStore.postDetail.show({
-                            trxId: (notification.extra.fromObject as IComment).objectId,
+                            id: (notification.extra.fromObject as IComment).objectId,
                           });
                         }
                       }}

@@ -4,34 +4,34 @@ const Profile = require('./profile');
 const UniqueCounter = require('./uniqueCounter');
 const getDefaultProfile = require('../utils/getDefaultProfile');
 const config = require('../config');
-const QuorumLightNodeSDK = require('quorum-light-node-sdk-nodejs');
+const rumsdk = require('rum-sdk-nodejs');
 
 exports.create = async (item) => {
   return await Post.create(item);
 };
 
-exports.update = async (trxId, data) => {
+exports.update = async (id, data) => {
   return await Post.update(data, {
     where: {
-      trxId
+      id
     }
   });
 };
 
-exports.replaceUpdatedTrxId = async (trxId, newTrxId) => {
-  return await Post.update({
-    latestTrxId: newTrxId
-  }, {
-    where: {
-      latestTrxId: trxId
-    }
-  });
-}
+// exports.replaceUpdatedTrxId = async (trxId, newTrxId) => {
+//   return await Post.update({
+//     latestTrxId: newTrxId
+//   }, {
+//     where: {
+//       latestTrxId: trxId
+//     }
+//   });
+// }
 
-exports.get = async (trxId, options = {}) => {
+exports.get = async (id, options = {}) => {
   const query = {
     where: {
-      trxId
+      id
     }
   };
   if (options.withReplacedImage) {
@@ -50,10 +50,10 @@ exports.get = async (trxId, options = {}) => {
   return result;
 };
 
-exports.destroy = async (trxId) => {
+exports.destroy = async (postId) => {
   await Post.destroy({
     where: {
-      trxId
+      id: postId
     }
   });
 };
@@ -74,7 +74,7 @@ exports.list = async (query, options = {}) => {
 const bulkAppendExtra = async (items, options = {}) => {
   items = items.map((item) => {
     item.extra = item.extra || {};
-    item.extra.groupName = QuorumLightNodeSDK.cache.Group.get(item.groupId).groupName
+    item.extra.groupName = rumsdk.cache.Group.get(item.groupId).groupName
     return item;
   });
 
@@ -86,7 +86,7 @@ const bulkAppendExtra = async (items, options = {}) => {
     });
     items = items.map((item) => {
       item.extra = item.extra || {};
-      item.extra.liked = !!likedMap[item.trxId]
+      item.extra.liked = !!likedMap[item.id]
       return item;
     });
   }
@@ -109,7 +109,7 @@ const bulkAppendExtra = async (items, options = {}) => {
 const getCounterMap = async (p) => {
   const counters = await UniqueCounter.bulkGet(p.items.map((item) => ({
     name: p.counterName,
-    objectId: item.trxId,
+    objectId: item.id,
     userAddress: p.userAddress
   })));
   return keyBy(counters, (counter) => counter.objectId);
@@ -119,7 +119,7 @@ const replaceImages = item => {
   if (item.imageCount > 0) {
     item.images = [];
     for (let i = 0; i < item.imageCount; i++) {
-      item.images.push(`${config.serverOrigin || config.origin || ''}/api/images/posts/${item.trxId}/${i}`);
+      item.images.push(`${config.serverOrigin || config.origin || ''}/api/images/posts/${item.id}/${i}`);
     }
   }
   return item;

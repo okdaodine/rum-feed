@@ -5,31 +5,33 @@ const Comment = require('../database/comment');
 const { assert, Errors } = require('../utils/validator');
 const getDefaultProfile = require('../utils/getDefaultProfile');
 
-router.get('/posts/:trxId/:index', getPostImage);
-router.get('/comments/:trxId/:index', getCommentImage);
+router.get('/posts/:id/:index', getPostImage);
+router.get('/comments/:id/:index', getCommentImage);
 router.get('/profiles/:userAddress', getProfileImage);
 
 async function getPostImage(ctx) {
-  const post = await Post.get(ctx.params.trxId);
+  const post = await Post.get(ctx.params.id);
   assert(post, Errors.ERR_NOT_FOUND('post'));
   assert(post.images, Errors.ERR_NOT_FOUND('post.images'));
   const image = post.images[ctx.params.index];
   assert(image, Errors.ERR_NOT_FOUND('image'));
-  const buffer = Buffer.from(image.content, 'base64');
-  ctx.set('Content-Type', image.mediaType);
+
+  const buffer = Buffer.from(getContent(image.content), 'base64');
+  ctx.set('Content-Type', getMimeType(image.content));
   ctx.set('Content-Length', buffer.length);
   ctx.set('Cache-Control', 'public, max-age=31557600');
   ctx.body = buffer;
 }
 
 async function getCommentImage(ctx) {
-  const comment = await Comment.get(ctx.params.trxId);
+  const comment = await Comment.get(ctx.params.id);
   assert(comment, Errors.ERR_NOT_FOUND('comment'));
   assert(comment.images, Errors.ERR_NOT_FOUND('comment.images'));
   const image = comment.images[ctx.params.index];
   assert(image, Errors.ERR_NOT_FOUND('image'));
-  const buffer = Buffer.from(image.content, 'base64');
-  ctx.set('Content-Type', image.mediaType);
+  console.log(image)
+  const buffer = Buffer.from(getContent(image.content), 'base64');
+  ctx.set('Content-Type', getMimeType(image.content));
   ctx.set('Content-Length', buffer.length);
   ctx.set('Cache-Control', 'public, max-age=31557600');
   ctx.body = buffer;

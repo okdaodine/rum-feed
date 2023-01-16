@@ -20,15 +20,15 @@ export default {
     return items;
   },
 
-  async get(trxId: string, options: {
+  async get(id: string, options: {
     viewer: string | undefined
   }) {
-    const item: IPost = await request(`${API_BASE_URL}/posts/${trxId}?${qs.stringify(options)}`);
+    const item: IPost = await request(`${API_BASE_URL}/posts/${id}?${qs.stringify(options)}`);
     return item;
   },
 
-  async remove(trxId: string) {
-    await request(`${API_BASE_URL}/posts/${trxId}`, {
+  async remove(id: string) {
+    await request(`${API_BASE_URL}/posts/${id}`, {
       method: 'DELETE'
     });
   }

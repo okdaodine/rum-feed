@@ -1,22 +1,32 @@
 const Profile = require('../database/profile');
-const QuorumLightNodeSDK = require('quorum-light-node-sdk-nodejs');
+const rumsdk = require('rum-sdk-nodejs');
 
 module.exports = async (item) => {
   await Profile.upsert(pack(item));
 }
 
 const pack = (item) => {
-  const { name, image } = item.Data;
+  const {
+    Data: {
+      object: {
+        name,
+        image,
+      }
+    },
+    SenderPubkey,
+  } = item;
   const data = {
-    userAddress: QuorumLightNodeSDK.utils.pubkeyToAddress(item.SenderPubkey),
+    userAddress: rumsdk.utils.pubkeyToAddress(SenderPubkey),
     groupId: '',
     updatedAt: Date.now()
   };
   if (name) {
     data.name = name;
   }
-  if (image) {
-    data.avatar = `data:${image.mediaType};base64,${image.content}`;
+  if (image && image.length) {
+    const img = Buffer.from(image[0].content, 'base64');
+    const url = img.toString();
+    data.avatar = url;
   }
   return data;
 }

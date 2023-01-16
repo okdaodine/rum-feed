@@ -42,7 +42,7 @@ export interface IDraft {
 
 type ISubmitData = {
   content: string
-  updatedTrxId?: string
+  updatedId?: string
   images?: IImage[]
 };
 
@@ -289,7 +289,7 @@ const Editor = observer((props: IProps) => {
       payload.images = images;
     }
     if (isUpdating) {
-      payload.updatedTrxId = props.post!.trxId;
+      payload.updatedId = props.post!.id;
     }
     let _draft = '';
     if (!isUpdating) {

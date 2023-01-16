@@ -2,7 +2,7 @@ const UniqueCounter = require('../database/uniqueCounter');
 const Post = require('../database/post');
 const Comment = require('../database/comment');
 const Notification = require('../database/notification');
-const QuorumLightNodeSDK = require('quorum-light-node-sdk-nodejs');
+const rumsdk = require('rum-sdk-nodejs');
 const { trySendSocket } = require('../socket');
 
 const CounterName = {
@@ -29,27 +29,29 @@ module.exports = async (item, group) => {
   } else if (value < 0) {
     await UniqueCounter.destroy(uniqueCounter);
   }
+  console.log(name)
 
   if (name.startsWith('post')) {
     const post = await Post.get(objectId);
+    console.log(post)
     if (post) {
       const count = await UniqueCounter.count({
         where: {
           name,
-          objectId: post.trxId
+          objectId: post.id
         }
       });
       if (name === CounterName.postLike) {
         post.likeCount = count;
       }
-      await Post.update(post.trxId, post);
+      await Post.update(post.id, post);
     }
     if (value > 0 && from !== post.userAddress) {
       const notification = {
         groupId: '',
         status: group.loaded ? 'unread' : 'read',
         type: 'like',
-        toObjectId: post.trxId,
+        toObjectId: post.id,
         toObjectType: 'post',
         to: post.userAddress,
         from,
@@ -72,19 +74,19 @@ module.exports = async (item, group) => {
     const count = await UniqueCounter.count({
       where: {
         name,
-        objectId: comment.trxId
+        objectId: comment.id
       }
     });
     if (name === CounterName.commentLike) {
       comment.likeCount = count;
     }
-    await Comment.update(comment.trxId, comment);
+    await Comment.update(comment.id, comment);
     if (value > 0 && from !== comment.userAddress) {
       const notification = {
         groupId: '',
         status: group.loaded ? 'unread' : 'read',
         type: 'like',
-        toObjectId: comment.trxId,
+        toObjectId: comment.id,
         toObjectType: 'comment',
         to: comment.userAddress,
         from,
@@ -101,17 +103,29 @@ module.exports = async (item, group) => {
 }
 
 const pack = async (item) => {
-  const { id, type } = item.Data;
+  const {
+    TrxId,
+    Data: {
+      type,
+      object: {
+        id,
+      }
+    },
+    SenderPubkey,
+    GroupId,
+  } = item;
   const data = {
     objectId: id,
     value: type === 'Like' ? 1 : -1,
     name: '',
-    userAddress: QuorumLightNodeSDK.utils.pubkeyToAddress(item.SenderPubkey),
-    groupId: item.GroupId,
-    trxId: item.TrxId
+    userAddress: rumsdk.utils.pubkeyToAddress(SenderPubkey),
+    groupId: GroupId,
+    trxId: TrxId
   }
   const post = await Post.get(id);
   const comment = await Comment.get(id);
+  console.log(id)
+  console.log(post)
   if (post) {
     data.name = 'postLike';
   } else if (comment) {

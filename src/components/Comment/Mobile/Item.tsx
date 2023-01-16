@@ -59,7 +59,7 @@ export default observer((props: IProps) => {
   React.useEffect(() => {
     if (
       commentStore.mobile.topCommentPage.open &&
-      commentStore.mobile.topCommentPage.topComment?.trxId === comment.trxId
+      commentStore.mobile.topCommentPage.topComment?.id === comment.id
     ) {
       return;
     }
@@ -84,24 +84,24 @@ export default observer((props: IProps) => {
     return () => {
       window.removeEventListener('resize', setCanExpand);
     };
-  }, [state, commentStore, comment.trxId]);
+  }, [state, commentStore, comment.id]);
 
   const isOwner = comment.userAddress === userStore.address;
   const isFromAuthor = props.post.userAddress === comment.userAddress;
   const isAuthor = props.post.userAddress === userStore.address;
 
   const contentPrefix =
-    comment.threadId && comment.extra.replyComment && comment.threadId !== comment.extra.replyComment.trxId
+    comment.threadId && comment.extra.replyComment && comment.threadId !== comment.extra.replyComment.id
       ? `回复 <span class="text-sky-500">${comment.extra.replyComment.extra.userProfile.name}</span>：`
       : '';
   const previewContentPrefix =
-    comment.threadId && comment.extra.replyComment && comment.threadId !== comment.extra.replyComment.trxId
+    comment.threadId && comment.extra.replyComment && comment.threadId !== comment.extra.replyComment.id
       ? `<span class="text-sky-500">${comment.extra.userProfile.name}</span> 回复 <span class="text-sky-500">${comment.extra.replyComment.extra.userProfile.name}</span>：`
       : `<span class="text-sky-500">${comment.extra.userProfile.name}</span>：`;
 
   if (isPreview) {
     return (
-      <div className="pt-[2px]" id={`comment_${commentStore.mobile.topCommentPage.open ? '_xxx_' : ''}${comment.trxId}`}>
+      <div className="pt-[2px]" id={`comment_${commentStore.mobile.topCommentPage.open ? '_xxx_' : ''}${comment.id}`}>
         <span
           className="dark:text-white dark:text-opacity-80 text-gray-1e break-words"
           dangerouslySetInnerHTML={{ __html: replaceContent(`${previewContentPrefix}${comment.content}`, { disabled: true }) }}
@@ -123,7 +123,7 @@ export default observer((props: IProps) => {
     );
   }
 
-  const updateCounter = async (trxId: string) => {
+  const updateCounter = async (id: string) => {
     if (!userStore.isLogin) {
       openLoginModal();
       return;
@@ -134,13 +134,13 @@ export default observer((props: IProps) => {
     state.submitting = true;
     state.likeAnimating = !comment.extra.liked;
     try {
-      const res = await TrxApi.createObject({
-        groupId: comment.groupId,
+      const res = await TrxApi.createActivity({
+        type: comment.extra.liked ? 'Dislike' : 'Like',
         object: {
-          id: trxId,
-          type: comment.extra.liked ? 'Dislike' : 'Like',
+          type: 'Note',
+          id,
         },
-      });
+      }, comment.groupId);
       console.log(res);
       commentStore.updateComment({
         ...comment,
@@ -173,7 +173,7 @@ export default observer((props: IProps) => {
           },
           'mobile-comment-item pt-4 pr-4 duration-500 ease-in-out pl-4 md:pt-4',
         )}
-        id={`comment_${comment.trxId}`}
+        id={`comment_${comment.id}`}
       >
         <div className="relative">
           <div className="avatar absolute top-0 left-0">
@@ -228,7 +228,7 @@ export default observer((props: IProps) => {
                       if (commentStore.mobile.topCommentPage.open) {
                         return;
                       }
-                      selectComment(comment.extra.replyComment?.trxId, {
+                      selectComment(comment.extra.replyComment?.id, {
                         useScrollIntoView: true,
                         behavior: 'smooth',
                       });
@@ -286,7 +286,7 @@ export default observer((props: IProps) => {
                   className={classNames({
                     'dark:text-white dark:text-opacity-80 text-black text-opacity-60 font-bold': comment.extra.liked
                   }, 'flex items-center cursor-pointer pr-6')}
-                  onClick={() => updateCounter(comment.trxId)}
+                  onClick={() => updateCounter(comment.id)}
                 >
                   <span className="flex items-center text-16 pr-1 md">
                     {comment.extra.liked ? (
@@ -312,7 +312,7 @@ export default observer((props: IProps) => {
                 <div
                   className='flex items-center justify-center cursor-pointer pr-6'
                   onClick={() => {
-                    copy(`${window.origin}/posts/${comment.objectId}?commentId=${comment.trxId}`);
+                    copy(`${window.origin}/posts/${comment.objectId}?commentId=${comment.id}`);
                     snackbarStore.show({
                       message: `链接${lang.copied}`,
                     });

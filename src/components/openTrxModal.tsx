@@ -4,7 +4,7 @@ import { observer, useLocalObservable } from 'mobx-react-lite';
 import Modal from 'components/Modal';
 import { StoreProvider } from 'store';
 import { ThemeRoot } from 'utils/theme';
-import { ITrx } from 'quorum-light-node-sdk';
+import { ITrx } from 'rum-sdk-browser';
 import { lang } from 'utils/lang';
 import Loading from 'components/Loading';
 import { useStore } from 'store';
