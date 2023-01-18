@@ -1,4 +1,4 @@
-const QuorumLightNodeSDK = require('quorum-light-node-sdk-nodejs');
+const rumsdk = require('rum-sdk-nodejs');
 const sleep = require('../utils/sleep');
 const handlePost = require('./handlePost');
 const handleComment = require('./handleComment');
@@ -13,6 +13,7 @@ const { shuffle } = require('lodash');
 const moment = require('moment');
 const shuffleChainApi = require('../utils/shuffleChainApi');
 const pendingTrxHelper = require('../utils/pendingTrxHelper');
+const handlePostDelete = require('./handlePostDelete');
 
 const jobShareData = {
   limit: 0,
@@ -24,13 +25,13 @@ const jobShareData = {
 module.exports = (duration) => {
   let stop = false;
 
-  QuorumLightNodeSDK.cache.Group.clear();
+  rumsdk.cache.Group.clear();
 
   (async () => {
     while (!stop) {
       const groups = await Group.findAll();
       for (const group of groups) {
-        QuorumLightNodeSDK.cache.Group.add(group.seedUrl);
+        rumsdk.cache.Group.add(group.seedUrl);
       }
       if (process.env.NODE_ENV === 'production-debug') {
         stop = true;
@@ -78,7 +79,7 @@ const startJob = async (groupId, duration) => {
           const chainAPIs = await shuffleChainApi(group.groupId);
           console.log(`[shuffleChainApi]:`, { groupId, chainAPIs });
         }
-        const contents = await QuorumLightNodeSDK.chain.Content.list(listOptions);
+        const contents = await rumsdk.chain.Content.list(listOptions);
         console.log(`${group.groupName} 请求回来了，获得 ${contents.length} 条`);
         while (jobShareData.handling) {
           await sleep(200);
@@ -126,6 +127,7 @@ const handleContents = async (group, contents) => {
         const type = getTrxType(content);
         switch(type) {
           case 'post': await handlePost(content, group); break;
+          case 'delete': await handlePostDelete(content, group); break;
           case 'comment': await handleComment(content, group); break;
           case 'counter': await handleCounter(content, group); break;
           case 'profile': await handleProfile(content); break;

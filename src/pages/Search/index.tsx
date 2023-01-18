@@ -71,7 +71,7 @@ export default observer(() => {
             changed = true;
           }
           if (changed) {
-            postStore.resetSearchedTrxIds();
+            postStore.resetSearchedIds();
             state.fetched = false;
             state.page = 1;
             fetchData();
@@ -104,7 +104,7 @@ export default observer(() => {
       });
       postStore.addSearchedPosts(posts);
       state.hasMore = posts.length === limit;
-      const showImageSmoothly = !state.fetched && postStore.searchedTrxIds.slice(0, 5).some((trxId) => (postStore.map[trxId].images || []).length > 0);
+      const showImageSmoothly = !state.fetched && postStore.searchedIds.slice(0, 5).some((id) => (postStore.map[id].images || []).length > 0);
         if (showImageSmoothly) {
           runInAction(() => {
             state.invisibleOverlay = true;
@@ -141,7 +141,7 @@ export default observer(() => {
   }
 
   const submit = () => {
-    postStore.resetSearchedTrxIds();
+    postStore.resetSearchedIds();
     state.fetched = false;
     state.page = 1;
     history.replace(`/search?${qs.stringify({
@@ -164,7 +164,7 @@ export default observer(() => {
               <div className="flex items-center text-30 ml-1 mr-3 dark:text-white dark:text-opacity-80 text-gray-88 mt-1 cursor-pointer" onClick={async () => {
                 pathStore.paths.length > 0 ? history.goBack() : history.replace(`/`);
                 await aliveController.drop('search');
-                postStore.resetSearchedTrxIds();
+                postStore.resetSearchedIds();
               }}>
                 <MdChevronLeft />
                 {isPc && <span className="text-14 mr-5">返回</span>}
@@ -211,7 +211,7 @@ export default observer(() => {
             'opacity-0': state.invisibleOverlay || !state.fetched || total === 0
           }, "md:mt-2 w-full box-border dark:md:border-t dark:md:border-l dark:md:border-r dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] md:rounded-12 overflow-hidden")}>
             {postStore.searchedPosts.map((post) => (
-              <div key={post.trxId}>
+              <div key={post.id}>
                 <PostItem
                   post={post}
                   where="postList"
@@ -241,4 +241,3 @@ export default observer(() => {
     </div>
   )
 });
-

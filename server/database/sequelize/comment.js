@@ -10,6 +10,10 @@ const Comment = sequelize.define('comments', {
     allowNull: false,
     primaryKey: true
   },
+  id: {
+    type: Sequelize.STRING,
+    defaultValue: ''
+  },
   content: {
     type: Sequelize.TEXT,
     defaultValue: ''
@@ -66,6 +70,8 @@ const Comment = sequelize.define('comments', {
   timestamps: false,
   indexes: [{
     fields: ['trxId']
+  }, {
+    fields: ['id']
   }, {
     fields: ['userAddress']
   }, {

@@ -4,7 +4,7 @@ import { IPost } from 'apis/types';
 import { RiThumbUpLine, RiThumbUpFill } from 'react-icons/ri';
 import Comment from 'components/Comment';
 import CommentMobile from 'components/Comment/Mobile';
-import { TrxStorage, OBJECT_STATUS_DELETED_LABEL } from 'apis/common';
+import { TrxStorage } from 'apis/common';
 import Fade from '@material-ui/core/Fade';
 import { useStore } from 'store';
 import classNames from 'classnames';
@@ -46,7 +46,7 @@ export default observer((props: IProps) => {
   const likeCount = post.likeCount;
   const history = useHistory()
 
-  const updateCounter = async (trxId: string) => {
+  const updateCounter = async (id: string) => {
     if (!userStore.isLogin) {
       openLoginModal();
       return;
@@ -57,13 +57,13 @@ export default observer((props: IProps) => {
     state.submitting = true;
     state.likeAnimating = !post.extra.liked;
     try {
-      const res = await TrxApi.createObject({
-        groupId: post.groupId,
+      const res = await TrxApi.createActivity({
+        type: 'Like',
         object: {
-          id: trxId,
-          type: post.extra.liked ? 'Dislike' : 'Like'
-        },
-      });
+          type: 'Note',
+          id,
+        }
+      }, post.groupId);
       console.log(res);
       postStore.updatePost({
         ...post,
@@ -85,20 +85,19 @@ export default observer((props: IProps) => {
     state.likeAnimating = false;
   }
 
-  const deletePost = async (trxId: string) => {
+  const deletePost = async (postId: string) => {
     if (state.submitting) {
       return;
     }
     state.submitting = true;
     try {
-      const res = await TrxApi.createObject({
-        groupId: post.groupId,
+      const res = await TrxApi.createActivity({
+        type: 'Delete',
         object: {
           type: 'Note',
-          content: OBJECT_STATUS_DELETED_LABEL,
-          id: trxId
+          id: postId,
         },
-      });
+      }, post.groupId);
       console.log(res);
     } catch (err) {
       console.log(err);
@@ -106,13 +105,13 @@ export default observer((props: IProps) => {
     state.submitting = false;
   }
 
-  const deletePostByAdmin = async (trxId: string) => {
+  const deletePostByAdmin = async (id: string) => {
     if (state.submitting) {
       return;
     }
     state.submitting = true;
     try {
-      await PostApi.remove(trxId);
+      await PostApi.remove(id);
     } catch (err) {
       console.log(err);
     }
@@ -131,7 +130,7 @@ export default observer((props: IProps) => {
               'flex items-center pl-0 p-2 pr-5 cursor-pointer tracking-wide',
             )}
             onClick={() => {
-              updateCounter(post.trxId);
+              updateCounter(post.id);
             }}
           >
             <div className="text-16 mr-[6px]">
@@ -162,7 +161,7 @@ export default observer((props: IProps) => {
                 return;
               }
               if (isMobile) {
-                history.push(`/posts/${post.trxId}`);
+                history.push(`/posts/${post.id}`);
                 return;
               }
               state.showComment = !state.showComment;
@@ -184,7 +183,7 @@ export default observer((props: IProps) => {
           <div
             className='flex items-center p-2 py-1 mr-5 cursor-pointer tracking-wide dark:text-white dark:text-opacity-50 opacity-80'
             onClick={() => {
-              copy(`${window.origin}/posts/${post.trxId}`);
+              copy(`${window.origin}/posts/${post.id}`);
               snackbarStore.show({
                 message: `链接${lang.copied}`,
               });
@@ -204,7 +203,6 @@ export default observer((props: IProps) => {
           </div>
           <div className="mt-[1px]">
             <ContentSyncStatus
-              trxId={post.trxId}
               storage={post.storage}
               SyncedComponent={() => (
                 <div className="mt-[-1px]">
@@ -235,7 +233,7 @@ export default observer((props: IProps) => {
                         cancelText: '取消',
                         ok: async () => {
                           confirmDialogStore.setLoading(true);
-                          await (deleteByAdmin ? deletePostByAdmin(post.trxId): deletePost(post.trxId));
+                          await (deleteByAdmin ? deletePostByAdmin(post.id): deletePost(post.id));
                           confirmDialogStore.hide();
                           await sleep(400);
                           if (props.where === 'postDetailModal') {
@@ -245,7 +243,7 @@ export default observer((props: IProps) => {
                           if (inPostDetail) {
                             history.push(`/`);
                           }
-                          postStore.removePost(post.trxId);
+                          postStore.removePost(post.id);
                           snackbarStore.show({
                             message: deleteByAdmin ? '已从界面上移除' : '已删除'
                           });

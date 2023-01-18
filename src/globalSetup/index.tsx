@@ -49,7 +49,7 @@ export default observer(() => {
       console.log('received a comment');
       console.log({ comment });
       commentStore.updateComment({
-        ...(commentStore.map[comment.trxId] || comment),
+        ...(commentStore.map[comment.id] || comment),
         storage: TrxStorage.chain
       });
     }
@@ -64,7 +64,7 @@ export default observer(() => {
       console.log('received a post', post);
       console.log({ post });
       postStore.updatePost({
-        ...(postStore.map[post.trxId] || post),
+        ...(postStore.map[post.id] || post),
         storage: TrxStorage.chain
       });
     }

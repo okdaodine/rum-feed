@@ -8588,24 +8588,6 @@ quick-lru@^5.1.1:
   resolved "https://registry.npmmirror.com/quick-lru/-/quick-lru-5.1.1.tgz#366493e6b3e42a3a6885e2e99d18f80fb7a8c932"
   integrity sha512-WuyALRjWPDGtt/wzJiadO5AXY+8hZ80hVpe6MyivgraREW751X3SbhRvG3eLKOYN+8VEvqLcf3wdnt44Z4S4SA==
 
-quorum-light-node-sdk@0.1.36:
-  version "0.1.36"
-  resolved "https://registry.npmjs.org/quorum-light-node-sdk/-/quorum-light-node-sdk-0.1.36.tgz#f66d382d187298f8140480ae9d24ee4a42364bda"
-  integrity sha512-Q7TKnuErQRDzftuiWtjDLxICCInhkk5pPpRwR8k8Bggu/uwEGANuJZH8cn3wzaGp3RZNiP4Oz7ZmqLb3gkhYFw==
-  dependencies:
-    "@types/crypto-js" "^4.1.1"
-    "@types/node-localstorage" "^1.3.0"
-    "@types/uuid" "^8.3.4"
-    axios "^0.27.2"
-    crypto-js "^4.1.1"
-    ethereumjs-util "7.1.0"
-    ethers "^5.6.9"
-    js-base64 "^3.7.2"
-    node-localstorage "^2.2.1"
-    protobufjs "^6.11.3"
-    store2 "^2.13.2"
-    uuid "^8.3.2"
-
 raf@^3.4.1:
   version "3.4.1"
   resolved "https://registry.npmmirror.com/raf/-/raf-3.4.1.tgz#0742e99a4a6552f445d73e3ee0328af0ff1ede39"
@@ -9109,6 +9091,24 @@ rollup@^2.43.1:
   integrity sha512-VSE1iy0eaAYNCxEXaleThdFXqZJ42qDBatAwrfnPlENEZ8erQ+0LYX4JXOLPceWfZpV1VtZwZ3dFCuOZiSyFtQ==
   optionalDependencies:
     fsevents "~2.3.2"
+
+rum-sdk-browser@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.npmmirror.com/rum-sdk-browser/-/rum-sdk-browser-1.1.1.tgz#c7ede0cc75cd34d4771b0180604256e1e9a2f4c7"
+  integrity sha512-VMpk/qj74RYZOdLb5EiXhvBIvS+tnNHHId6leMqNWtuYbK7XN6QGUv8uwYmLpOxmN+Idn02LAT0KZBhilT3+Fg==
+  dependencies:
+    "@types/crypto-js" "^4.1.1"
+    "@types/node-localstorage" "^1.3.0"
+    "@types/uuid" "^8.3.4"
+    axios "^0.27.2"
+    crypto-js "^4.1.1"
+    ethereumjs-util "7.1.0"
+    ethers "^5.6.9"
+    js-base64 "^3.7.2"
+    node-localstorage "^2.2.1"
+    protobufjs "^6.11.3"
+    store2 "^2.13.2"
+    uuid "^8.3.2"
 
 run-parallel@^1.1.9:
   version "1.2.0"
@@ -10157,6 +10157,11 @@ uuid@^8.3.2:
   version "8.3.2"
   resolved "https://registry.npmmirror.com/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
   integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
+
+uuid@^9.0.0:
+  version "9.0.0"
+  resolved "https://registry.npmmirror.com/uuid/-/uuid-9.0.0.tgz#592f550650024a38ceb0c562f2f6aa435761efb5"
+  integrity sha512-MXcSTerfPa4uqyzStbRoTgt5XIe3x5+42+q1sDuy3R5MDk66URdLMOZe5aPX/SQd+kuYAh0FdP/pO28IkQyTeg==
 
 v8-compile-cache@^2.0.3:
   version "2.3.0"

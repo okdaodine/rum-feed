@@ -101,26 +101,26 @@ export default observer((props: IMessagesProps) => {
                             if (isMobile) {
                               props.close();
                               await sleep(400);
-                              toPost(`/posts/${(toObject as IPost).trxId}`);
+                              toPost(`/posts/${(toObject as IPost).id}`);
                             } else {
                               modalStore.postDetail.show({
-                                trxId: (toObject as IPost).trxId,
+                                id: (toObject as IPost).id,
                               });
                             }
                           }
                           if (notification.toObjectType === 'comment') {
                             if (isMobile) {
                               const objectId = (toObject as IComment).objectId;
-                              const commentId = (toObject as IComment).trxId;
+                              const commentId = (toObject as IComment).id;
                               props.close();
                               await sleep(400);
                               toPost(`/posts/${objectId}?commentId=${commentId}`);
                             } else {
                               Query.set({
-                                commentId: (toObject as IComment).trxId
+                                commentId: (toObject as IComment).id
                               });
                               modalStore.postDetail.show({
-                                trxId: (toObject as IComment).objectId,
+                                id: (toObject as IComment).objectId,
                               });
                             }
                           }

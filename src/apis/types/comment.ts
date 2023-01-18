@@ -13,6 +13,7 @@ export interface IComment extends ICommentContent {
   userAddress: string
   groupId: string
   trxId: string
+  id: string
   storage: TrxStorage
   timestamp: number
   commentCount: number

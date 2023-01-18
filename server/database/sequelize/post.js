@@ -8,6 +8,10 @@ const Post = sequelize.define('posts', {
     allowNull: false,
     primaryKey: true
   },
+  id: {
+    type: Sequelize.STRING,
+    defaultValue: ''
+  },
   latestTrxId: {
     type: Sequelize.STRING,
     defaultValue: ''
@@ -59,6 +63,8 @@ const Post = sequelize.define('posts', {
   timestamps: false,
   indexes: [{
     fields: ['trxId']
+  }, {
+    fields: ['id']
   }, {
     fields: ['userAddress']
   }, {

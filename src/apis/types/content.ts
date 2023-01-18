@@ -1,4 +1,4 @@
-import { IContent as _IContent } from 'quorum-light-node-sdk';
+import { IContent as _IContent } from 'rum-sdk-browser';
 
 export interface IContent extends _IContent {
   id: number,

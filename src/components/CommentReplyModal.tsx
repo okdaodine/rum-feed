@@ -4,7 +4,7 @@ import CommentItem from 'components/Comment/Item';
 import { useStore } from 'store';
 import Editor from 'components/Editor';
 import { lang } from 'utils/lang';
-import { IObject } from 'quorum-light-node-sdk';
+import { IActivity } from 'rum-sdk-browser';
 
 const Reply = observer(() => {
   const { modalStore, groupStore } = useStore();
@@ -25,21 +25,29 @@ const Reply = observer(() => {
           <div className="mt-3">
             <Editor
               groupId={groupStore.defaultGroup.groupId}
-              editorKey={`comment_reply_${comment.trxId}`}
+              editorKey={`comment_reply_${comment.id}`}
               minRows={3}
               placeholder={`${lang.reply} ${comment.extra.userProfile.name}`}
               autoFocus
               submit={async (data) => {
-                const payload: IObject = {
-                  type: 'Note',
-                  content: data.content,
-                  inreplyto: {
-                    trxid: comment.trxId
-                  }
+                const payload: IActivity = {
+                  type: 'Create',
+                  object: {
+                    type: 'Note',
+                    content: data.content,
+                    inreplyto: {
+                      type: 'Note',
+                      id: comment.id
+                    },
+                    ...data.images ? {
+                      image: data.images.map(v => ({
+                        type: 'Image',
+                        mediaType: v.mediaType,
+                        content: v.content,
+                      }))
+                    } : {}
+                  },
                 };
-                if (data.images) {
-                  payload.image = data.images;
-                }
                 await submit(payload);
                 modalStore.commentReply.hide();
               }}

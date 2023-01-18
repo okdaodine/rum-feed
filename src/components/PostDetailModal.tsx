@@ -9,13 +9,13 @@ import Modal from 'components/Modal';
 
 const PostDetail = observer(() => {
   const { modalStore } = useStore();
-  const { trxId } = modalStore.postDetail.data;
+  const { id } = modalStore.postDetail.data;
   const { postStore, userStore } = useStore();
   const state = useLocalObservable(() => ({
     open: true,
     loading: true,
   }));
-  const post = postStore.map[trxId];
+  const post = postStore.map[id];
 
   React.useEffect(() => {
     if (post) {
@@ -24,7 +24,7 @@ const PostDetail = observer(() => {
     }
     (async () => {
       try {
-        const post = await PostApi.get(trxId, {
+        const post = await PostApi.get(id, {
           viewer: userStore.address
         });
         postStore.tryAddPostToMap(post);

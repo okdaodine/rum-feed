@@ -6,53 +6,53 @@ export type FeedType = 'following' | 'latest' | 'random';
 
 export function createPostStore() {
   return {
-    trxIds: [] as string[],
+    ids: [] as string[],
 
-    groupTrxIds: [] as string[],
+    groupIds: [] as string[],
 
-    userTrxIds: [] as string[],
+    userIds: [] as string[],
 
-    searchedTrxIds: [] as string[],
+    searchedIds: [] as string[],
 
     map: {} as Record<string, IPost>,
 
     feedType: (store('feedType') || 'latest') as FeedType,
 
     get total() {
-      return this.trxIds.length;
+      return this.ids.length;
     },
 
     get groupTotal() {
-      return this.groupTrxIds.length;
+      return this.groupIds.length;
     },
 
     get userTotal() {
-      return this.userTrxIds.length;
+      return this.userIds.length;
     },
 
     get searchTotal() {
-      return this.searchedTrxIds.length;
+      return this.searchedIds.length;
     },
 
     get posts() {
-      return this.trxIds.map((rId: string) => this.map[rId]);
+      return this.ids.map((rId: string) => this.map[rId]);
     },
 
     get groupPosts() {
-      return this.groupTrxIds.map((rId: string) => this.map[rId]);
+      return this.groupIds.map((rId: string) => this.map[rId]);
     },
 
     get userPosts() {
-      return this.userTrxIds.map((rId: string) => this.map[rId]);
+      return this.userIds.map((rId: string) => this.map[rId]);
     },
 
     get searchedPosts() {
-      return this.searchedTrxIds.map((rId: string) => this.map[rId]);
+      return this.searchedIds.map((rId: string) => this.map[rId]);
     },
 
     clear() {
       runInAction(() => {
-        this.trxIds = [];
+        this.ids = [];
         this.map = {};
       })
     },
@@ -60,8 +60,8 @@ export function createPostStore() {
     addPosts(posts: IPost[]) {
       runInAction(() => {
         for (const post of posts) {
-          if (!this.trxIds.includes(post.trxId)) {
-            this.trxIds.push(post.trxId);
+          if (!this.ids.includes(post.id)) {
+            this.ids.push(post.id);
           }
           this.tryAddPostToMap(post);
         }
@@ -70,7 +70,7 @@ export function createPostStore() {
 
     addPost(post: IPost) {
       runInAction(() => {
-        this.trxIds.unshift(post.trxId);
+        this.ids.unshift(post.id);
         this.tryAddPostToMap(post);
       })
     },
@@ -78,8 +78,8 @@ export function createPostStore() {
     addGroupPosts(posts: IPost[]) {
       runInAction(() => {
         for (const post of posts) {
-          if (!this.groupTrxIds.includes(post.trxId)) {
-            this.groupTrxIds.push(post.trxId);
+          if (!this.groupIds.includes(post.id)) {
+            this.groupIds.push(post.id);
           }
           this.tryAddPostToMap(post);
         }
@@ -89,8 +89,8 @@ export function createPostStore() {
     addUserPosts(posts: IPost[]) {
       runInAction(() => {
         for (const post of posts) {
-          if (!this.userTrxIds.includes(post.trxId)) {
-            this.userTrxIds.push(post.trxId);
+          if (!this.userIds.includes(post.id)) {
+            this.userIds.push(post.id);
           }
           this.tryAddPostToMap(post);
         }
@@ -100,8 +100,8 @@ export function createPostStore() {
     addSearchedPosts(posts: IPost[]) {
       runInAction(() => {
         for (const post of posts) {
-          if (!this.searchedTrxIds.includes(post.trxId)) {
-            this.searchedTrxIds.push(post.trxId);
+          if (!this.searchedIds.includes(post.id)) {
+            this.searchedIds.push(post.id);
           }
           this.tryAddPostToMap(post);
         }
@@ -110,39 +110,39 @@ export function createPostStore() {
 
     addGroupPost(post: IPost) {
       runInAction(() => {
-        this.groupTrxIds.unshift(post.trxId);
+        this.groupIds.unshift(post.id);
         this.tryAddPostToMap(post);
       })
     },
 
     addUserPost(post: IPost) {
       runInAction(() => {
-        this.userTrxIds.unshift(post.trxId);
+        this.userIds.unshift(post.id);
         this.tryAddPostToMap(post);
       })
     },
 
     tryAddPostToMap(post: IPost) {
-      if (!this.map[post.trxId]) {
-        this.map[post.trxId] = post;
+      if (!this.map[post.id]) {
+        this.map[post.id] = post;
       }
     },
 
-    removePost(trxId: string) {
+    removePost(id: string) {
       runInAction(() => {
-        this.trxIds = this.trxIds.filter(t => t !== trxId);
-        this.userTrxIds = this.userTrxIds.filter(t => t !== trxId);
-        this.searchedTrxIds = this.searchedTrxIds.filter(t => t !== trxId);
-        delete this.map[trxId];
+        this.ids = this.ids.filter(t => t !== id);
+        this.userIds = this.userIds.filter(t => t !== id);
+        this.searchedIds = this.searchedIds.filter(t => t !== id);
+        delete this.map[id];
       });
     },
 
     removePostByUser(address: string) {
-      this.trxIds = this.trxIds.filter(trxId => this.map[trxId].userAddress !== address);
+      this.ids = this.ids.filter(id => this.map[id].userAddress !== address);
     },
 
     updatePost(post: IPost) {
-      const item = this.map[post.trxId];
+      const item = this.map[post.id];
       if (item) {
         item.storage = post.storage;
         item.likeCount = post.likeCount;
@@ -151,20 +151,20 @@ export function createPostStore() {
       }
     },
 
-    resetTrxIds() {
-      this.trxIds = [];
+    resetIds() {
+      this.ids = [];
     },
 
-    resetGroupTrxIds() {
-      this.groupTrxIds = [];
+    resetGroupIds() {
+      this.groupIds = [];
     },
 
-    resetUserTrxIds() {
-      this.userTrxIds = [];
+    resetUserIds() {
+      this.userIds = [];
     },
 
-    resetSearchedTrxIds() {
-      this.searchedTrxIds = [];
+    resetSearchedIds() {
+      this.searchedIds = [];
     },
 
     setFeedType(feedType: FeedType) {

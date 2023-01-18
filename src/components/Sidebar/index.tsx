@@ -194,7 +194,7 @@ export default observer(() => {
                   onClick={async () => {
                     const result = await openSearchModal();
                     if (result) {
-                      postStore.resetSearchedTrxIds();
+                      postStore.resetSearchedIds();
                       await aliveController.drop('search');
                       history.push(`/search?${qs.stringify(result!, {
                         skipEmptyString: true
@@ -388,7 +388,7 @@ export default observer(() => {
                       openLoginModal();
                       return;
                     }
-                    postStore.resetSearchedTrxIds();
+                    postStore.resetSearchedIds();
                     await aliveController.drop('search');
                     history.push(`/search`);
                   }}
@@ -442,4 +442,3 @@ export default observer(() => {
     </div>
   );
 });
-

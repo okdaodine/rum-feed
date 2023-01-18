@@ -1,5 +1,5 @@
 const { shuffle } = require('lodash');
-const QuorumLightNodeSDK = require('quorum-light-node-sdk-nodejs');
+const rumsdk = require('rum-sdk-nodejs');
 const { assert, Errors } = require('../utils/validator');
 const Group = require('../database/sequelize/group');
 
@@ -20,7 +20,7 @@ module.exports = async groupId => {
       groupId
     }
   })
-  QuorumLightNodeSDK.cache.Group.remove(groupId);
-  QuorumLightNodeSDK.cache.Group.add(seedUrl);
+  rumsdk.cache.Group.remove(groupId);
+  rumsdk.cache.Group.add(seedUrl);
   return chainAPIs;
 }

@@ -72,18 +72,49 @@ const UserList = observer((props: IProps) => {
     }
     state.submitting = true;
     try {
-      const res = await TrxApi.createObject({
-        groupId: groupStore.relationGroup.groupId,
-        object: {
-          type: 'Note',
-          content: JSON.stringify({
-            groupId: groupStore.defaultGroup.groupId,
-            type,
-            to: relation.to
-          })
-        },
-      });
-      console.log(res);
+
+      if (type === 'unfollow') {
+        const res = await TrxApi.createActivity({
+          type: 'Ignore',
+          object: {
+            type: 'Person',
+            id: relation.to,
+          },
+          target: {
+            type: 'Group',
+            id: groupStore.defaultGroup.groupId,
+          }
+        }, groupStore.relationGroup.groupId);
+        console.log(res);
+      }
+
+      if (type === 'unmute') {
+        const res = await TrxApi.createActivity({
+          type: 'Unblock',
+          object: {
+            type: 'Person',
+            id: relation.to,
+          },
+          target: {
+            type: 'Group',
+            id: groupStore.defaultGroup.groupId,
+          }
+        }, groupStore.relationGroup.groupId);
+        console.log(res);
+      }
+
+      // const res = await TrxApi.createObject({
+      //   groupId: groupStore.relationGroup.groupId,
+      //   object: {
+      //     type: 'Note',
+      //     content: JSON.stringify({
+      //       groupId: groupStore.defaultGroup.groupId,
+      //       type,
+      //       to: relation.to
+      //     })
+      //   },
+      // });
+      
       state.relations = state.relations.filter(r => r.to !== relation.to);
       if (type === 'unfollow') {
         userStore.updateUser(userStore.address, {

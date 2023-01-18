@@ -9,10 +9,10 @@ exports.create = async (item) => {
   return await Comment.create(item);
 };
 
-exports.update = async (trxId, item) => {
+exports.update = async (id, item) => {
   return await Comment.update(item, {
     where: {
-      trxId
+      id
     }
   });
 };
@@ -27,10 +27,10 @@ exports.replaceObjectId = async (objectId, newObjectId) => {
   });
 };
 
-exports.get = async (trxId, options = {}) => {
+exports.get = async (id, options = {}) => {
   const query = {
     where: {
-      trxId
+      id
     }
   };
   if (options.withReplacedImage) {
@@ -49,10 +49,10 @@ exports.get = async (trxId, options = {}) => {
   return result;
 };
 
-exports.destroy = async (trxId) => {
+exports.destroy = async (id) => {
   await Comment.destroy({
     where: {
-      trxId
+      id
     }
   });
 };
@@ -75,7 +75,7 @@ exports.count = async (query) => {
 }
 
 const bulkAppendExtra = async (items, options = {}) => {
-  const itemsMap = keyBy(items, 'trxId');
+  const itemsMap = keyBy(items, 'id');
   items = items.map((item) => {
     item.extra = item.extra || {};
     if (item.replyId) {
@@ -92,7 +92,7 @@ const bulkAppendExtra = async (items, options = {}) => {
     });
     items = items.map((item) => {
       item.extra = item.extra || {};
-      item.extra.liked = !!likedMap[item.trxId]
+      item.extra.liked = !!likedMap[item.id]
       return item;
     });
   }
@@ -113,7 +113,7 @@ const bulkAppendExtra = async (items, options = {}) => {
 const getCounterMap = async (p) => {
   const counters = await UniqueCounter.bulkGet(p.items.map((item) => ({
     name: p.counterName,
-    objectId: item.trxId,
+    objectId: item.id,
     userAddress: p.userAddress
   })));
   return keyBy(counters, (counter) => counter.objectId);
@@ -123,7 +123,7 @@ const replaceImages = item => {
   if (item.imageCount > 0) {
     item.images = [];
     for (let i = 0; i < item.imageCount; i++) {
-      item.images.push(`${config.serverOrigin || config.origin || ''}/api/images/comments/${item.trxId}/${i}`);
+      item.images.push(`${config.serverOrigin || config.origin || ''}/api/images/comments/${item.id}/${i}`);
     }
   }
   return item;
