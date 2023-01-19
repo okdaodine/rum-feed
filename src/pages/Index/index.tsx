@@ -12,11 +12,12 @@ import classNames from 'classnames';
 import useInfiniteScroll from 'react-infinite-scroll-hook';
 import Loading from 'components/Loading';
 import openLoginModal from 'components/openLoginModal';
-import { IObject } from 'quorum-light-node-sdk';
+import { IActivity } from 'rum-sdk-browser';
 import Button from 'components/Button';
 import { isMobile } from 'utils/env';
-import Base64 from 'utils/base64';
 import TopPlaceHolder from 'components/TopPlaceHolder';
+import { v4 } from 'uuid';
+import base64 from 'utils/base64';
 
 export default observer(() => {
   const { userStore, postStore, groupStore } = useStore();
@@ -45,7 +46,7 @@ export default observer(() => {
       });
       postStore.addPosts(posts);
       state.hasMore = posts.length === limit;
-      const showImageSmoothly = !state.fetched && postStore.trxIds.slice(0, 5).some((trxId) => (postStore.map[trxId].images || []).length > 0);
+      const showImageSmoothly = !state.fetched && postStore.ids.slice(0, 5).some((id) => (postStore.map[id].images || []).length > 0);
         if (showImageSmoothly) {
           runInAction(() => {
             state.invisibleOverlay = true;
@@ -75,7 +76,7 @@ export default observer(() => {
       state.fetched = false;
       state.fetching = true;
       state.page = 1;
-      postStore.resetTrxIds();
+      postStore.resetIds();
       fetchData();
     }
   }, [postStore.feedType])
@@ -89,28 +90,26 @@ export default observer(() => {
     },
   });
 
-  const submitPost = async (payload: IObject) => {
+  const submitPost = async (activity: IActivity) => {
     if (!userStore.isLogin) {
       openLoginModal();
       return;
     }
-    const res = await TrxApi.createObject({
-      groupId: groupStore.defaultGroup.groupId,
-      object: payload,
-    });
+    const res = await TrxApi.createActivity(activity, groupStore.defaultGroup.groupId);
     console.log(res);
     const post: IPost = {
-      content: payload.content || '',
-      images: (payload.image || []).map(image => Base64.getUrl(image)),
+      content: activity.object?.content || '',
+      images: activity.object?.image?.map(image => base64.getUrl(image as any)) ?? [],
       userAddress: userStore.address,
       groupId: groupStore.defaultGroup.groupId,
       trxId: res.trx_id,
+      id: activity.object?.id ?? '',
       latestTrxId: '',
       storage: TrxStorage.cache,
       commentCount: 0,
       hotCount: 0,
       likeCount: 0,
-      imageCount: (payload.image || []).length,
+      imageCount: (activity.object?.image || []).length,
       timestamp: Date.now(),
       extra: {
         userProfile: userStore.profile,
@@ -137,13 +136,21 @@ export default observer(() => {
               autoFocusDisabled
               minRows={3}
               submit={(data) => {
-                const payload: IObject = {
-                  type: 'Note',
-                  content: data.content,
+                const payload: IActivity = {
+                  type: 'Create', 
+                  object: {
+                    type: 'Note',
+                    id: v4(),
+                    content: data.content,
+                    ...data.images ? {
+                      image: data.images.map(v => ({
+                        type: 'Image',
+                        mediaType: v.mediaType,
+                        content: v.content,
+                      }))
+                    } : {}
+                  }
                 };
-                if (data.images) {
-                  payload.image = data.images;
-                }
                 return submitPost(payload);
               }}
               enabledImage
@@ -153,7 +160,7 @@ export default observer(() => {
             'opacity-0': state.invisibleOverlay || !state.fetched
           }, "md:mt-5 w-full box-border dark:md:border-t dark:md:border-l dark:md:border-r dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] md:rounded-12 overflow-hidden")}>
             {postStore.posts.map((post) => (
-              <div key={post.trxId}>
+              <div key={post.id}>
                 <PostItem
                   post={post}
                   where="postList"
@@ -191,4 +198,3 @@ export default observer(() => {
     </div>
   )
 });
-

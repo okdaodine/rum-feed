@@ -8,7 +8,6 @@ import { lang } from 'utils/lang';
 import { TrxStorage } from 'apis/common';
 
 interface IProps {
-  trxId: string
   storage: TrxStorage
   SyncedComponent?: any
   positionClassName?: string

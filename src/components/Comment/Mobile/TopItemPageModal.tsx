@@ -9,7 +9,7 @@ import { IPost, IComment } from 'apis/types';
 
 interface IProps {
   replyTo: (comment: IComment) => void
-  selectComment: (trxId: string, options: any) => any
+  selectComment: (id: string, options: any) => any
   post: IPost
 }
 
@@ -52,17 +52,17 @@ export default observer((props: IProps) => {
                 noSubComments
               />
             </div>
-            {subCommentsGroupMap[topComment.trxId] && (
+            {subCommentsGroupMap[topComment.id] && (
               <div>
                 <div className="pb-6-px dark:bg-[#181818] bg-gray-f7" />
                 <div className="pt-3 pb-1 px-4 text-16 font-bold dark:text-white dark:text-opacity-80 text-gray-700">
-                  全部回复（{subCommentsGroupMap[topComment.trxId].length}）
+                  全部回复（{subCommentsGroupMap[topComment.id].length}）
                 </div>
                 <div className="ios-safe-area-padding">
-                  {subCommentsGroupMap[topComment.trxId].map(
+                  {subCommentsGroupMap[topComment.id].map(
                     (subComment: IComment, index: number) => {
-                      const isLast = index === subCommentsGroupMap[topComment.trxId].length - 1;
-                      const highlight = selectedComment?.trxId === subComment.trxId;
+                      const isLast = index === subCommentsGroupMap[topComment.id].length - 1;
+                      const highlight = selectedComment?.id === subComment.id;
                       return (
                         <div key={index}>
                           <CommentItem
@@ -79,7 +79,7 @@ export default observer((props: IProps) => {
                     },
                   )}
                 </div>
-                {subCommentsGroupMap[topComment.trxId].length > 2 && (
+                {subCommentsGroupMap[topComment.id].length > 2 && (
                   <div className="pt-5">
                     <BottomLine />
                   </div>

@@ -5,12 +5,12 @@ const truncate = require('../utils/truncate');
 const { Op } = require("sequelize");
 const { groupBy } = require('lodash');
 
-router.get('/:trxId', get);
+router.get('/:id', get);
 router.get('/', list);
 
 async function get(ctx) {
-  const trxId = ctx.params.trxId;
-  const comment = await Comment.get(trxId, {
+  const id = ctx.params.id;
+  const comment = await Comment.get(id, {
     withReplacedImage: true,
     withExtra: true
   });
@@ -36,11 +36,11 @@ async function list(ctx) {
     withExtra: true,
     viewer: ctx.query.viewer
   });
-  const subCommentTrxIds = comments.map(item => item.trxId);
-  let subComments = subCommentTrxIds.length > 0 ? await Comment.list({
+  const subCommentIds = comments.map(item => item.id);
+  let subComments = subCommentIds.length > 0 ? await Comment.list({
     where: {
       threadId: {
-        [Op.or]: subCommentTrxIds
+        [Op.or]: subCommentIds
       }
     },
     order: [
@@ -56,8 +56,8 @@ async function list(ctx) {
       item.content = truncate(item.content, ~~ctx.query.truncatedLength)
     }
     const subItemsMap = groupBy(subComments, 'threadId');
-    if (subItemsMap[item.trxId]) {
-      item.extra.comments = subItemsMap[item.trxId];
+    if (subItemsMap[item.id]) {
+      item.extra.comments = subItemsMap[item.id];
     }
     return item;
   });

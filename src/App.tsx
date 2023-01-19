@@ -45,7 +45,7 @@ const App = observer(() => {
                   <Search />
                 </KeepAlive>
               )} />
-              <Route path="/posts/:trxId" exact component={PostDetail} />
+              <Route path="/posts/:id" exact component={PostDetail} />
               <Route path="/users/:userAddress" exact render={props => (
                 <KeepAlive name='user' when={() => (
                   window.location.pathname.startsWith(`/posts`)

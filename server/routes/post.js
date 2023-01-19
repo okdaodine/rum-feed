@@ -6,13 +6,13 @@ const Relation = require('../database/sequelize/relation');
 const { Op, fn } = require("sequelize");
 const { ensurePermission } = require('../middleware/api');
 
-router.get('/:trxId', get);
-router.delete('/:trxId', ensurePermission, remove);
+router.get('/:id', get);
+router.delete('/:id', ensurePermission, remove);
 router.get('/', list);
 
 async function get(ctx) {
-  const trxId = ctx.params.trxId;
-  const post = await Post.get(trxId, {
+  const id = ctx.params.id;
+  const post = await Post.get(id, {
     withReplacedImage: true,
     withExtra: true,
     viewer: ctx.query.viewer
@@ -113,7 +113,7 @@ async function list(ctx) {
 }
 
 async function remove(ctx) {
-  await Post.destroy(ctx.params.trxId);
+  await Post.destroy(ctx.params.id);
   ctx.body = true;
 }
 

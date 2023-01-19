@@ -229,7 +229,7 @@ export default observer((props: IProps) => {
                 }, "flex items-center text-gray-88 opacity-70 dark:text-white dark:opacity-40 text-12 tracking-wide cursor-pointer")}
                 onClick={() => {
                   if (isMobile || !inPostDetail) {
-                    history.push(`/posts/${post.trxId}`);
+                    history.push(`/posts/${post.id}`);
                   }
                 }}
               >
@@ -262,7 +262,7 @@ export default observer((props: IProps) => {
                   }}
                   onClick={() => {
                     if (isMobile) {
-                      history.push(`/posts/${post.trxId}`);
+                      history.push(`/posts/${post.id}`);
                     }
                   }}
                 />

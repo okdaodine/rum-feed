@@ -1,6 +1,6 @@
 const router = require('koa-router')();
 const { assert, Errors } = require('../utils/validator');
-const QuorumLightNodeSDK = require('quorum-light-node-sdk-nodejs');
+const rumsdk = require('rum-sdk-nodejs');
 const { Op } = require("sequelize");
 const Group = require('../database/sequelize/group');
 const Seed = require('../database/sequelize/seed');
@@ -85,7 +85,7 @@ async function _shuffleChainApi(ctx) {
 }
 
 const pack = group => {
-  const rawGroup = QuorumLightNodeSDK.cache.Group.get(group.groupId);
+  const rawGroup = rumsdk.cache.Group.get(group.groupId);
   const [ baseUrl ] = group.seedUrl.split('&u=');
   const seedUrl = baseUrl + '&u=' + rawGroup.chainAPIs.join('|');
   return {
@@ -117,7 +117,7 @@ async function remove(ctx) {
   await Comment.destroy({ where: { groupId }});
   await Profile.destroy({ where: { groupId }});
   await Notification.destroy({ where: { groupId }});
-  QuorumLightNodeSDK.cache.Group.remove(groupId);
+  rumsdk.cache.Group.remove(groupId);
   ctx.body = true;
 }
 

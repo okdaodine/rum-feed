@@ -29,7 +29,7 @@ export default observer((props: Props) => {
         ] as const)
           .filter(<T extends unknown>(v: T | undefined | boolean): v is T => !!v)
           .map((v, i) => (
-            <div className="mt-4 flex justify-center w-full">
+            <div className="mt-4 flex justify-center w-full" key={i}>
               <Button
                 fullWidth
                 onClick={() => selectMenuItem(v[0] as MenuItemActions)}

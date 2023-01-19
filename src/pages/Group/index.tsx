@@ -12,14 +12,15 @@ import classNames from 'classnames';
 import useInfiniteScroll from 'react-infinite-scroll-hook';
 import Loading from 'components/Loading';
 import openLoginModal from 'components/openLoginModal';
-import { IObject } from 'quorum-light-node-sdk';
 import Button from 'components/Button';
 import { isMobile } from 'utils/env';
-import Base64 from 'utils/base64';
 import TopPlaceHolder, { scrollToTop } from 'components/TopPlaceHolder';
 import { RouteChildrenProps } from 'react-router-dom';
 import { useActivate, useUnactivate } from 'react-activation';
 import sleep from 'utils/sleep';
+import { IActivity } from 'rum-sdk-browser';
+import { v4 } from 'uuid';
+import base64 from 'utils/base64';
 
 import './index.css';
 
@@ -64,7 +65,7 @@ export default observer((props: RouteChildrenProps) => {
   });
 
   React.useEffect(() => {
-    postStore.resetGroupTrxIds();
+    postStore.resetGroupIds();
     const fetched = state.fetched;
     if (fetched) {
       state.fetchedPosts = false;
@@ -106,7 +107,7 @@ export default observer((props: RouteChildrenProps) => {
       });
       postStore.addGroupPosts(posts);
       state.hasMore = posts.length === limit;
-      const showImageSmoothly = !state.fetchedPosts && postStore.trxIds.slice(0, 5).some((trxId) => (postStore.map[trxId].images || []).length > 0);
+      const showImageSmoothly = !state.fetchedPosts && postStore.ids.slice(0, 5).some((id) => (postStore.map[id].images || []).length > 0);
         if (showImageSmoothly) {
           runInAction(() => {
             state.invisibleOverlay = true;
@@ -139,7 +140,7 @@ export default observer((props: RouteChildrenProps) => {
       state.fetchedPosts = false;
       state.fetchingPosts = true;
       state.page = 1;
-      postStore.resetTrxIds();
+      postStore.resetIds();
       fetchPosts();
     }
   }, [postStore.feedType])
@@ -153,28 +154,26 @@ export default observer((props: RouteChildrenProps) => {
     },
   });
 
-  const submitPost = async (payload: IObject) => {
+  const submitPost = async (activity: IActivity) => {
     if (!userStore.isLogin) {
       openLoginModal();
       return;
     }
-    const res = await TrxApi.createObject({
-      groupId,
-      object: payload,
-    });
+    const res = await TrxApi.createActivity(activity, groupId);
     console.log(res);
     const post: IPost = {
-      content: payload.content || '',
-      images: (payload.image || []).map(image => Base64.getUrl(image)),
+      content: activity.object?.content || '',
+      images: activity.object?.image?.map(image => base64.getUrl(image as any)) ?? [],
       userAddress: userStore.address,
       groupId,
       trxId: res.trx_id,
+      id: activity.object?.id ?? '',
       latestTrxId: '',
       storage: TrxStorage.cache,
       commentCount: 0,
       hotCount: 0,
       likeCount: 0,
-      imageCount: (payload.image || []).length,
+      imageCount: (activity.object?.image || []).length,
       timestamp: Date.now(),
       extra: {
         userProfile: userStore.profile,
@@ -226,13 +225,21 @@ export default observer((props: RouteChildrenProps) => {
                     autoFocusDisabled
                     minRows={3}
                     submit={(data) => {
-                      const payload: IObject = {
-                        type: 'Note',
-                        content: data.content,
+                      const payload: IActivity = {
+                        type: 'Create',
+                        object: {
+                          id: v4(),
+                          type: 'Note',
+                          content: data.content,
+                          ...data.images ? {
+                            image: data.images.map(v => ({
+                              type: 'Image',
+                              mediaType: v.mediaType,
+                              content: v.content,
+                            }))
+                          } : {}
+                        }
                       };
-                      if (data.images) {
-                        payload.image = data.images;
-                      }
                       return submitPost(payload);
                     }}
                     enabledImage
@@ -242,7 +249,7 @@ export default observer((props: RouteChildrenProps) => {
                   'opacity-0': state.invisibleOverlay || !state.fetched || postStore.groupTotal === 0
                 }, "md:mt-5 w-full box-border dark:md:border-t dark:md:border-l dark:md:border-r dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] md:rounded-12")}>
                   {postStore.groupPosts.map((post) => (
-                    <div key={post.trxId}>
+                    <div key={post.id}>
                       <PostItem
                         post={post}
                         where="postList"
@@ -283,4 +290,3 @@ export default observer((props: RouteChildrenProps) => {
     </div>
   )
 });
-

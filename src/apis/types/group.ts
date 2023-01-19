@@ -1,4 +1,4 @@
-import { IGroup as IRawGroup } from 'quorum-light-node-sdk';
+import { IGroup as IRawGroup } from 'rum-sdk-browser';
 
 export interface IGroup {
   groupId: string,

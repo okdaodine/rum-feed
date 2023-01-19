@@ -3,7 +3,7 @@ const Feature = require('../database/sequelize/feature');
 const Activity = require('../database/sequelize/activity');
 const { Op } = require("sequelize");
 const { assert, Errors } = require('../utils/validator');
-const { ethers } = require('quorum-light-node-sdk-nodejs');
+const { ethers } = require('rum-sdk-nodejs');
 
 router.get('/:userAddress', list);
 

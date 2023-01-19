@@ -4,7 +4,7 @@ import { IComment } from 'apis/types';
 
 export function createCommentStore() {
   return {
-    trxIdsSet: new Set(),
+    idsSet: new Set(),
 
     map: {} as Record<string, IComment>,
 
@@ -13,7 +13,7 @@ export function createCommentStore() {
     selectedComment: null as IComment | null,
 
     get comments() {
-      return this.trxIds.map((rId: string) => this.map[rId]);
+      return this.ids.map((rId: string) => this.map[rId]);
     },
 
     get commentsGroupMap() {
@@ -24,8 +24,8 @@ export function createCommentStore() {
       return map;
     },
 
-    get trxIds() {
-      return Array.from(this.trxIdsSet) as string[];
+    get ids() {
+      return Array.from(this.idsSet) as string[];
     },
 
     get subCommentsGroupMap() {
@@ -41,20 +41,20 @@ export function createCommentStore() {
     },
 
     reset() {
-      this.trxIdsSet.clear();
+      this.idsSet.clear();
       this.map = {};
     },
 
     addComments(comments: IComment[]) {
       runInAction(() => {
         for (const comment of comments) {
-          const { trxId } = comment;
-          this.map[trxId] = comment;
-          this.trxIdsSet.add(trxId);
+          const { id } = comment;
+          this.map[id] = comment;
+          this.idsSet.add(id);
           for (const subComment of comment.extra.comments || []) {
-            const { trxId } = subComment;
-            this.map[trxId] = subComment;
-            this.trxIdsSet.add(trxId);
+            const { id } = subComment;
+            this.map[id] = subComment;
+            this.idsSet.add(id);
           }
         }
       })
@@ -62,18 +62,18 @@ export function createCommentStore() {
 
     addComment(comment: IComment) {
       runInAction(() => {
-        const { trxId } = comment;
+        const { id } = comment;
         if (comment.replyId && !comment.extra.replyComment) {
           comment.extra.replyComment = this.map[comment.replyId];
         }
-        this.map[trxId] = comment;
-        this.trxIdsSet.add(trxId);
-        this.newCommentIdsSet.add(comment.trxId);
+        this.map[id] = comment;
+        this.idsSet.add(id);
+        this.newCommentIdsSet.add(comment.id);
       })
     },
 
     updateComment(comment: IComment) {
-      const item = this.map[comment.trxId];
+      const item = this.map[comment.id];
       if (item) {
         item.storage = comment.storage;
         item.likeCount = comment.likeCount;

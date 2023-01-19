@@ -9,7 +9,7 @@ import './items.css';
 
 interface IProps {
   replyTo: (comment: IComment) => void
-  selectComment: (trxId: string, options: any) => any
+  selectComment: (id: string, options: any) => any
   post: IPost
 }
 
@@ -34,14 +34,14 @@ export default observer((props: IProps) => {
       <div className="-mt-2 md:mt-0 md:border-t md:dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] border-gray-300 md:pt-5">
         {topComments.map((comment: IComment, index: number) => {
           const isTopLast = index === topComments.length - 1;
-          const highlight = selectedComment?.trxId === comment.trxId;
-          const subComments = subCommentsGroupMap[comment.trxId] || [];
+          const highlight = selectedComment?.id === comment.id;
+          const subComments = subCommentsGroupMap[comment.id] || [];
           const hasSubComments = subComments.length > 0;
           const noSubComments = !hasSubComments;
           const visibleSubComments = (subComments || []).filter(
             (subComment, index) =>
               index < PREVIEW_SUB_COMMENT_COUNT
-              || commentStore.newCommentIdsSet.has(subComment.trxId),
+              || commentStore.newCommentIdsSet.has(subComment.id),
           );
           return (
             <div
@@ -89,9 +89,9 @@ export default observer((props: IProps) => {
                           })}
                         </div>
                       )}
-                      {subCommentsGroupMap[comment.trxId].length > visibleSubComments.length && (
+                      {subCommentsGroupMap[comment.id].length > visibleSubComments.length && (
                           <span className="text-sky-500 cursor-pointer mt-[6px] flex items-center leading-none">
-                            共 {subCommentsGroupMap[comment.trxId].length} 条回复
+                          共 {subCommentsGroupMap[comment.id].length} 条回复
                             <span>
                               <MdChevronRight className="text-16" />
                             </span>

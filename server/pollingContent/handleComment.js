@@ -1,7 +1,7 @@
 const Post = require('../database/post');
 const Comment = require('../database/comment');
 const Notification = require('../database/notification');
-const QuorumLightNodeSDK = require('quorum-light-node-sdk-nodejs');
+const rumsdk = require('rum-sdk-nodejs');
 const { trySendSocket } = require('../socket');
 const { getSocketIo } = require('../socket');
 const config = require('../config');
@@ -18,7 +18,7 @@ module.exports = async (item, group) => {
   await Comment.create(comment);
 
   if (group.loaded) {
-    await notify(comment.trxId);
+    await notify(comment.id);
   }
 
   const { objectId, threadId, replyId } = comment;
@@ -31,20 +31,20 @@ module.exports = async (item, group) => {
   post.commentCount = await Comment.count({
     where: {
       groupId: post.groupId,
-      objectId: post.trxId
+      objectId: post.id
     }
   });
-  await Post.update(post.trxId, post);
+  await Post.update(post.id, post);
   if (!threadId && from !== post.userAddress) {
     const notification = {
       groupId: '',
       status: group.loaded ?'unread' : 'read',
       type: 'comment',
       to: post.userAddress,
-      toObjectId: post.trxId,
+      toObjectId: post.id,
       toObjectType: 'post',
       from,
-      fromObjectId: comment.trxId,
+      fromObjectId: comment.id,
       fromObjectType: 'comment',
       timestamp: Date.now()
     };
@@ -62,10 +62,10 @@ module.exports = async (item, group) => {
     threadComment.commentCount = await Comment.count({
       where: {
         groupId: threadComment.groupId,
-        threadId: threadComment.trxId
+        threadId: threadComment.id
       }
     });
-    await Comment.update(threadComment.trxId, threadComment);
+    await Comment.update(threadComment.id, threadComment);
     if (replyId) {
       const replyComment = await Comment.get(replyId);
       if (!replyComment) {
@@ -77,10 +77,10 @@ module.exports = async (item, group) => {
           status: group.loaded ?'unread' : 'read',
           type: 'comment',
           to: replyComment.userAddress,
-          toObjectId: replyComment.trxId,
+          toObjectId: replyComment.id,
           toObjectType: 'comment',
           from,
-          fromObjectId: comment.trxId,
+          fromObjectId: comment.id,
           fromObjectType: 'comment',
           timestamp: Date.now()
         };
@@ -95,11 +95,11 @@ module.exports = async (item, group) => {
           groupId: '',
           status: group.loaded ?'unread' : 'read',
           type: 'comment',
-          toObjectId: threadComment.trxId,
+          toObjectId: threadComment.id,
           toObjectType: 'comment',
           to: threadComment.userAddress,
           from,
-          fromObjectId: comment.trxId,
+          fromObjectId: comment.id,
           fromObjectType: 'comment',
           timestamp: Date.now()
         };
@@ -114,41 +114,52 @@ module.exports = async (item, group) => {
 
 const pack = async item => {
   const {
-    content,
-    image,
-    inreplyto,
-  } = item.Data;
+    TrxId,
+    Data: {
+      object: {
+        id,
+        content,
+        image,
+        inreplyto,
+      }
+    },
+    SenderPubkey,
+    TimeStamp,
+    GroupId,
+  } = item;
+
   const comment = {
     content,
     objectId: '',
     threadId: '',
     replyId: '',
-    userAddress: QuorumLightNodeSDK.utils.pubkeyToAddress(item.SenderPubkey),
-    groupId: item.GroupId,
-    trxId: item.TrxId,
+    userAddress: rumsdk.utils.pubkeyToAddress(SenderPubkey),
+    groupId: GroupId,
+    trxId: TrxId,
+    id,
     storage: 'chain',
     commentCount: 0,
     hotCount: 0,
     likeCount: 0,
-    timestamp: parseInt(String(item.TimeStamp / 1000000), 10)
+    timestamp: parseInt(String(TimeStamp / 1000000), 10)
   };
-  if (image) {
+  if (image && Array.isArray(image)) {
     comment.images = image;
     comment.imageCount = image.length;
   }
   if (inreplyto) {
-    const toTrxId = inreplyto.trxid;
-    const toPost = await Post.get(toTrxId);
-    const toComment = await Comment.get(toTrxId);
+    const toId = inreplyto.id;
+    const toPost = await Post.get(toId);
+    const toComment = await Comment.get(toId);
     if (toPost) {
-      comment.objectId = toPost.trxId;
+      comment.objectId = toPost.id;
     } else if (toComment) {
       comment.objectId = toComment.objectId;
       if (toComment.threadId) {
         comment.threadId = toComment.threadId;
-        comment.replyId = toComment.trxId;
+        comment.replyId = toComment.id;
       } else {
-        comment.threadId = toComment.trxId;
+        comment.threadId = toComment.id;
       }
     } else {
       return null;
@@ -157,8 +168,8 @@ const pack = async item => {
   return comment;
 }
 
-const notify = async (trxId) => {
-  const comment = await Comment.get(trxId, {
+const notify = async (id) => {
+  const comment = await Comment.get(id, {
     withReplacedImage: true,
     withExtra: true
   });
@@ -169,7 +180,7 @@ const notify = async (trxId) => {
       iconUrl: comment.extra.userProfile.avatar,
       title: (comment.content || '').slice(0, 30) || '图片',
       description: `${truncateByBytes(name, 14)} 发布评论`,
-      url: `${config.origin}/posts/${comment.objectId}?commentId=${comment.trxId}`
+      url: `${config.origin}/posts/${comment.objectId}?commentId=${comment.id}`
     });
   }
 }

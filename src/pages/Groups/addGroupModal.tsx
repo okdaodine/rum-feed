@@ -8,7 +8,7 @@ import sleep from 'utils/sleep';
 import { lang } from 'utils/lang';
 import { GroupApi, SeedApi } from 'apis';
 import { IGroup } from 'apis/types';
-import QuorumLightNodeSDK from 'quorum-light-node-sdk';
+import rumsdk from 'rum-sdk-browser';
 import Loading from 'components/Loading';
 import { BsFillCheckCircleFill } from 'react-icons/bs';
 import Fade from '@material-ui/core/Fade';
@@ -38,7 +38,8 @@ const Main = observer((props: IProps) => {
  
   const submit = async () => {
     try {
-      const group = QuorumLightNodeSDK.utils.seedUrlToGroup(state.seedUrl);
+      const group = rumsdk.utils.seedUrlToGroup(state.seedUrl);
+      console.log(group)
       if (group.chainAPIs.length === 0) {
         return snackbarStore.show({
           message: '缺少有效的 chainAPIs',
@@ -53,6 +54,7 @@ const Main = observer((props: IProps) => {
         });
       }
     } catch (err) {
+      console.error(err)
       return snackbarStore.show({
         message: '无法解析这个种子',
         type: 'error',

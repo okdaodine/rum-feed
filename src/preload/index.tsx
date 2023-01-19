@@ -16,6 +16,7 @@ import { useHistory } from 'react-router-dom';
 import { ethers } from 'ethers';
 import * as JsBase64 from 'js-base64';
 import store from 'store2';
+import base64 from 'utils/base64';
 
 const Preload = observer(() => {
   const { userStore, groupStore, confirmDialogStore, modalStore, configStore } = useStore();
@@ -102,16 +103,20 @@ const Preload = observer(() => {
       const profileExist = await ProfileApi.exist(userStore.address);
       if (!profileExist && !isJWT(token)) {
         const avatar: any = await Base64.getFromBlobUrl(vaultUser.avatar_url || 'https://static-assets.pek3b.qingstor.com/rum-avatars/default.png');
-        const res = await TrxApi.createPerson({
-          groupId: groupStore.defaultGroup.groupId,
-          person: {
+
+        const res = await TrxApi.createActivity({
+          type: "Create",
+          object: {
+            type: "Person",
+            id: store('address'),
             name: vaultUser.display_name,
-            image: {
-              mediaType: Base64.getMimeType(avatar.url),
-              content: Base64.getContent(avatar.url),
-            },
-          },
-        });
+            image: [{
+              type: 'Image',
+              mediaType: base64.getMimeType(avatar.url),
+              content: base64.getContent(avatar.url),
+            } as any],
+          }
+        }, groupStore.defaultGroup.groupId);
         console.log(res);
         userStore.setProfile({
           name: vaultUser.display_name,

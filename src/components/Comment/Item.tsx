@@ -16,7 +16,6 @@ import openPhotoSwipe from 'components/openPhotoSwipe';
 import Images from 'components/Images';
 import { isMobile, isPc } from 'utils/env';
 import Fade from '@material-ui/core/Fade';
-import { IObject } from 'quorum-light-node-sdk';
 import { TiArrowForwardOutline } from 'react-icons/ti';
 import copy from 'copy-to-clipboard';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -24,13 +23,14 @@ import openLoginModal from 'components/openLoginModal';
 import sleep from 'utils/sleep';
 import { TrxApi } from 'apis';
 import { FaRegComment } from 'react-icons/fa';
+import { IActivity } from 'rum-sdk-browser';
 
 import './item.css';
 
 interface IProps {
   comment: IComment
   postUserAddress: string
-  submit: (payload: IObject) => void
+  submit: (payload: IActivity) => void
   where: 'postList' | 'postDetail' | 'postDetailModal'
   selectComment?: any
   highlight?: boolean
@@ -45,7 +45,7 @@ export default observer((props: IProps) => {
   const isSubComment = !isTopComment;
   const { threadId } = comment;
   const replyComment = comment.extra.replyComment;
-  const domElementId = `${props.where}_comment_${comment.trxId}`;
+  const domElementId = `${props.where}_comment_${comment.id}`;
 
   const state = useLocalObservable(() => ({
     canExpand: false,
@@ -72,7 +72,7 @@ export default observer((props: IProps) => {
     return () => {
       window.removeEventListener('resize', setCanExpand);
     };
-  }, [state, commentStore, comment.trxId]);
+  }, [state, commentStore, comment.id]);
 
   const UserName = (props: {
     name: string
@@ -94,7 +94,7 @@ export default observer((props: IProps) => {
     </span>
   );
 
-  const updateCounter = async (trxId: string) => {
+  const updateCounter = async (id: string) => {
     if (!userStore.isLogin) {
       openLoginModal();
       return;
@@ -105,13 +105,13 @@ export default observer((props: IProps) => {
     state.submitting = true;
     state.likeAnimating = !comment.extra.liked;
     try {  
-      const res = await TrxApi.createObject({
-        groupId: comment.groupId,
+      const res = await TrxApi.createActivity({
+        type: comment.extra.liked ? 'Dislike' : 'Like',
         object: {
-          id: trxId,
-          type: comment.extra.liked ? 'Dislike' : 'Like'
+          type: 'Note',
+          id,
         },
-      });
+      }, comment.groupId);
       console.log(res);
       commentStore.updateComment({
         ...comment,
@@ -216,7 +216,7 @@ export default observer((props: IProps) => {
                       />
                       {threadId
                         && replyComment
-                        && threadId !== replyComment.trxId ? (
+                        && threadId !== replyComment.id ? (
                           <span>
                             <span className="opacity-80 mx-1">{lang.reply}</span>
                             <UserName
@@ -312,7 +312,7 @@ export default observer((props: IProps) => {
                     },
                     'flex items-center cursor-pointer pr-6 tracking-wide leading-none',
                   )}
-                  onClick={() => updateCounter(comment.trxId)}
+                  onClick={() => updateCounter(comment.id)}
                 >
                   <span className="flex items-center text-14 pr-[3px]">
                     {comment.extra.liked ? (
@@ -345,7 +345,7 @@ export default observer((props: IProps) => {
                 <div
                   className='items-center cursor-pointer pr-6 tracking-wide leading-none hidden group-hover:flex'
                   onClick={() => {
-                    copy(`${window.origin}/posts/${comment.objectId}?commentId=${comment.trxId}`);
+                    copy(`${window.origin}/posts/${comment.objectId}?commentId=${comment.id}`);
                     snackbarStore.show({
                       message: `链接${lang.copied}`,
                     });
@@ -365,7 +365,6 @@ export default observer((props: IProps) => {
                 </div>
                 <div className='ml-[2px] mt-[2px]'>
                   <ContentSyncStatus
-                    trxId={comment.trxId}
                     storage={comment.storage}
                     SyncedComponent={() => (
                       <TrxInfo
