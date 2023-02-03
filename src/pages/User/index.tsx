@@ -193,31 +193,29 @@ export default observer((props: RouteChildrenProps) => {
     state.submitting = true;
     try {
       if (['follow', 'unfollow'].includes(type)) {
-        const res = await TrxApi.createActivity({
-          type: type === 'follow' ? 'Follow' : 'Ignore',
+        const follow = {
+          type: 'Follow',
           object: {
             type: 'Person',
             id: userAddress,
           },
-          target: {
-            type: 'Group',
-            id: groupStore.defaultGroup.groupId,
-          }
-        }, groupStore.relationGroup.groupId);
+        };
+        const res = type === 'follow' ?
+          await TrxApi.createActivity(follow, groupStore.defaultGroup.groupId) : 
+          await TrxApi.createActivity({ type: 'Undo', object: follow }, groupStore.defaultGroup.groupId);
         console.log(res);
       }
       if (['mute', 'unmute'].includes(type)) {
-        const res = await TrxApi.createActivity({
-          type: type === 'mute' ? 'Block' : 'Unblock',
+        const block = {
+          type: 'Block',
           object: {
             type: 'Person',
             id: userAddress,
           },
-          target: {
-            type: 'Group',
-            id: groupStore.defaultGroup.groupId,
-          }
-        }, groupStore.relationGroup.groupId);
+        }
+        const res = type === 'mute' ?
+          await TrxApi.createActivity(block, groupStore.defaultGroup.groupId) :
+          await TrxApi.createActivity({ type: 'Undo', object: block }, groupStore.defaultGroup.groupId);
         console.log(res);
       }
       if (type.includes('follow')) {

@@ -80,11 +80,7 @@ const UserList = observer((props: IProps) => {
             type: 'Person',
             id: relation.to,
           },
-          target: {
-            type: 'Group',
-            id: groupStore.defaultGroup.groupId,
-          }
-        }, groupStore.relationGroup.groupId);
+        }, groupStore.defaultGroup.groupId);
         console.log(res);
       }
 
@@ -95,25 +91,9 @@ const UserList = observer((props: IProps) => {
             type: 'Person',
             id: relation.to,
           },
-          target: {
-            type: 'Group',
-            id: groupStore.defaultGroup.groupId,
-          }
-        }, groupStore.relationGroup.groupId);
+        }, groupStore.defaultGroup.groupId);
         console.log(res);
       }
-
-      // const res = await TrxApi.createObject({
-      //   groupId: groupStore.relationGroup.groupId,
-      //   object: {
-      //     type: 'Note',
-      //     content: JSON.stringify({
-      //       groupId: groupStore.defaultGroup.groupId,
-      //       type,
-      //       to: relation.to
-      //     })
-      //   },
-      // });
       
       state.relations = state.relations.filter(r => r.to !== relation.to);
       if (type === 'unfollow') {

@@ -16,10 +16,6 @@ export function createGroupStore() {
       return Object.values(this.map).find(group => group.extra.rawGroup.appKey === 'group_timeline')!;
     },
 
-    get relationGroup() {
-      return Object.values(this.map).find(group => group.extra.rawGroup.appKey === 'group_relations')!;
-    },
-
     setDefaultGroupId(defaultGroupId: string) {
       this.defaultGroupId = defaultGroupId;
     },

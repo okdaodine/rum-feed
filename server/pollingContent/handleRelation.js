@@ -1,19 +1,13 @@
 const Relation = require('../database/sequelize/relation');
-const Group = require('../database/sequelize/group');
 const Notification = require('../database/notification');
 const rumsdk = require('rum-sdk-nodejs');
 const { trySendSocket } = require('../socket');
 
-module.exports = async (item) => {
+module.exports = async (item, group) => {
   const {
     Data: {
       type,
-      object: {
-        id: to,
-      },
-      target: {
-        id: groupId,
-      },
+      object,
     },
     SenderPubkey,
   } = item;
@@ -24,45 +18,39 @@ module.exports = async (item) => {
       where: {
         type: 'following',
         from,
-        to,
+        to: object.id,
       }
     });
-    const group = await Group.findOne({
-      where: {
-        groupId
-      }
-    });
-    if (group) {
-      const notification = {
-        groupId: '',
-        status: group.loaded ? 'unread' : 'read',
-        type: 'follow',
-        toObjectId: '',
-        toObjectType: '',
-        to: to,
-        from: from,
-        fromObjectId: '',
-        fromObjectType: '',
-        timestamp: Date.now()
-      };
-      await Notification.create(notification);
-      if (group.loaded) {
-        trySendSocket(notification.to, 'notification', notification);
-      }
+    const notification = {
+      groupId: '',
+      status: group.loaded ? 'unread' : 'read',
+      type: 'follow',
+      toObjectId: '',
+      toObjectType: '',
+      to: object.id,
+      from: from,
+      fromObjectId: '',
+      fromObjectType: '',
+      timestamp: Date.now()
+    };
+    await Notification.create(notification);
+    if (group.loaded) {
+      trySendSocket(notification.to, 'notification', notification);
     }
   }
 
-  if (type === 'Ignore') {
+  if (type === 'Undo' && item.Data.object.type === 'Follow') {
+    const follow = item.Data.object;
     await Relation.destroy({
       where: {
         type: 'following',
         from,
-        to,
+        to: follow.object.id,
       }
     });
     await Notification.destroy({
       type: 'follow',
-      to: to,
+      to: follow.object.id,
       from: from,
     })
   }
@@ -72,17 +60,18 @@ module.exports = async (item) => {
       where: {
         type: 'muted',
         from,
-        to,
+        to: object.id,
       }
     });
   }
 
-  if (type === 'Unblock') {
+  if (type === 'Undo' && item.Data.object.type === 'Block') {
+    const block = item.Data.object;
     await Relation.destroy({
       where: {
         type: 'muted',
         from,
-        to,
+        to: block.object.id,
       }
     });
   }

@@ -40,7 +40,7 @@ module.exports = (duration) => {
         console.log('==================================================');
         return;
       }
-      jobShareData.defaultGroupMap = await getdefaultGroupMap(groups);
+      jobShareData.defaultGroupMap = await getDefaultGroupMap(groups);
       jobShareData.limit = getLimit(groups);
       for (const group of groups) {
         if (!jobShareData.jobMap[group.groupId]) {
@@ -131,7 +131,7 @@ const handleContents = async (group, contents) => {
           case 'comment': await handleComment(content, group); break;
           case 'counter': await handleCounter(content, group); break;
           case 'profile': await handleProfile(content); break;
-          case 'relation': await handleRelation(content); break;
+          case 'relation': await handleRelation(content, group); break;
           default: break;
         }
         console.log(`${content.TrxId} ✅`);
@@ -164,7 +164,7 @@ const handleContents = async (group, contents) => {
 }
 
 
-const getdefaultGroupMap = async groups => {
+const getDefaultGroupMap = async groups => {
   const map = {};
   const loadedGroups = groups.filter(group => group.loaded);
   const unloadedGroups = groups.filter(group => !group.loaded);

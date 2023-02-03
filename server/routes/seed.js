@@ -12,7 +12,6 @@ async function create(ctx) {
   const { url } = ctx.request.body;
   assert(url, Errors.ERR_IS_REQUIRED('url'));
   const groupId = await createSeed(url);
-  tryCreateUserRelationSeed();
   ctx.body = await Group.findOne({
     where: {
       groupId
@@ -76,14 +75,6 @@ const createSeed = async (url) => {
   rumsdk.cache.Group.remove(groupId);
   rumsdk.cache.Group.add(combinedSeedUrl);
   return groupId;
-}
-
-const tryCreateUserRelationSeed = async () => {
-  try {
-    if (config.userRelation?.seed) {
-      await createSeed(config.userRelation.seed);
-    }
-  } catch (_) {}
 }
 
 module.exports = router;

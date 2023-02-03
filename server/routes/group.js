@@ -14,7 +14,6 @@ const shuffleChainApi = require('../utils/shuffleChainApi');
 const config = require('../config');
 
 router.get('/default', getDefaultGroup);
-router.get('/relation', getRelationGroup);
 router.get('/:groupId', get);
 router.get('/:groupId/shuffle', _shuffleChainApi);
 router.get('/:groupId/ping', ping);
@@ -37,12 +36,7 @@ async function list(ctx) {
       ['contentCount', 'DESC']
     ]
   });
-  ctx.body = groups
-              .filter(group => (
-                group.seedUrl.includes('group_timeline') ||
-                (config.userRelation?.visible && group.seedUrl.includes('group_relations'))
-              ))
-              .map(group => pack(group.toJSON()));
+  ctx.body = groups.map(group => pack(group.toJSON()));
 }
 
 async function getDefaultGroup(ctx) {
@@ -64,18 +58,6 @@ async function getDefaultGroup(ctx) {
   const group = groups.find(g => g.seedUrl.includes('group_timeline') && g.status === 'connected');
   assert(group, Errors.ERR_NOT_FOUND('group'));
   ctx.body = pack(group.toJSON());
-}
-
-async function getRelationGroup(ctx) {
-  const group = await Group.findOne({
-    where: {
-      seedUrl: {
-        [Op.like]: `%group_relations%`
-      }
-    }
-  });
-  assert(group, Errors.ERR_NOT_FOUND('group'));
-  ctx.body = group.toJSON();
 }
 
 async function _shuffleChainApi(ctx) {
