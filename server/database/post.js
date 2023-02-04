@@ -69,6 +69,7 @@ exports.list = async (query, options = {}) => {
       viewer: options.viewer
     });
   }
+  return result;
 }
 
 const bulkAppendExtra = async (items, options = {}) => {
