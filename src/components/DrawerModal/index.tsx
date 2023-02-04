@@ -3,7 +3,7 @@ import { Drawer, DrawerProps } from '@material-ui/core';
 import { MdClear } from 'react-icons/md';
 import classNames from 'classnames';
 
-import './index.css';
+// import './index.css';
 
 interface Props extends DrawerProps {
   open: boolean;

@@ -16,7 +16,7 @@ import sleep from 'utils/sleep';
 import { useStore } from 'store';
 import { runInAction } from 'mobx';
 import Modal from 'components/Modal';
-import { useHistory } from 'react-router-dom';
+import { useRouter } from 'next/router';
 
 interface IProps {
   open: boolean
@@ -48,7 +48,7 @@ const LIMIT = 10;
 
 const Notification = observer((props: IProps) => {
   const { userStore } = useStore();
-  const history = useHistory();
+  const router = useRouter();
   const tabs = [
     {
       unreadCount: 0,
@@ -143,7 +143,7 @@ const Notification = observer((props: IProps) => {
     await sleep(400);
     const path = `/users/${userAddress}`;
     if (window.location.pathname !== path) {
-      history.push(path);
+      router.push(path);
     } 
   }
 

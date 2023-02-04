@@ -29,7 +29,7 @@ import { IImage } from 'apis/types/common';
 import openLoginModal from 'components/openLoginModal';
 import { isMobile, isPc } from 'utils/env';
 
-import './index.css';
+// import './index.css';
 
 interface IPreviewItem extends PreviewItem {
   kbSize: number

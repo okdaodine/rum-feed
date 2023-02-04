@@ -4,11 +4,12 @@ import { API_BASE_URL } from 'apis/common';
 const BASE = '';
 export default async (url: any, options: any = {}) => {
   const hasEffectMethod = ['post', 'delete', 'put'].includes((options.method || '').toLocaleLowerCase());
-  if (url.startsWith(API_BASE_URL)) {
-    options.headers = {
-      'X-Address': (window as any).store.userStore.address || ''
-    }
-  }
+  // if (url.startsWith(API_BASE_URL)) {
+  //   options.headers = {
+  //     'X-Address': (window as any).store.userStore.address || ''
+  //   }
+  // }
+
   if (hasEffectMethod) {
     options.headers = {
       ...(options.headers || {}),
@@ -40,9 +41,9 @@ export default async (url: any, options: any = {}) => {
   if (res.ok) {
     return resData;
   } else {
-    if (hasEffectMethod && res.status === 401) {
-      (window as any).store.modalStore.openLogin()
-    }
+    // if (hasEffectMethod && res.status === 401 && typeof window !== 'undefined') {
+    //   (window as any).store.modalStore.openLogin()
+    // }
     throw Object.assign(new Error(), {
       code: resData.code,
       status: res.status,

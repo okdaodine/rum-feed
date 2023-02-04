@@ -8,12 +8,12 @@ import ago from 'utils/ago';
 import { IComment, INotification, IPost } from 'apis/types';
 import Query from 'utils/query';
 import { useStore } from 'store';
-import { useHistory } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { isMobile } from 'utils/env';
 import sleep from 'utils/sleep';
 import replaceContent from 'utils/replaceContent';
 
-import './index.css';
+// import './index.css';
 
 interface IMessagesProps {
   notifications: INotification[]
@@ -25,14 +25,14 @@ interface IMessagesProps {
 export default observer((props: IMessagesProps) => {
   const { modalStore } = useStore();
   const { notifications } = props;
-  const history = useHistory();
+  const router = useRouter();
 
   const toPost = (url: string) => {
     const inPostDetail = window.location.pathname.includes('/posts/');
     if (inPostDetail) {
       window.location.href = url;
     } else {
-      history.push(url);
+      router.push(url);
     }
   }
 

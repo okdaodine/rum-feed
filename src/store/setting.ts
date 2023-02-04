@@ -1,6 +1,7 @@
 import store from 'store2';
 
-const systemDarkModeEnabled = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+const systemDarkModeEnabled = typeof window !== 'undefined' ? window.matchMedia('(prefers-color-scheme: dark)').matches : false;
 const theme = store('theme') || (systemDarkModeEnabled ? 'dark' : 'light');
 if (theme === 'dark') {
   document.documentElement.classList.add('dark');

@@ -4,7 +4,7 @@ import { useStore } from 'store';
 import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
 import classNames from 'classnames';
 
-import './index.css';
+// import './index.css';
 
 export default observer(() => {
   const { snackbarStore } = useStore();

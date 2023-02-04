@@ -26,3 +26,5 @@ server/node_modules
 server/localStorage
 
 debug.log
+
+.next

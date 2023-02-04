@@ -20,7 +20,7 @@ import sleep from 'utils/sleep';
 import { TrxApi } from 'apis';
 import { BsFillCaretDownFill } from 'react-icons/bs';
 
-import './Item.css';
+// import './Item.css';
 
 interface IProps {
   comment: IComment

@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import { IComment, IPost } from 'apis/types';
 import { MdChevronRight } from 'react-icons/md';
 
-import './items.css';
+// import './items.css';
 
 interface IProps {
   replyTo: (comment: IComment) => void

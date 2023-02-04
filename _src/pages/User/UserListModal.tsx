@@ -8,7 +8,7 @@ import { IRelation } from 'apis/types';
 import useInfiniteScroll from 'react-infinite-scroll-hook';
 import { RelationApi } from 'apis';
 import sleep from 'utils/sleep';
-import { useHistory } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { lang } from 'utils/lang';
 import { TrxApi } from 'apis';
 import UserName from 'components/UserName';
@@ -32,7 +32,7 @@ const UserList = observer((props: IProps) => {
     submitting: false,
     relations: [] as IRelation[],
   }));
-  const history = useHistory();
+  const router = useRouter();
   const isMyList = props.userAddress === userStore.address;
 
   React.useEffect(() => {
@@ -138,7 +138,7 @@ const UserList = observer((props: IProps) => {
                     onClick={async () => {
                       props.onClose();
                       await sleep(200);
-                      history.push(`/users/${relation.to}`);
+                      router.push(`/users/${relation.to}`);
                     }}
                   >
                     <div className="flex items-center cursor-pointer">
@@ -201,7 +201,7 @@ const UserList = observer((props: IProps) => {
                       onClick={async () => {
                         props.onClose();
                         await sleep(200);
-                        history.push(`/users/${relation.extra.userProfile.userAddress}`);
+                        router.push(`/users/${relation.extra.userProfile.userAddress}`);
                       }}>
                       打开主页
                     </Button>

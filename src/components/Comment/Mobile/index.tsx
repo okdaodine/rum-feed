@@ -21,7 +21,7 @@ import { IActivity } from 'rum-sdk-browser';
 import { v4 } from 'uuid';
 import base64 from 'utils/base64';
 
-import './index.css';
+// import './index.css';
 
 interface IProps {
   post: IPost;

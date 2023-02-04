@@ -5,7 +5,7 @@ import { ClickAwayListener, Grow, Popper, PopperProps } from '@material-ui/core'
 import { emojis } from './emoji';
 import { lang } from './lang';
 
-import './index.css';
+// import './index.css';
 
 interface Props extends Omit<PopperProps, 'children'> {
   onSelectEmoji?: (emoji: string) => unknown

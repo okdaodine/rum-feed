@@ -31,7 +31,7 @@ const switchLang = action((lang: AllLanguages) => {
 });
 
 const init = action(() => {
-  let value = (localStorage.getItem(STORAGE_KEY) || 'cn') as AllLanguages;
+  let value = (typeof window !== 'undefined' ? localStorage.getItem(STORAGE_KEY) || 'cn' : 'cn') as AllLanguages;
   if (!allLang.includes(value)) {
     value = 'cn';
   }

@@ -7,7 +7,7 @@ import { IProfile } from 'apis/types';
 import Loading from 'components/Loading';
 import sleep from 'utils/sleep';
 import { useStore } from 'store';
-import { useHistory } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import classNames from 'classnames';
 import { isPc, isMobile } from 'utils/env';
 import Button from 'components/Button';
@@ -162,7 +162,7 @@ const UserCard = observer((props: IUserCardProps) => {
 });
 
 export default observer((props: IProps) => {
-  const history = useHistory();
+  const router = useRouter();
   const state = useLocalObservable(() => ({
     resetting: false
   }));
@@ -181,7 +181,7 @@ export default observer((props: IProps) => {
       await sleep(200);
       state.resetting = false;
     }
-    history.push(`/users/${props.userAddress}`);
+    router.push(`/users/${props.userAddress}`);
   }
 
   if (isMobile) {

@@ -25,7 +25,7 @@ import { TrxApi } from 'apis';
 import { FaRegComment } from 'react-icons/fa';
 import { IActivity } from 'rum-sdk-browser';
 
-import './item.css';
+// import './item.css';
 
 interface IProps {
   comment: IComment

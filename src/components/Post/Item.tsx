@@ -14,13 +14,13 @@ import { isMobile, isPc } from 'utils/env';
 import ago from 'utils/ago';
 import Fade from '@material-ui/core/Fade';
 import replaceContent from 'utils/replaceContent';
-import { useHistory } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import BFSReplace from 'utils/BFSReplace';
 import Query from 'utils/query';
 import escapeStringRegexp from 'escape-string-regexp';
 import UserName from 'components/UserName';
 
-import './index.css';
+// import './index.css';
 
 interface IProps {
   post: IPost
@@ -144,7 +144,7 @@ export default observer((props: IProps) => {
   const postBoxRef = React.useRef<HTMLDivElement>(null);
   const contentRef = React.useRef<HTMLDivElement>(null);
   const profile = post.extra!.userProfile;
-  const history = useHistory();
+  const router = useRouter();
   const fromTwitter = (post.title || '').startsWith('https://twitter.com');
   const fromWeibo = (post.title || '').startsWith('https://weibo.com');
   const isTweet = fromTwitter || fromWeibo;
@@ -229,7 +229,7 @@ export default observer((props: IProps) => {
                 }, "flex items-center text-gray-88 opacity-70 dark:text-white dark:opacity-40 text-12 tracking-wide cursor-pointer")}
                 onClick={() => {
                   if (isMobile || !inPostDetail) {
-                    history.push(`/posts/${post.id}`);
+                    router.push(`/posts/${post.id}`);
                   }
                 }}
               >
@@ -262,7 +262,7 @@ export default observer((props: IProps) => {
                   }}
                   onClick={() => {
                     if (isMobile) {
-                      history.push(`/posts/${post.id}`);
+                      router.push(`/posts/${post.id}`);
                     }
                   }}
                 />
@@ -312,7 +312,7 @@ export default observer((props: IProps) => {
 
             <div className="flex pt-1 pb-2 tracking-wider">
               <div className="bg-[#EFF3F4] bg-opacity-100 dark:bg-opacity-10 text-12 py-[2px] px-2 flex items-center rounded-full cursor-pointer" onClick={() => {
-                history.push(`/groups/${post.groupId}`)
+                router.push(`/groups/${post.groupId}`)
               }}>
                 <div className="w-[10px] h-[10px] bg-[#37434D] rounded-full mr-[6px] opacity-30 dark:bg-white dark:opacity-30" />
                 <span className="text-[#37434D] opacity-[0.55] font-bold dark:text-white dark:opacity-50">{post.extra.groupName}</span>

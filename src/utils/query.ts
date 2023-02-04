@@ -2,10 +2,16 @@ import qs from 'query-string';
 
 export default {
   get (name: string) {
+    if (typeof window === 'undefined') {
+      return '';
+    }
     return String(qs.parse(window.location.search)[name] || '');
   },
   
   set(param: any = {}) {
+    if (typeof window === 'undefined') {
+      return '';
+    }
     let parsed = qs.parse(window.location.search);
     parsed = {
       ...parsed,
@@ -23,6 +29,9 @@ export default {
   },
   
   remove (name: string) {
+    if (typeof window === 'undefined') {
+      return '';
+    }
     let parsed = qs.parse(window.location.search);
     delete parsed[name];
     const isEmpty = Object.keys(parsed).length === 0;

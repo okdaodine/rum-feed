@@ -8,7 +8,7 @@ import Images from 'components/Images';
 import ago from 'utils/ago';
 import { INotification, IComment } from 'apis/types';
 import Query from 'utils/query';
-import { useHistory } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { isMobile } from 'utils/env';
 import sleep from 'utils/sleep';
 import replaceContent from 'utils/replaceContent';
@@ -23,14 +23,14 @@ interface IMessagesProps {
 export default observer((props: IMessagesProps) => {
   const { modalStore, snackbarStore } = useStore();
   const { notifications } = props;
-  const history = useHistory();
+  const router = useRouter();
 
   const toPost = (url: string) => {
     const inPostDetail = window.location.pathname.includes('/posts/');
     if (inPostDetail) {
       window.location.href = url;
     } else {
-      history.push(url);
+      router.push(url);
     }
   }
 

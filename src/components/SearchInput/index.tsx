@@ -6,7 +6,7 @@ import { MdSearch, MdClose } from 'react-icons/md';
 import sleep from 'utils/sleep';
 import { lang } from 'utils/lang';
 
-import './index.css';
+// import './index.css';
 
 interface IProps {
   size?: string

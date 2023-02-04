@@ -7,7 +7,7 @@ import { IPost } from 'apis/types';
 import { useStore } from 'store';
 import { isMobile } from 'utils/env';
 import Loading from 'components/Loading';
-import { useHistory } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import Button from 'components/Button';
 import TopPlaceHolder from 'components/TopPlaceHolder';
 
@@ -18,7 +18,7 @@ export default observer(() => {
   }));
   const { id } = useParams() as { id: string };
   const post = postStore.map[id];
-  const history = useHistory();
+  const router = useRouter();
 
   React.useEffect(() => {
     if (post) {
@@ -32,7 +32,7 @@ export default observer(() => {
           viewer: userStore.address
         });
         if (post.latestTrxId) {
-          history.push(`/posts/${post.latestTrxId}`);
+          router.push(`/posts/${post.latestTrxId}`);
           return;
         }
         if (post) {
@@ -74,7 +74,7 @@ export default observer(() => {
           <span
             className="dark:text-white dark:text-opacity-80 text-gray-88 cursor-pointer text-12 opacity-90"
             onClick={() => {
-              history.push(`/`);
+              router.push(`/`);
             }}>
             返回首页
           </span>

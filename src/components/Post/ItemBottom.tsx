@@ -10,7 +10,7 @@ import { useStore } from 'store';
 import classNames from 'classnames';
 import ContentSyncStatus from 'components/ContentSyncStatus';
 import Menu from 'components/ObjectMenu';
-import { useHistory } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import sleep from 'utils/sleep';
 import openEditor from 'components/Post/OpenEditor';
 import openLoginModal from 'components/openLoginModal';
@@ -44,7 +44,7 @@ export default observer((props: IProps) => {
   }));
   const liked = post.extra?.liked;
   const likeCount = post.likeCount;
-  const history = useHistory()
+  const router = useRouter()
 
   const updateCounter = async (id: string) => {
     if (!userStore.isLogin) {
@@ -161,7 +161,7 @@ export default observer((props: IProps) => {
                 return;
               }
               if (isMobile) {
-                history.push(`/posts/${post.id}`);
+                router.push(`/posts/${post.id}`);
                 return;
               }
               state.showComment = !state.showComment;
@@ -241,7 +241,7 @@ export default observer((props: IProps) => {
                             await sleep(400);
                           }
                           if (inPostDetail) {
-                            history.push(`/`);
+                            router.push(`/`);
                           }
                           postStore.removePost(post.id);
                           snackbarStore.show({

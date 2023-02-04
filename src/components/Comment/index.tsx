@@ -16,7 +16,7 @@ import { useStore } from 'store';
 import Loading from 'components/Loading';
 import Editor from 'components/Editor';
 import Query from 'utils/query';
-import { useHistory } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import openLoginModal from 'components/openLoginModal';
 import { v4 } from 'uuid';
 import base64 from 'utils/base64';
@@ -49,7 +49,7 @@ export default observer((props: IProps) => {
     highlightId: '',
     fetched: false,
   }));
-  const history = useHistory();
+  const router = useRouter();
   const comments = commentStore.commentsGroupMap[props.post.id] || [];
   const topComments = comments.filter(
     (comment) => !comment.threadId,
@@ -329,7 +329,7 @@ export default observer((props: IProps) => {
               && visibleTopComments.length < topComments.length && (
               <div className="pt-10">
                 <div className="text-center border-t dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] dark:text-white dark:text-opacity-[0.75] text-black text-opacity-80 tracking-widest border-gray-f2 pt-2 leading-[26px] bg-white dark:bg-[#181818] cursor-pointer flex items-center justify-center absolute bottom-3 left-0 w-full" onClick={() => {
-                  history.push(`/posts/${props.post.id}?scrollIntoView=1`);
+                  router.push(`/posts/${props.post.id}?scrollIntoView=1`);
                 }}>
                   {lang.checkMoreComments(comments.length)}
                   <GoChevronRight className="text-14 ml-1" />

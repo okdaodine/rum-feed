@@ -4,7 +4,7 @@ import { initSocket, getSocket } from 'utils/socket';
 import { useStore } from 'store';
 import { TrxStorage } from 'apis/common';
 import { IComment, IPost } from 'apis/types';
-import { useLocation, useHistory } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import Sidebar from 'components/Sidebar';
 import { isMobile } from 'utils/env';
 
@@ -17,8 +17,7 @@ export default observer(() => {
     confirmDialogStore,
     configStore
   } = useStore();
-  const location = useLocation();
-  const history = useHistory();
+  const router = useRouter();
   const state = useLocalObservable(() => ({
     ready: false,
   }));
@@ -110,7 +109,7 @@ export default observer(() => {
             if (pathname === '/search') {
               history.replace(`/search?q=${encodeURIComponent(href)}`);
             } else {
-              history.push(`/search?q=${encodeURIComponent(href)}`);
+              router.push(`/search?q=${encodeURIComponent(href)}`);
             }
           }
         }
@@ -126,12 +125,12 @@ export default observer(() => {
     } else if (pathname === `/search`) {
       document.title = '搜索';
     }
-  }, [location.pathname]);
+  }, [router.pathname]);
 
   React.useEffect(() => {
-    const { push } = history;
-    history.push = (path: string) => {
-      if (path === window.location.pathname) {
+    const { push } = router;
+    router.push = (path: string) => {
+      if (path === router.pathname) {
         return;
       }
       push(path);

@@ -19,7 +19,7 @@ import Menu from './Menu';
 import ImageLibModal from './ImageLibModal';
 import PresetImagesModal from './PresetImagesModal';
 
-import './index.css';
+// import './index.css';
 
 interface IProps {
   className?: string

@@ -50,7 +50,9 @@ export const useStore = () => {
   if (!store) {
     throw new Error('You have forgot to use StoreProvider');
   }
-  (window as any).toJS = toJS;
-  (window as any).store = store;
+  if (typeof window !== 'undefined') {
+    (window as any).toJS = toJS;
+    (window as any).store = store;
+  }
   return store as Store;
 };

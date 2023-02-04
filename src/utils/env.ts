@@ -2,25 +2,26 @@
 
 const { isEmpty } = require('lodash');
 
+const userAgent = typeof window !== 'undefined' ? navigator.userAgent : '';
+const windowInnerWidth = typeof window !== 'undefined' ? window.innerWidth : 1000;
+
 export const isProduction = process.env.REACT_APP_ENV === 'production';
 
 export const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-  navigator.userAgent,
-) || window.innerWidth < 760;
+  userAgent,
+) || windowInnerWidth < 760;
 
-export const isAndroid = /Android/i.test(navigator.userAgent);
+export const isAndroid = /Android/i.test(userAgent);
 
 export const isIPhone = isMobile && !isAndroid;
 
 export const isPc = !isMobile;
 
-export const isWeChat = /MicroMessenger/i.test(navigator.userAgent);
+export const isWeChat = /MicroMessenger/i.test(userAgent);
 
-export const isFirefox = navigator.userAgent.indexOf("Firefox") > 0;
+export const isSafari = /^((?!chrome|android).)*safari/i.test(userAgent);
 
-export const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-
-export const isMI = /; MI /i.test(navigator.userAgent);
+export const isMI = /; MI /i.test(userAgent);
 
 export const getMixinContext = () => {
   let ctx: any = {};

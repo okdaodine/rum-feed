@@ -12,7 +12,7 @@ import openProfileEditor from 'components/openProfileEditor';
 import openLoginModal from 'components/openLoginModal';
 import sleep from 'utils/sleep';
 import isJWT from 'utils/isJWT';
-import { useHistory } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { ethers } from 'ethers';
 import * as JsBase64 from 'js-base64';
 import store from 'store2';
@@ -20,7 +20,7 @@ import base64 from 'utils/base64';
 
 const Preload = observer(() => {
   const { userStore, groupStore, confirmDialogStore, modalStore, configStore } = useStore();
-  const history = useHistory();
+  const router = useRouter();
   const token = Query.get('token');
   const accessToken = Query.get('access_token');
   if (token) {
@@ -38,7 +38,7 @@ const Preload = observer(() => {
           initConfig()
         ]);
         if (!groupStore.defaultGroup) {
-          history.push('/groups');
+          router.push('/groups');
           return;
         }
         if (token) {

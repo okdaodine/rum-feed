@@ -13,8 +13,7 @@ import Avatar from 'components/Avatar';
 import sleep from 'utils/sleep';
 import { MdArrowUpward, MdOutlineDarkMode, MdOutlineLightMode } from 'react-icons/md';
 import { BiArrowBack } from 'react-icons/bi';
-import { useLocation } from 'react-router-dom';
-import { useHistory } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { isPc, isMobile } from 'utils/env';
 import { RiSearchLine, RiSearchFill } from 'react-icons/ri';
 import { AiOutlineHome, AiFillHome, AiOutlineSearch, AiOutlineGithub } from 'react-icons/ai';
@@ -58,8 +57,8 @@ export default observer(() => {
     tabIndex: 1,
     anchorEl: null
   }));
-  const history = useHistory();
-  const location = useLocation();
+  const router = useRouter();
+  const location = useRouter();
   const aliveController = useAliveController();
 
   const isHomePage = location.pathname === `/`;
@@ -151,7 +150,7 @@ export default observer(() => {
         <div className="w-[600px] flex items-center justify-between">
           {isPc && (
             <div className="absolute top-0 left-[50%] ml-[-400px] mt-1 cursor-pointer px-4" onClick={() => {
-              history.push('/');
+              router.push('/');
             }}>
               <img src={configStore.config.logo || "/logo192.png"} alt="logo" width={32} height={32} className="rounded-full" />
             </div>
@@ -196,7 +195,7 @@ export default observer(() => {
                     if (result) {
                       postStore.resetSearchedIds();
                       await aliveController.drop('search');
-                      history.push(`/search?${qs.stringify(result!, {
+                      router.push(`/search?${qs.stringify(result!, {
                         skipEmptyString: true
                       })}`);
                     }
@@ -258,7 +257,7 @@ export default observer(() => {
                     <MenuItem 
                       onClick={() => {
                         state.anchorEl = null;
-                        history.push(`/users/${userStore.address}`);
+                        router.push(`/users/${userStore.address}`);
                       }}>
                       <div className="py-1 px-3 flex items-center">
                         我的主页
@@ -358,7 +357,7 @@ export default observer(() => {
                   onClick={() => {
                     const path = `/`;
                     if (location.pathname !== path) {
-                      history.push(path);
+                      router.push(path);
                     } else {
                       state.consoleClickCount++;
                       if (state.consoleClickCount === 5) {
@@ -390,7 +389,7 @@ export default observer(() => {
                     }
                     postStore.resetSearchedIds();
                     await aliveController.drop('search');
-                    history.push(`/search`);
+                    router.push(`/search`);
                   }}
                 >
                   <div className="flex items-center justify-center text-24 h-6 w-6">
@@ -412,7 +411,7 @@ export default observer(() => {
                     }
                     const path = `/users/${userStore.address}`;
                     if (location.pathname !== path) {
-                      history.push(path);
+                      router.push(path);
                     }
                   }}
                 >

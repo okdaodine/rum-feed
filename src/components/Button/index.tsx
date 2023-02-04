@@ -3,8 +3,6 @@ import classNames from 'classnames';
 import ButtonProgress from 'components/ButtonProgress';
 import { isMobile } from 'utils/env';
 
-import './index.css';
-
 interface Props {
   className?: string;
   onClick?: () => unknown;

@@ -5,7 +5,7 @@ import Avatar from 'components/Avatar';
 import ago from 'utils/ago';
 import { INotification } from 'apis/types';
 
-import './index.css';
+// import './index.css';
 
 interface IMessagesProps {
   notifications: INotification[]

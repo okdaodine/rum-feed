@@ -14,7 +14,7 @@ import { FiFilter } from 'react-icons/fi';
 import openSearchModal from 'components/openSearchModal';
 import qs from 'query-string';
 import sleep from 'utils/sleep';
-import { useHistory } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { MdChevronLeft } from 'react-icons/md';
 import { isPc, isMobile } from 'utils/env';
 import { useAliveController } from 'react-activation';
@@ -25,7 +25,7 @@ import './index.css';
 export default observer(() => {
   const { userStore, postStore, pathStore } = useStore();
   const total = postStore.searchedPosts.length;
-  const history = useHistory();
+  const router = useRouter();
   const aliveController = useAliveController();
   (window as any).aliveController = aliveController;
   const state = useLocalObservable(() => ({
