@@ -36,4 +36,4 @@ http://localhost:3000
 
 ## Want to deploy your own feed?
 
-Come and take a look at this repository, you can deploy the feed with one click, https://github.com/okdaodine/rum-feed-setup
+Come and take a look at this repository, you can deploy it easily, https://github.com/okdaodine/rum-feed-setup
