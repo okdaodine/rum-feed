@@ -1,19 +1,19 @@
-基于 [Rum](https://github.com/rumsystem/quorum) 实现的社交产品
+A social product that is built on Quorum.
 
-所有的功能实现参考 Quorum 官方推荐的 [ActivityPub](https://docs.rumsystem.net/docs/data-format-and-examples/) 格式。
+All functional implementations refer to the [ActivityPub](https://docs.rumsystem.net/docs/data-format-and-examples/) format recommended by Quorum official.
 
-live 版本：https://feed.base.one
+live version: [https://feed.base.one](https://feed.base.one/)
 
-## 启动前端服务
+## Start frontend service
 
 ```
 yarn install
 yarn dev
 ```
 
-## 启动后端服务
+## Start backend service
 
-另外起一个终端界面，执行：
+Open another terminal window and execute:
 
 ```
 cd server
@@ -21,23 +21,19 @@ yarn install
 yarn dev
 ```
 
-## 访问服务
+## Access service
 
 http://localhost:3000
 
-## 如何获取 Group ？
+## How to get Group?
 
-1. 打开 [Quorum open node](https://node.rumsystem.net/)
-2. 使用 Github 登录
-3. 创建一个 group
-4. 打开 group
-5. 复制 seed
-6. http://localhost:3000/groups 中导入 seed 即可使用
+1. Open [Quorum open node](https://node.rumsystem.net/)
+2. Login with Github
+3. Create a group
+4. Open the group
+5. Copy the seed
+6. Import the seed in [http://localhost:3000/groups](http://localhost:3000/groups) to use
 
-## 反馈和交流
+## Want to deploy your own feed?
 
-可以直接提 [Issues](https://github.com/okdaodine/rum-feed/issues)
-
-## 想自己部署一个 feed ？
-
-可以来看看这个仓库，一键就可以部署 feed，https://github.com/okdaodine/rum-feed-setup
+Come and take a look at this repository, you can deploy the feed with one click, https://github.com/okdaodine/rum-feed-setup
