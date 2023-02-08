@@ -77,7 +77,7 @@ const Main = observer((props: IModalProps) => {
 
   const remove = () => {
     confirmDialogStore.show({
-      content: '确定移除这个种子网络吗？<div class="text-12">（同时移除掉已同步的内容）</div>',
+      content: lang.areYouSureToRemove,
       ok: async () => {
         try {
           await GroupApi.remove(props.groupId);
@@ -86,7 +86,7 @@ const Main = observer((props: IModalProps) => {
         } catch (err: any) {
           if (err.code === 'ERR_NOT_PERMISSION') {
             snackbarStore.show({
-              message: '您还没有权限执行这个操作，请让站长给您加权限',
+              message: lang.noPermission,
               type: 'error',
               duration: 4000
             });
@@ -118,7 +118,7 @@ const Main = observer((props: IModalProps) => {
               <div className="mt-8">
                 <div className="flex">
                   <div className="dark:text-white dark:text-opacity-80 text-gray-500 font-bold bg-gray-100 dark:bg-black dark:bg-opacity-70 rounded-0 pt-2 pb-3 px-4">
-                    种子
+                    {lang.seed}
                   </div>
                 </div>
                 <div className="-mt-3 justify-center bg-gray-100 dark:bg-black dark:bg-opacity-70 rounded-0 pt-3 px-4 md:px-6 pb-3 leading-7 tracking-wide">
@@ -126,7 +126,7 @@ const Main = observer((props: IModalProps) => {
                       enterDelay={300}
                       enterNextDelay={300}
                       placement="left"
-                      title="点击复制"
+                      title={lang.clickToCopy}
                       arrow
                       interactive
                     >
@@ -148,13 +148,13 @@ const Main = observer((props: IModalProps) => {
               <div className="mt-8">
                 <div className="flex">
                   <div className="dark:text-white dark:text-opacity-80 text-gray-500 font-bold bg-gray-100 dark:bg-black dark:bg-opacity-70 rounded-0 pt-2 pb-3 px-4">
-                    节点
+                    {lang.node}
                   </div>
                 </div>
                 <div className="-mt-3 justify-center bg-gray-100 dark:bg-black dark:bg-opacity-70 rounded-0 pt-3 px-4 md:px-6 pb-3 leading-7 tracking-wide">
                   {state.group.status === 'disconnected' && (
                     <div className="flex items-center justify-center bg-red-400 dark:text-black text-white px-2 text-12 rounded-12 mb-2 py-1 leading-none">
-                      <MdOutlineErrorOutline className="mr-1 text-18" /> 节点都访问不了，无法连接
+                      <MdOutlineErrorOutline className="mr-1 text-18" /> {lang.disconnected}
                     </div>
                   )}
                   {state.group.extra.rawGroup.chainAPIs.map((api, i) => (
@@ -163,7 +163,7 @@ const Main = observer((props: IModalProps) => {
                       enterDelay={300}
                       enterNextDelay={300}
                       placement="left"
-                      title="点击复制"
+                      title={lang.clickToCopy}
                       arrow
                       interactive
                     >
@@ -185,7 +185,7 @@ const Main = observer((props: IModalProps) => {
                 <div className="mt-8">
                   <div className="flex">
                     <div className="dark:text-white dark:text-opacity-80 text-gray-500 font-bold bg-gray-100 dark:bg-black dark:bg-opacity-70 rounded-0 pt-2 pb-3 px-4">
-                      区块
+                      {lang.block}
                     </div>
                   </div>
                   <div className="-mt-3 justify-center bg-gray-100 dark:bg-black dark:bg-opacity-70 rounded-0 pt-3 px-4 md:px-6 pb-3 leading-7 tracking-wide">
@@ -209,13 +209,13 @@ const Main = observer((props: IModalProps) => {
                     ))}
                     {state.hasMoreContent && (
                       <div className="text-center pt-1 text-12" onClick={fetchMoreContents}>
-                        <span className="text-sky-500 cursor-pointer">加载更多</span>
+                        <span className="text-sky-500 cursor-pointer">{lang.loadMore}</span>
                       </div>
                     )}
                   </div>
                 </div>
               )}
-              <Button className="w-full mt-8" color="red" outline onClick={remove}>移除</Button>
+              <Button className="w-full mt-8" color="red" outline onClick={remove}>{lang.remove}</Button>
             </div>
           )}
         </div>
@@ -255,7 +255,7 @@ const ContentDetail = observer((props: {
           {state.content && <pre dangerouslySetInnerHTML={{ __html: JSON.stringify(state.content.Data, null, 2) }} />}
           {!state.content && (
             <div className="text-center py-2 opacity-70">
-              没有找到内容
+              {lang.contentNotFound}
             </div>
           )}
         </div>

@@ -28,7 +28,7 @@ const Main = observer(() => {
   return (
     <div className="box-border px-14 pt-6 md:pt-8 pb-10 md:w-[320px]">
       <div className="text-17 font-bold dark:text-white dark:text-opacity-80 text-neutral-700 text-center opacity-90">
-        选择登录方式
+        {lang.connectWallet}
       </div>
       <div className="flex justify-center w-full mt-[30px] md:mt-6">
         <Button
@@ -48,7 +48,7 @@ const Main = observer(() => {
             });
           }}
         >
-          Mixin 登录{state.loadingMixin && '...'}
+          Mixin {state.loadingMixin && '...'}
         </Button>
       </div>
       <div className="justify-center mt-6 md:mt-4 w-full hidden md:flex">
@@ -58,11 +58,11 @@ const Main = observer(() => {
           onClick={async () => {
             if (!(window as any).ethereum) {
               confirmDialogStore.show({
-                content: '请先安装 MetaMask 插件',
-                cancelText: '我知道了',
-                okText: '去安装',
+                content: lang.installMetaMaskFirst,
+                cancelText: lang.gotIt,
+                okText: lang.install,
                 ok: () => {
-                  confirmDialogStore.okText = '跳转中';
+                  confirmDialogStore.okText = lang.redirecting;
                   confirmDialogStore.setLoading(true);
                   window.location.href = 'https://metamask.io';
                 },
@@ -73,7 +73,7 @@ const Main = observer(() => {
             try {
               const { typeTransform } = rumsdk.utils;
               const PREFIX = '\x19Ethereum Signed Message:\n';
-              const message = `Rum 身份认证 | ${Math.round(Date.now() / 1000)}`;
+              const message = `Rum identity authentication | ${Math.round(Date.now() / 1000)}`;
               const provider = new ethers.providers.Web3Provider((window as any).ethereum);
               const accounts = await provider.send("eth_requestAccounts", []);
               const address = accounts[0];
@@ -102,7 +102,7 @@ const Main = observer(() => {
             } catch (err: any) {
               if (err.message === 'invalid address') {
                 snackbarStore.show({
-                  message: '加解密的 address 不匹配',
+                  message: lang.invalid('address'),
                   type: 'error'
                 });
               } else {
@@ -115,7 +115,7 @@ const Main = observer(() => {
             }
           }}
         >
-          MetaMask 登录{state.loadingMetaMask && '...'}
+          MetaMask {state.loadingMetaMask && '...'}
         </Button>
       </div>
       <div className="justify-center mt-6 md:mt-4 w-full flex">
@@ -135,7 +135,7 @@ const Main = observer(() => {
             });
           }}
         >
-          Github 登录{state.loadingGithub && '...'}
+          Github {state.loadingGithub && '...'}
         </Button>
       </div>
       <div className="justify-center mt-6 md:mt-4 w-full flex">
@@ -162,13 +162,13 @@ const Main = observer(() => {
             window.location.href += '?action=openProfileEditor';
           }}
         >
-          {state.loadingRandom ? '正在创建帐号...' : '使用随机帐号'}
+          {state.loadingRandom ? lang.creatingAccount : lang.createAccount }
         </Button>
       </div>
       <div className="dark:text-white dark:text-opacity-80 text-gray-88 opacity-60 mt-5 md:mt-[10px] text-center">
         <span className="cursor-pointer text-12" onClick={() => {
           state.openKeystoreModal = true;
-        }}>密钥登录</span>
+        }}>{lang.importPrivateKey}</span>
       </div>
       <KeystoreModal
         switchingAccount

@@ -434,7 +434,7 @@ const Editor = observer((props: IProps) => {
                   if (!alertedPreviewsRef.current.includes(preview.name)) {
                     alertedPreviewsRef.current.push(preview.name);
                     snackbarStore.show({
-                      message: `还不支持上传 ${ext} (${preview.name})`,
+                      message: `${lang.notSupport} ${ext} (${preview.name})`,
                       type: 'error',
                       duration: 3000
                     });
@@ -532,7 +532,7 @@ const Editor = observer((props: IProps) => {
                     enterDelay={600}
                     enterNextDelay={600}
                     placement="top"
-                    title='您的内容将发送到这里'
+                    title={lang.submitContentToHere}
                     arrow
                     >
                     <div className="bg-[#e3e5e6] bg-opacity-60 dark:bg-opacity-10 text-12 py-[2px] px-2 flex items-center rounded-full">
@@ -547,7 +547,7 @@ const Editor = observer((props: IProps) => {
               enterDelay={1500}
               enterNextDelay={1500}
               placement="left"
-              title="快捷键：Ctrl + Enter 或 Cmd + Enter"
+              title={`${lang.shortcut}: Ctrl + Enter, Cmd + Enter`}
               arrow
               interactive
             >

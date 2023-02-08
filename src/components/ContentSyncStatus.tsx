@@ -38,7 +38,7 @@ export default observer((props: IProps) => {
   return (
     <div>
       {storage === TrxStorage.cache && (
-        <Tooltip placement="top" title={lang.syncingContentTip2} arrow>
+        <Tooltip placement="top" title={lang.syncingContentTip} arrow>
           <div
             className={`${
               props.positionClassName || 'mt-[-2px]'

@@ -132,7 +132,7 @@ export default observer(() => {
             <Editor
               groupId={groupStore.defaultGroup.groupId}
               editorKey="post"
-              placeholder={lang.andNewIdea}
+              placeholder={lang.anyNewIdea}
               autoFocusDisabled
               minRows={3}
               submit={(data) => {

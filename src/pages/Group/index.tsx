@@ -221,7 +221,7 @@ export default observer((props: RouteChildrenProps) => {
                   <Editor
                     groupId={state.group.groupId}
                     editorKey="post"
-                    placeholder={lang.andNewIdea}
+                    placeholder={lang.anyNewIdea}
                     autoFocusDisabled
                     minRows={3}
                     submit={(data) => {
