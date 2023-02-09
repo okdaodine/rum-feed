@@ -78,7 +78,7 @@ router.use('/api/relations', relation.routes(), relation.allowedMethods());
 router.use('/api/:groupId/trx', trx.routes(), trx.allowedMethods());
 router.use('/api/config', config.routes(), config.allowedMethods());
 
-router.use('(.*)', view.routes(), config.allowedMethods());
+router.use('(.*)', view.routes(), view.allowedMethods());
 
 app.use(router.routes(), router.allowedMethods());
 
