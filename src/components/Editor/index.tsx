@@ -22,7 +22,7 @@ import { lang } from 'utils/lang';
 import Base64 from 'utils/base64';
 import { useStore } from 'store';
 import openPhotoSwipe from 'components/openPhotoSwipe';
-import { v4 as uuidV4 } from 'uuid';
+import { v4 as uuid } from 'uuid';
 import sleep from 'utils/sleep';
 import { IPost } from 'apis/types';
 import { IImage } from 'apis/types/common';
@@ -444,7 +444,7 @@ const Editor = observer((props: IProps) => {
               });
               if (newPreviews.length + imageIdSet.size > imageLImit) {
                 for (const preview of newPreviews) {
-                  preview.id = uuidV4();
+                  preview.id = uuid();
                   state.cacheImageIdSet.add(preview.id);
                 }
                 snackbarStore.show({
@@ -460,7 +460,7 @@ const Editor = observer((props: IProps) => {
                   })) as { url: string, kbSize: number };
                   return {
                     ...preview,
-                    name: `${uuidV4()}_${preview.name}`,
+                    name: `${uuid()}_${preview.name}`,
                     url: imageData.url,
                     kbSize: imageData.kbSize,
                   };

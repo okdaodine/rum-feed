@@ -77,7 +77,7 @@ const Main = observer((props: IModalProps) => {
 
   const remove = () => {
     confirmDialogStore.show({
-      content: lang.areYouSureToRemove,
+      content: lang.youAreSureTo(lang.delete),
       ok: async () => {
         try {
           await GroupApi.remove(props.groupId);
@@ -126,7 +126,7 @@ const Main = observer((props: IModalProps) => {
                       enterDelay={300}
                       enterNextDelay={300}
                       placement="left"
-                      title={lang.clickToCopy}
+                      title={lang.copy}
                       arrow
                       interactive
                     >
@@ -163,7 +163,7 @@ const Main = observer((props: IModalProps) => {
                       enterDelay={300}
                       enterNextDelay={300}
                       placement="left"
-                      title={lang.clickToCopy}
+                      title={lang.copy}
                       arrow
                       interactive
                     >
@@ -215,7 +215,7 @@ const Main = observer((props: IModalProps) => {
                   </div>
                 </div>
               )}
-              <Button className="w-full mt-8" color="red" outline onClick={remove}>{lang.remove}</Button>
+              <Button className="w-full mt-8" color="red" outline onClick={remove}>{lang.delete}</Button>
             </div>
           )}
         </div>
@@ -255,7 +255,7 @@ const ContentDetail = observer((props: {
           {state.content && <pre dangerouslySetInnerHTML={{ __html: JSON.stringify(state.content.Data, null, 2) }} />}
           {!state.content && (
             <div className="text-center py-2 opacity-70">
-              {lang.contentNotFound}
+              {lang.notFound(lang.content)}
             </div>
           )}
         </div>

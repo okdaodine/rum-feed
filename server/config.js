@@ -8,11 +8,6 @@ module.exports = {
     dialect: "postgres"
   },
 
-  polling: {
-    limit: 200,
-    maxIndexingUnloadedGroup: 3,
-  },
-
   origin: 'http://localhost:3000',
 
   serverOrigin: 'http://localhost:9000',

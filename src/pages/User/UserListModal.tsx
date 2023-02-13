@@ -115,9 +115,9 @@ const UserList = observer((props: IProps) => {
   return (
     <div className="bg-white dark:bg-[#181818] rounded-12 dark:text-white dark:text-opacity-80 text-gray-4a">
       <div className="px-5 py-4 leading-none text-16 border-b dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] border-gray-d8 border-opacity-75 flex justify-between items-center">
-        {props.type === 'following' && `${isMyList ? '我' : 'Ta '}关注的人`}
-        {props.type === 'followers' && `关注${isMyList ? '我' : ' Ta '}的人`}
-        {props.type === 'muted' && '我屏蔽掉的人'}
+        {props.type === 'following' && lang.following}
+        {props.type === 'followers' && lang.followers}
+        {props.type === 'muted' && lang.muted}
       </div>
       <div className="w-full md:w-[350px] h-[80vh] md:h-[400px] overflow-y-auto" ref={rootRef}>
         {!state.fetched && (
@@ -165,7 +165,7 @@ const UserList = observer((props: IProps) => {
                           {props.type === 'following' && (  
                             <Button size="small" onClick={() => {
                               confirmDialogStore.show({
-                                content: '确定取消关注吗？',
+                                content: lang.youAreSureTo(lang.unfollow),
                                 ok: async () => {
                                   confirmDialogStore.setLoading(true);
                                   await changeRelation('unfollow', relation)
@@ -173,13 +173,13 @@ const UserList = observer((props: IProps) => {
                                 },
                               });
                             }} outline>
-                              取消关注
+                              {lang.unfollow}
                             </Button>
                           )}
                           {props.type === 'muted' && (  
                             <Button size="small" color="red" onClick={() => {
                               confirmDialogStore.show({
-                                content: '确定解除屏蔽吗？',
+                                content: lang.youAreSureTo(lang.unmuted),
                                 ok: async () => {
                                   confirmDialogStore.setLoading(true);
                                   await changeRelation('unmute', relation);
@@ -187,7 +187,7 @@ const UserList = observer((props: IProps) => {
                                 },
                               });
                             }} outline>
-                              解除屏蔽
+                              {lang.unmuted}
                             </Button>
                           )}
                         </div>  
@@ -203,7 +203,7 @@ const UserList = observer((props: IProps) => {
                         await sleep(200);
                         history.push(`/users/${relation.extra.userProfile.userAddress}`);
                       }}>
-                      打开主页
+                      {lang.open}
                     </Button>
                   )}
                 </div>
@@ -211,7 +211,7 @@ const UserList = observer((props: IProps) => {
             })}
             {state.relations.length === 0 && (
               <div className="py-28 text-center text-14 dark:text-white dark:text-opacity-80 text-gray-400 opacity-80">
-                空空如也 ~
+                {lang.empty}
               </div>
             )}
             {state.fetching && (

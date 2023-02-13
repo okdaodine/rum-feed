@@ -177,7 +177,7 @@ const Preload = observer(() => {
       Query.remove('action');
       await sleep(500);
       confirmDialogStore.show({
-        content: '确定退出当前帐号吗？',
+        content: lang.youAreSureTo(lang.exit),
         ok: async () => {
           confirmDialogStore.hide();
           await sleep(400);

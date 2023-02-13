@@ -16,7 +16,7 @@ import { IActivity } from 'rum-sdk-browser';
 import Button from 'components/Button';
 import { isMobile } from 'utils/env';
 import TopPlaceHolder from 'components/TopPlaceHolder';
-import { v4 } from 'uuid';
+import { v4 as uuid } from 'uuid';
 import base64 from 'utils/base64';
 
 export default observer(() => {
@@ -132,7 +132,7 @@ export default observer(() => {
             <Editor
               groupId={groupStore.defaultGroup.groupId}
               editorKey="post"
-              placeholder={lang.anyNewIdea}
+              placeholder={lang.whatsHappening}
               autoFocusDisabled
               minRows={3}
               submit={(data) => {
@@ -140,7 +140,7 @@ export default observer(() => {
                   type: 'Create', 
                   object: {
                     type: 'Note',
-                    id: v4(),
+                    id: uuid(),
                     content: data.content,
                     ...data.images ? {
                       image: data.images.map(v => ({
@@ -181,12 +181,12 @@ export default observer(() => {
           )}
           {state.fetched && postStore.total === 0 && (
             <div className="py-[30vh] text-center dark:text-white dark:text-opacity-80 text-gray-500 text-14 tracking-wider opacity-80">
-              {['latest', 'random'].includes(postStore.feedType) && '来发布一条内容吧 ~'}
-              {postStore.feedType === 'following' && '去关注你感兴趣的人吧 ~'}
+              {['latest', 'random'].includes(postStore.feedType) && lang.letUsPostSomething}
+              {postStore.feedType === 'following' && lang.followPeopleYouAreInterestedIn}
               {postStore.feedType === 'latest' && isMobile && !userStore.isLogin && (
                 <div className="flex justify-center mt-5">
                   <Button onClick={openLoginModal} >
-                    点击发布
+                    {lang.publish}
                   </Button>
                 </div>
               )}

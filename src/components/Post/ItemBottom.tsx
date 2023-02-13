@@ -147,7 +147,7 @@ export default observer((props: IProps) => {
             )
               : <span className={classNames({
                 'invisible': isMobile
-              })}>赞</span>}
+              })}>{lang.like}</span>}
           </div>
           <div
             className={classNames(
@@ -178,14 +178,14 @@ export default observer((props: IProps) => {
             {post.commentCount ? (
               <span className="mr-1 mt-[1px]">{post.commentCount}</span>
             )
-              : <span className="hidden md:block">评论</span>}
+              : <span className="hidden md:block">{lang.comment}</span>}
           </div>
           <div
             className='flex items-center p-2 py-1 mr-5 cursor-pointer tracking-wide dark:text-white dark:text-opacity-50 opacity-80'
             onClick={() => {
               copy(`${window.origin}/posts/${post.id}`);
               snackbarStore.show({
-                message: `链接${lang.copied}`,
+                message: lang.copied,
               });
             }}
           >
@@ -193,7 +193,7 @@ export default observer((props: IProps) => {
               enterDelay={200}
               enterNextDelay={200}
               placement="top"
-              title='复制链接'
+              title={lang.copy}
               arrow
               >
               <div className="text-20 mr-[6px]">
@@ -229,8 +229,8 @@ export default observer((props: IProps) => {
                     onClickDeleteMenu={() => {
                       const deleteByAdmin = userStore.user.role === 'admin' && post.userAddress !== userStore.address;
                       confirmDialogStore.show({
-                        content: deleteByAdmin ? '这是一条来自他人的内容，由于您是管理员，所以您有权利<strong>从界面上</strong>移除这条内容，确定移除吗？' : '确定删除吗？',
-                        cancelText: '取消',
+                        content: deleteByAdmin ? lang.deleteByAdminTip : lang.youAreSureTo(lang.delete),
+                        cancelText: lang.cancel,
                         ok: async () => {
                           confirmDialogStore.setLoading(true);
                           await (deleteByAdmin ? deletePostByAdmin(post.id): deletePost(post.id));
@@ -245,7 +245,7 @@ export default observer((props: IProps) => {
                           }
                           postStore.removePost(post.id);
                           snackbarStore.show({
-                            message: deleteByAdmin ? '已从界面上移除' : '已删除'
+                            message: deleteByAdmin ? lang.deletedFromClient : lang.deleted
                           });
                         },
                       });

@@ -57,7 +57,7 @@ export default observer((props: IProps) => {
           }}
           items={[
             {
-              name: '删除',
+              name: lang.delete,
               className: 'text-red-400',
               onClick: () => {
                 props.onClickDeleteMenu();
@@ -133,7 +133,7 @@ export default observer((props: IProps) => {
                 <span className="flex items-center mr-3">
                   <MdClose className="text-18 opacity-50" />
                 </span>
-                <span>删除</span>
+                <span>{lang.delete}</span>
               </div>
             </MenuItem>
           </div>

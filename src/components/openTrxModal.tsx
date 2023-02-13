@@ -47,7 +47,7 @@ const ModalWrapper = observer((props: IModalProps) => {
       } catch (err) {
         console.error(err);
         snackbarStore.show({
-          message: lang.failToLoad,
+          message: lang.somethingWrong,
           type: 'error',
         });
       }

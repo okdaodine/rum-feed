@@ -77,10 +77,12 @@ const startJob = async (groupId, duration) => {
         }
         if (pendingTrxHelper.isTimeOut(group.groupId)) {
           const chainAPIs = await shuffleChainApi(group.groupId);
-          console.log(`[shuffleChainApi]:`, { groupId, chainAPIs });
+          if (chainAPIs.length > 1) {
+            console.log(`[shuffleChainApi]:`, { groupId, chainAPIs });
+          }
         }
         const contents = await rumsdk.chain.Content.list(listOptions);
-        console.log(`${group.groupName} 请求回来了，获得 ${contents.length} 条`);
+        console.log(`${moment().format('HH:mm:ss')} ${group.groupName}: fetched and got ${contents.length} contents`);
         while (jobShareData.handling) {
           await sleep(200);
         }

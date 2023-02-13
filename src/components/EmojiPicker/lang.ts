@@ -11,5 +11,16 @@ export const lang = i18n.createLangLoader({
     'objects': '物体',
     'symbols': '符号',
     'flags': '旗帜',
-  } }
+  } },
+  en: { content: {
+    'recent': 'Frequently Used',
+    'people': 'Smileys & People',
+    'nature': 'Animals & Nature',
+    'foods': 'Food & Drink',
+    'activity': 'Activities',
+    'places': 'Travel & Places',
+    'objects': 'Objects',
+    'symbols': 'Symbols',
+    'flags': 'Flags',
+  } },
 });

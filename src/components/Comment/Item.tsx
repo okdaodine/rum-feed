@@ -347,7 +347,7 @@ export default observer((props: IProps) => {
                   onClick={() => {
                     copy(`${window.origin}/posts/${comment.objectId}?commentId=${comment.id}`);
                     snackbarStore.show({
-                      message: `链接${lang.copied}`,
+                      message: lang.copied,
                     });
                   }}
                 >
@@ -355,7 +355,7 @@ export default observer((props: IProps) => {
                     enterDelay={200}
                     enterNextDelay={200}
                     placement="top"
-                    title='复制链接'
+                    title={lang.copy}
                     arrow
                     >
                     <div className="flex items-center text-18">

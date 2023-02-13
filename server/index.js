@@ -1,12 +1,3 @@
-const path = require('path');
-const fs = require('fs');
-const isConfigExists = fs.existsSync(path.join(__dirname, './config.js'));
-if (!isConfigExists) {
-  console.log(`server/config.js not exists`);
-  console.log(`Please get it from https://bitbucket.org/pressone/deploy/src/master/medium/nft-bbs.config/config.js`)
-  process.exit(0);
-}
-
 const Koa = require('koa');
 const http = require('http');
 const convert = require('koa-convert');
@@ -32,7 +23,6 @@ const profile = require('./routes/profile');
 const notification = require('./routes/notification');
 const user = require('./routes/user');
 const trx = require('./routes/trx');
-const feature = require('./routes/feature');
 const image = require('./routes/image');
 const relation = require('./routes/relation');
 const config = require('./routes/config');
@@ -67,7 +57,6 @@ router.use('/api/ping', ping.routes(), ping.allowedMethods());
 router.use('/api/groups', group.routes(), group.allowedMethods());
 router.use('/api/contents', content.routes(), content.allowedMethods());
 router.use('/api/seeds', seed.routes(), seed.allowedMethods());
-router.use('/api/features', feature.routes(), feature.allowedMethods());
 router.use('/api/posts', post.routes(), post.allowedMethods());
 router.use('/api/comments', comment.routes(), comment.allowedMethods());
 router.use('/api/profiles', profile.routes(), profile.allowedMethods());

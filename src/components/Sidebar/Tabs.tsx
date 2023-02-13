@@ -2,6 +2,7 @@ import { observer } from 'mobx-react-lite';
 import { useStore } from 'store';
 import { FeedType } from 'store/post';
 import Fade from '@material-ui/core/Fade';
+import { lang } from 'utils/lang';
 
 interface ITab {
   text: string
@@ -9,13 +10,13 @@ interface ITab {
 }
 
 const tabs: ITab[] = [{
-  text: '最新',
+  text: lang.latest,
   value: 'latest'
 }, {
-  text: '关注',
+  text: lang.follow,
   value: 'following'
 }, {
-  text: '发现',
+  text: lang.discovery,
   value: 'random'
 }];
 

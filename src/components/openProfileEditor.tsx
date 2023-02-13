@@ -186,7 +186,7 @@ const ModalWrapper = observer((props: IModalProps) => {
               isDoing={state.loading}
               data-test-id="profile-edit-confirm"
             >
-              {lang.yes}
+              {lang.save}
             </Button>
           </div>
         </div>

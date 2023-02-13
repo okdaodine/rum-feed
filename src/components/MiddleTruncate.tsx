@@ -27,7 +27,7 @@ export default observer((props: IProps) => {
     >
       <Tooltip
         placement="top"
-        title={string + '（点击复制）'}
+        title={string + `（${lang.copy}）`}
         arrow
         interactive
         enterDelay={1000}

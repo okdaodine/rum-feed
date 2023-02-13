@@ -13,7 +13,7 @@ export function createGroupStore() {
       if (this.defaultGroupId && this.map[this.defaultGroupId]) {
         return this.map[this.defaultGroupId];
       }
-      return Object.values(this.map).find(group => group.extra.rawGroup.appKey === 'group_timeline')!;
+      return Object.values(this.map)[0];
     },
 
     setDefaultGroupId(defaultGroupId: string) {

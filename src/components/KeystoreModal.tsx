@@ -6,6 +6,7 @@ import { ethers } from 'ethers';
 import sleep from 'utils/sleep';
 import Modal from 'components/Modal';
 import { isMobile } from 'utils/env';
+import { lang } from 'utils/lang';
 
 interface IProps {
   switchingAccount: boolean
@@ -26,7 +27,7 @@ const Keystore = observer((props: IProps) => {
        <TextField
         multiline
         name='keystore'
-        label={props.switchingAccount ? '输入 Keystore' : "Keystore"}
+        label={props.switchingAccount ? 'Keystore' : "Keystore"}
         value={state.keystore}
         minRows={isMobile ? 10 : 14}
         maxRows={isMobile ? 10 : 14}
@@ -39,7 +40,7 @@ const Keystore = observer((props: IProps) => {
       <div className="mt-4" />
       <TextField
         name='password'
-        label={props.switchingAccount ? '输入 Password' : "Password"}
+        label={props.switchingAccount ? 'Password' : "Password"}
         value={state.password}
         onChange={(e) => { state.password = e.target.value; }}
         variant="outlined"
@@ -63,7 +64,7 @@ const Keystore = observer((props: IProps) => {
               userStore.setAddress(wallet.address);
               userStore.setPrivateKey(wallet.privateKey);
               snackbarStore.show({
-                message: '导入成功',
+                message: lang.done,
               });
               await sleep(2000);
               window.location.reload();
@@ -76,7 +77,7 @@ const Keystore = observer((props: IProps) => {
               });
               state.checking = false;
             }
-          }}>{state.checking ? `正在处理 ${state.percent}%` : '确定'}</Button>
+          }}>{state.checking ? `${lang.processing} ${state.percent}%` : lang.ok}</Button>
         </div>
       )}
     </div>

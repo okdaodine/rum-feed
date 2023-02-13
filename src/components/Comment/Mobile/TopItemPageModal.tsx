@@ -6,6 +6,7 @@ import sleep from 'utils/sleep';
 import BottomLine from 'components/BottomLine';
 import CommentItem from './Item';
 import { IPost, IComment } from 'apis/types';
+import { lang } from 'utils/lang';
 
 interface IProps {
   replyTo: (comment: IComment) => void
@@ -39,7 +40,7 @@ export default observer((props: IProps) => {
       {topComment && (
         <div className="relative overflow-hidden">
           <div className="font-bold items-center text-16 text-center border-b dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] border-gray-200 py-3">
-            评论详情
+            {lang.commentDetail}
           </div>
           <div className="top-comment-height overflow-y-auto h-[90vh]">
             <div className="pt-1">
@@ -56,7 +57,7 @@ export default observer((props: IProps) => {
               <div>
                 <div className="pb-6-px dark:bg-[#181818] bg-gray-f7" />
                 <div className="pt-3 pb-1 px-4 text-16 font-bold dark:text-white dark:text-opacity-80 text-gray-700">
-                  全部回复（{subCommentsGroupMap[topComment.id].length}）
+                  {lang.totalReply(subCommentsGroupMap[topComment.id].length)}
                 </div>
                 <div className="ios-safe-area-padding">
                   {subCommentsGroupMap[topComment.id].map(

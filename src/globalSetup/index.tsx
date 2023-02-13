@@ -7,6 +7,7 @@ import { IComment, IPost } from 'apis/types';
 import { useLocation, useHistory } from 'react-router-dom';
 import Sidebar from 'components/Sidebar';
 import { isMobile } from 'utils/env';
+import { lang } from 'utils/lang';
 
 export default observer(() => {
   const {
@@ -95,7 +96,7 @@ export default observer(() => {
             const { origin } = new URL(href);
             if (origin !== window.origin) {
               confirmDialogStore.show({
-                content: `确定打开外部链接？<div class="text-12 max-w-[250px] break-words leading-[1.5] opacity-80 mt-2">${href.slice(0, 200)}</div>`,
+                content: `${lang.youAreSureTo(lang.openExternalLink)}<div class="text-12 max-w-[250px] break-words leading-[1.5] opacity-80 mt-2">${href.slice(0, 200)}</div>`,
                 ok: () => {
                   isMobile ? confirmDialogStore.setLoading(true) : confirmDialogStore.hide();
                   isMobile ? window.location.href = href : window.open(href);

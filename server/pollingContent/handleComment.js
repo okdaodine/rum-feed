@@ -178,8 +178,8 @@ const notify = async (id) => {
     const name = comment.extra.userProfile.name.split('\n')[0];
     Mixin.notifyByBot({
       iconUrl: comment.extra.userProfile.avatar,
-      title: (comment.content || '').slice(0, 30) || '图片',
-      description: `${truncateByBytes(name, 14)} 发布评论`,
+      title: (comment.content || '').slice(0, 30) || 'Image',
+      description: truncateByBytes(name, 14),
       url: `${config.origin}/posts/${comment.objectId}?commentId=${comment.id}`
     });
   }

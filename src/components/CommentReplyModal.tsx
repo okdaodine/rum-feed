@@ -5,6 +5,7 @@ import { useStore } from 'store';
 import Editor from 'components/Editor';
 import { lang } from 'utils/lang';
 import { IActivity } from 'rum-sdk-browser';
+import { v4 as uuid } from 'uuid';
 
 const Reply = observer(() => {
   const { modalStore, groupStore } = useStore();
@@ -34,6 +35,7 @@ const Reply = observer(() => {
                   type: 'Create',
                   object: {
                     type: 'Note',
+                    id: uuid(),
                     content: data.content,
                     inreplyto: {
                       type: 'Note',

@@ -283,3 +283,12 @@ body::-webkit-scrollbar { /* WebKit */
   padding-bottom: constant(safe-area-inset-bottom) !important;
   padding-bottom: env(safe-area-inset-bottom) !important;
 }
+
+/************************************** Radio **************************************/
+.MuiRadio-colorSecondary {
+  padding: 0 !important;
+  color: rgb(216, 212, 212) !important;
+}
+.MuiRadio-colorSecondary.Mui-checked {
+  color: #F08F38 !important;
+}

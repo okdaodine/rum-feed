@@ -17,7 +17,7 @@ import openLoginModal from 'components/openLoginModal';
 import { IActivity } from 'rum-sdk-browser';
 import Base64 from 'utils/base64';
 import { IImage } from 'apis/image';
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuid } from 'uuid';
 
 const PostEditor = observer((props: {
   post?: IPost
@@ -73,7 +73,7 @@ const PostEditor = observer((props: {
           groupId={group.groupId}
           post={props.post}
           editorKey="post"
-          placeholder={props.post ? '' : lang.anyNewIdea}
+          placeholder={props.post ? '' : lang.whatsHappening}
           autoFocus={isPc}
           autoFocusDisabled={isMobile}
           minRows={isPc ? 3 : 5}
@@ -81,8 +81,8 @@ const PostEditor = observer((props: {
             const payload: IActivity = {
               type: 'Create',
               object: {
-                id: uuidv4(),
                 type: 'Note',
+                id: uuid(),
                 content: data.content,
                 ...data.images ? {
                   image: data.images.map(v => ({

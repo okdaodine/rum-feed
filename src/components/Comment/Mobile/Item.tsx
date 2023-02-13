@@ -314,7 +314,7 @@ export default observer((props: IProps) => {
                   onClick={() => {
                     copy(`${window.origin}/posts/${comment.objectId}?commentId=${comment.id}`);
                     snackbarStore.show({
-                      message: `链接${lang.copied}`,
+                      message: lang.copied,
                     });
                   }}
                 >

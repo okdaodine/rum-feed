@@ -37,6 +37,7 @@ import Tabs from './Tabs';
 import { scrollToTop } from 'components/TopPlaceHolder';
 import copy from 'copy-to-clipboard';
 import { lang } from 'utils/lang';
+import openLanguageModal from 'components/openLanguageModal';
 
 export default observer(() => {
   const {
@@ -132,7 +133,7 @@ export default observer(() => {
 
   const logout = async () => {
     confirmDialogStore.show({
-      content: '确定退出帐号吗？',
+      content: lang.youAreSureTo(lang.exit),
       ok: async () => {
         confirmDialogStore.hide();
         await sleep(400);
@@ -168,12 +169,12 @@ export default observer(() => {
               <div className="flex items-center text-20 ml-3 md:ml-2">
                 <BiArrowBack />
               </div>
-              <span className="ml-3 text-15 leading-none mt-[1px]">返回</span>
+              <span className="ml-3 text-15 leading-none mt-[1px]">{lang.back}</span>
             </div>
           )}
           {isPc && !userStore.isLogin && !isGroupsPage && (
             <div className="px-2 opacity-70">
-              <Button outline size="mini" onClick={openLoginModal}>登录</Button>
+              <Button outline size="mini" onClick={openLoginModal}>{lang.connectWallet}</Button>
             </div>
           )}
           {userStore.isLogin && (
@@ -210,7 +211,7 @@ export default observer(() => {
                   onClick={() => { 
                     copy(window.location.href);
                     snackbarStore.show({
-                      message: `链接${lang.copied}`,
+                      message: lang.copied,
                     });
                   }}>
                   <TiArrowForwardOutline className="text-22 dark:text-white dark:text-opacity-80 text-neutral-400 opacity-80" />
@@ -261,7 +262,15 @@ export default observer(() => {
                         history.push(`/users/${userStore.address}`);
                       }}>
                       <div className="py-1 px-3 flex items-center">
-                        我的主页
+                        {lang.me}
+                      </div>
+                    </MenuItem>
+                    <MenuItem onClick={() => {
+                      openLanguageModal();
+                      state.anchorEl = null;
+                    }}>
+                      <div className="py-1 px-3 flex items-center">
+                        {lang.language}
                       </div>
                     </MenuItem>
                     <MenuItem onClick={() => {
@@ -269,7 +278,7 @@ export default observer(() => {
                       logout();
                     }}>
                       <div className="py-1 px-3 flex items-center text-red-400">
-                        退出帐号
+                        {lang.exit}
                       </div>
                     </MenuItem>
                   </Menu>
@@ -374,7 +383,7 @@ export default observer(() => {
                   <div className="flex items-center justify-center text-24 h-6 w-6">
                     {isHomePage ? <AiFillHome /> : <AiOutlineHome />}
                   </div>
-                  <div className="transform scale-90">首页</div>
+                  <div className="transform scale-90">{lang.home}</div>
                 </div>
                 <div
                   className={classNames(
@@ -396,7 +405,7 @@ export default observer(() => {
                   <div className="flex items-center justify-center text-24 h-6 w-6">
                     {isSearchPage ? <RiSearchFill /> : <RiSearchLine />}
                   </div>
-                  <div className="transform scale-90">搜索</div>
+                  <div className="transform scale-90">{lang.search}</div>
                 </div>
                 <div
                   className={classNames(
@@ -419,7 +428,7 @@ export default observer(() => {
                   <div className="flex items-center justify-center text-26 h-6 w-6">
                     {isMyUserPage ? <IoPerson /> : <IoPersonOutline />}
                   </div>
-                  <div className="transform scale-90">我的</div>
+                  <div className="transform scale-90">{lang.me}</div>
                 </div>
               </div>
             </div>

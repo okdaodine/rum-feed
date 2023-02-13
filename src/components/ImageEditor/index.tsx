@@ -218,7 +218,7 @@ export default observer((props: IProps) => {
               {lang.back}
             </Button>
             <Button onClick={handleAvatarSubmit} isDoing={state.avatarLoading}>
-              {lang.yes}
+              {lang.save}
             </Button>
           </div>
         </div>

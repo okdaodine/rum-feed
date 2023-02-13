@@ -82,7 +82,7 @@ export default observer((props: IMessagesProps) => {
                     )}
                     {!fromObject && (
                       <div className="opacity-60">
-                        内容已被删除
+                        {lang.notFound(lang.content)}
                       </div>
                     )}
                   </div>
@@ -95,7 +95,7 @@ export default observer((props: IMessagesProps) => {
                       onClick={async () => {
                         if (!toObject) {
                           snackbarStore.show({
-                            message: '内容已被删除',
+                            message: lang.notFound(lang.content),
                             type: 'error',
                           });
                           return;
@@ -124,7 +124,7 @@ export default observer((props: IMessagesProps) => {
               </div>
               {showLastReadFlag && (
                 <div className="w-full text-12 text-center pt-10 dark:text-white dark:text-opacity-80 text-gray-400 ">
-                  {lang.lastReadHere}
+                  {lang.lastSeenHere}
                 </div>
               )}
             </div>

@@ -1,3 +1,5 @@
+import { lang } from 'utils/lang';
+
 interface IShowOptions {
   content: string;
   ok: () => void;
@@ -8,8 +10,8 @@ interface IShowOptions {
   contentClassName?: string;
 }
 
-const DEFAULT_CANCEL_TEXT = '取消';
-const DEFAULT_OK_TEXT = '确定';
+const DEFAULT_CANCEL_TEXT = lang.cancel;
+const DEFAULT_OK_TEXT = lang.yes;
 
 export function createConfirmDialogStore() {
   return {

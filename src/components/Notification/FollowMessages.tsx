@@ -49,7 +49,7 @@ export default observer((props: IMessagesProps) => {
                     </div>
                   </div>
                   <div className="mt-[8px] dark:text-white dark:text-opacity-80 text-neutral-500 text-12">
-                    关注了你
+                    {lang.followedYou}
                   </div>
                   <div className="pt-3 mt-[2px] text-12 flex items-center dark:text-white dark:text-opacity-80 text-gray-af leading-none">
                     <div className="mr-6 opacity-90">
@@ -60,7 +60,7 @@ export default observer((props: IMessagesProps) => {
               </div>
               {showLastReadFlag && (
                 <div className="w-full text-12 text-center pt-10 dark:text-white dark:text-opacity-80 text-gray-400">
-                  {lang.lastReadHere}
+                  {lang.lastSeenHere}
                 </div>
               )}
             </div>

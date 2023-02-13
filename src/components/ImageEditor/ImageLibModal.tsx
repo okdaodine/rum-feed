@@ -10,6 +10,7 @@ import sleep from 'utils/sleep';
 import Tooltip from '@material-ui/core/Tooltip';
 import classNames from 'classnames';
 import SearchInput from 'components/SearchInput';
+import { lang } from 'utils/lang';
 
 const LIMIT = isMobile ? 20 : 24;
 
@@ -91,19 +92,17 @@ const ImageLib = observer((props: any) => {
     <div className=" text-center p-0 md:p-8 md:pt-5 image-lib">
       <div className="md:w-600-px relative pt-4 md:pt-0">
         <div className="flex justify-center">
-          <SearchInput className="w-64" placeholder="输入关键词" search={search} />
+          <SearchInput className="w-64" placeholder={lang.searchForImages} search={search} />
         </div>
         {isPc && (
-          <Tooltip placement="top" arrow title="图片由 Pixabay 提供，都是免费可自由使用的">
-            <a
-              href="https://pixabay.com/zh"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="absolute top-0 right-0 w-20 -mr-3 mt-5"
-            >
-              <img src="https://i.xue.cn/172e1214.png" alt="pixabay" />
-            </a>
-          </Tooltip>
+          <a
+            href="https://pixabay.com/zh"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="absolute top-0 right-0 w-20 -mr-3 mt-5"
+          >
+            <img src="https://i.xue.cn/172e1214.png" alt="pixabay" />
+          </a>
         )}
         <div
           className="mt-3 md:mt-2 overflow-y-auto p-1"
@@ -139,7 +138,7 @@ const ImageLib = observer((props: any) => {
                           image.webformatWidth,
                       }}
                       src={image.webformatURL.replace('_640', '_340')}
-                      alt="图片"
+                      alt={lang.image}
                     />
                   }
                 >
@@ -161,10 +160,9 @@ const ImageLib = observer((props: any) => {
           </div>
           {state.isFetched && state.total === 0 && (
             <div className="py-20 text-center dark:text-white dark:text-opacity-80 text-gray-500 text-14">
-              没有搜索到相关的图片呢
+              {lang.noRelatedFound(lang.image)}
               <br />
-              <div className="mt-1">换个关键词试试</div>
-              <div className="mt-1">也可以换英文试一试</div>
+              <div className="mt-1">{lang.tryAnotherKeyword}</div>
             </div>
           )}
           {state.isFetched && state.total > 0 && state.total === state.images.length && (

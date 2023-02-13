@@ -19,7 +19,7 @@ import { RouteChildrenProps } from 'react-router-dom';
 import { useActivate, useUnactivate } from 'react-activation';
 import sleep from 'utils/sleep';
 import { IActivity } from 'rum-sdk-browser';
-import { v4 } from 'uuid';
+import { v4 as uuid } from 'uuid';
 import base64 from 'utils/base64';
 
 import './index.css';
@@ -221,15 +221,15 @@ export default observer((props: RouteChildrenProps) => {
                   <Editor
                     groupId={state.group.groupId}
                     editorKey="post"
-                    placeholder={lang.anyNewIdea}
+                    placeholder={lang.whatsHappening}
                     autoFocusDisabled
                     minRows={3}
                     submit={(data) => {
                       const payload: IActivity = {
                         type: 'Create',
                         object: {
-                          id: v4(),
                           type: 'Note',
+                          id: uuid(),
                           content: data.content,
                           ...data.images ? {
                             image: data.images.map(v => ({
@@ -270,12 +270,12 @@ export default observer((props: RouteChildrenProps) => {
                 )}
                 {state.fetchedPosts && postStore.groupTotal === 0 && (
                   <div className="py-[30vh] text-center dark:text-white dark:text-opacity-80 text-gray-500 text-14 tracking-wider opacity-80">
-                    {['latest', 'random'].includes(postStore.feedType) && '来发布一条内容吧 ~'}
-                    {postStore.feedType === 'following' && '去关注你感兴趣的人吧 ~'}
+                    {['latest', 'random'].includes(postStore.feedType) && lang.letUsPostSomething}
+                    {postStore.feedType === 'following' && lang.followPeopleYouAreInterestedIn}
                     {postStore.feedType === 'latest' && isMobile && !userStore.isLogin && (
                       <div className="flex justify-center mt-5">
                         <Button onClick={openLoginModal} >
-                          点击发布
+                          {lang.publish}
                         </Button>
                       </div>
                     )}

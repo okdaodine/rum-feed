@@ -8,7 +8,6 @@ export * from './uniqueCounter';
 export * from './notification';
 export * from './common';
 export * from './user';
-export * from './feature';
 export * from './vault';
 export * from './relation';
 export * from './config';

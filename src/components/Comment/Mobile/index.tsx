@@ -18,7 +18,7 @@ import TopItemPageModal from './TopItemPageModal';
 import FixedCommentEntry from './FixedCommentEntry';
 import EditorModal from './EditorModal';
 import { IActivity } from 'rum-sdk-browser';
-import { v4 } from 'uuid';
+import { v4 as uuid } from 'uuid';
 import base64 from 'utils/base64';
 
 import './index.css';
@@ -83,9 +83,9 @@ export default observer((props: IProps) => {
         modalStore.pageLoading.hide();
         await sleep(200);
         confirmDialogStore.show({
-          content: '没有找到这条评论',
+          content: lang.notFound(lang.comment),
           cancelDisabled: true,
-          okText: '我知道了',
+          okText: lang.gotIt,
           ok: () => {
             confirmDialogStore.hide();
           },
@@ -191,8 +191,8 @@ export default observer((props: IProps) => {
       const activity: IActivity = {
         type: 'Create',
         object: {
-          id: v4(),
           type: 'Note',
+          id: uuid(),
           content: value,
           inreplyto: {
             type: 'Note',
@@ -225,7 +225,7 @@ export default observer((props: IProps) => {
         });
       }
       snackbarStore.show({
-        message: '发布成功',
+        message: lang.published,
         duration: 1000,
       });
       return true;
@@ -305,7 +305,7 @@ export default observer((props: IProps) => {
       <div className="mt-4 pb-4 border-t-[10px] dark:border-white dark:border-opacity-[0.04] border-gray-f7" />
       {!hasComments && (
         <div className="py-24 text-center dark:text-white dark:text-opacity-80 text-gray-500 text-14 tracking-wider opacity-80">
-          来发布一条评论吧 ~
+          {lang.letUsLeaveAComment}
         </div>
       )}
       {hasComments && (
@@ -314,7 +314,7 @@ export default observer((props: IProps) => {
             <span className="mr-2">
               <FaComment className="text-20" />
             </span>{' '}
-            全部 {props.post.commentCount} 条评论
+            {lang.totalComment(props.post.commentCount)}
           </div>
         </div>
       )}

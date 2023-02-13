@@ -19,6 +19,7 @@ import { MdChevronLeft } from 'react-icons/md';
 import { isPc, isMobile } from 'utils/env';
 import { useAliveController } from 'react-activation';
 import TopPlaceHolder from 'components/TopPlaceHolder';
+import { lang } from 'utils/lang';
 
 import './index.css';
 
@@ -167,14 +168,14 @@ export default observer(() => {
                 postStore.resetSearchedIds();
               }}>
                 <MdChevronLeft />
-                {isPc && <span className="text-14 mr-5">返回</span>}
+                {isPc && <span className="text-14 mr-5">{lang.back}</span>}
               </div>
               <form action="/" className="flex-1 md:flex-initial md:w-64">
                 <TextField
                   className="top-search-input"
                   fullWidth
                   autoFocus
-                  placeholder='输入关键词'
+                  placeholder={lang.search}
                   value={state.q}
                   onChange={(e) => {
                     state.q = e.target.value.trim();
@@ -202,7 +203,7 @@ export default observer(() => {
                   submit();
                 }
               }}>
-                筛选
+                {lang.filter}
                 <FiFilter className="text-14 ml-1" />
               </div>
             </div>
@@ -232,7 +233,7 @@ export default observer(() => {
           )}
           {state.fetched && total === 0 && (
             <div className="pt-[20vh] text-center dark:text-white dark:text-opacity-80 text-gray-500 text-14 leading-10 opacity-70">
-              没有搜索到相关内容<br /> 换一个关键词试试呢？
+              {lang.noRelatedFound(lang.content)}<br /> {lang.tryAnotherKeyword}
             </div>
           )}
         </div>

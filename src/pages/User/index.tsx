@@ -255,7 +255,7 @@ export default observer((props: RouteChildrenProps) => {
     return (
       <div className="h-screen flex justify-center items-center">
         <div className="-mt-20 text-base md:text-xl text-center dark:text-white dark:text-opacity-80 text-gray-600">
-          抱歉，你访问的用户不存在
+          {lang.notFound(lang.user)}
         </div>
       </div>
     );
@@ -321,7 +321,7 @@ export default observer((props: RouteChildrenProps) => {
                     <span className="text-16 font-bold">
                       {user.followingCount}
                     </span>{' '}
-                    关注{' '}
+                    {lang.follow}{' '}
                   </span>
                   <span className="opacity-50 mx-3 mt-[10px]">|</span>
                   <span
@@ -334,17 +334,17 @@ export default observer((props: RouteChildrenProps) => {
                     }}
                   >
                     <span className="text-16 font-bold">{user.followerCount}</span>{' '}
-                    被关注
+                    {lang.followers}
                   </span>
                 </div>
                 {fromTwitter && (
                   <div className="text-black bg-white dark:bg-opacity-90 py-1 px-3 rounded-full w-full text-12 mt-4 text-center tracking-wider">
-                    本号所有内容来自推特用户 @{profile.name.split('\n@')[1]}
+                    {lang.allContentsComeFromTwitterUser} @{profile.name.split('\n@')[1]}
                   </div>
                 )}
                 {fromWeibo && (
                   <div className="text-black bg-white dark:bg-opacity-90 py-1 px-3 rounded-full w-full text-12 mt-4 text-center tracking-wider">
-                    本号所有内容来自微博用户 @{profile.name.split('\n@')[0]}
+                    {lang.allContentsComeFromWeiboUser} @{profile.name.split('\n@')[0]}
                   </div>
                 )}
               </div>
@@ -376,7 +376,7 @@ export default observer((props: RouteChildrenProps) => {
                           state.showUserListModal = true;
                         }}>  
                           <div className="py-1 pl-1 pr-3 flex items-center dark:text-white dark:text-opacity-80 text-neutral-700">
-                            <BsFillMicMuteFill className="mr-2 text-16" /> 屏蔽列表
+                            <BsFillMicMuteFill className="mr-2 text-16" /> {lang.mutedList}
                           </div>
                         </MenuItem>
                       )}
@@ -384,7 +384,7 @@ export default observer((props: RouteChildrenProps) => {
                         <MenuItem onClick={() => {
                           state.anchorEl = null;
                           confirmDialogStore.show({
-                            content: '确定退出帐号吗？',
+                            content: lang.youAreSureTo(lang.exit),
                             ok: async () => {
                               confirmDialogStore.hide();
                               await sleep(400);
@@ -395,7 +395,7 @@ export default observer((props: RouteChildrenProps) => {
                           });
                         }}>  
                           <div className="py-1 pl-1 pr-3 flex items-center text-red-400">
-                            <BiLogOutCircle className="mr-2 text-16" /> 退出帐号
+                            <BiLogOutCircle className="mr-2 text-16" /> {lang.exit}
                           </div>
                         </MenuItem>
                       )}
@@ -403,7 +403,7 @@ export default observer((props: RouteChildrenProps) => {
                         <MenuItem onClick={() => {
                           state.anchorEl = null;
                           confirmDialogStore.show({
-                            content: `确定屏蔽吗？`,
+                            content: lang.youAreSureTo(lang.mute),
                             ok: async () => {
                               confirmDialogStore.setLoading(true);
                               await changeRelation('mute');
@@ -412,7 +412,7 @@ export default observer((props: RouteChildrenProps) => {
                           });
                         }}>
                           <div className="py-1 pl-3 pr-4 flex items-center text-red-400">
-                            <BsFillMicMuteFill className="mr-2 text-16" /> 屏蔽
+                            <BsFillMicMuteFill className="mr-2 text-16" /> {lang.mute}
                           </div>
                         </MenuItem>
                       )}
@@ -426,14 +426,14 @@ export default observer((props: RouteChildrenProps) => {
                           color="white"
                           outline
                           onClick={() => changeRelation('unfollow')}>
-                          已关注
+                          {lang.followed}
                         </Button>
                       ) : (
                         <Button
                           isDoing={state.submitting && !confirmDialogStore.open}
                           color='white'
                           onClick={() => changeRelation('follow')}>
-                          关注
+                          {lang.follow}
                         </Button>
                       )}
                     </div>
@@ -448,14 +448,14 @@ export default observer((props: RouteChildrenProps) => {
                       <div className="flex items-center text-16 mr-1">
                         <BiEditAlt />
                       </div>
-                      {isMobile ? '编辑' : '编辑资料'}
+                      {isMobile ? lang.edit : lang.editProfile}
                     </Button>
                   )}
                   {!isMyself && user.muted && (
                     <Button
                       color='red'
                       onClick={() => changeRelation('unmute')}>
-                        已屏蔽
+                        {lang.muted}
                     </Button>
                   )}
                 </div>
@@ -498,13 +498,13 @@ export default observer((props: RouteChildrenProps) => {
                   }
                 }}
               >
-                点击发布第一条内容
+                {lang.letUsPostSomething}
               </Button>
             </div>
           )}
           {!isMyself && state.fetched && user.postCount === 0 && (
             <div className="py-32 text-center dark:text-white dark:text-opacity-80 text-gray-500 text-14">
-              还没有发布过内容
+              {lang.notExist(lang.content)}
             </div>
           )}
           {state.fetched && state.fetchingPosts && (

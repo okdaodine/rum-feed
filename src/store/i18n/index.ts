@@ -2,13 +2,13 @@ import { action, observable } from 'mobx';
 
 const STORAGE_KEY = 'I18N_CURRENT_LANG';
 
-const allLang = ['cn'] as const;
+const allLang = ['en', 'cn'] as const;
 
 export type AllLanguages = typeof allLang[number];
 type LangData<T> = Record<AllLanguages, { content: T }>;
 
 const state = observable({
-  lang: 'cn' as AllLanguages,
+  lang: 'en' as AllLanguages,
 });
 
 const createLangLoader = <T>(langData: LangData<T>) => {
@@ -31,9 +31,9 @@ const switchLang = action((lang: AllLanguages) => {
 });
 
 const init = action(() => {
-  let value = (localStorage.getItem(STORAGE_KEY) || 'cn') as AllLanguages;
+  let value = (localStorage.getItem(STORAGE_KEY) || 'en') as AllLanguages;
   if (!allLang.includes(value)) {
-    value = 'cn';
+    value = 'en';
   }
   state.lang = value;
 });
@@ -45,3 +45,6 @@ export const i18n = {
   createLangLoader,
   switchLang,
 };
+
+
+(window as any).i18n = i18n;

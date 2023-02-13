@@ -9,6 +9,7 @@ import Button from 'components/Button';
 import { FiFilter } from 'react-icons/fi';
 import { TextField } from '@material-ui/core';
 import Fade from '@material-ui/core/Fade';
+import { lang } from 'utils/lang';
 
 interface IProps {
   q: string
@@ -53,7 +54,7 @@ const Main = observer((props: IModalProps) => {
       <form action="/">
         <TextField
           autoFocus={isPc}
-          label="输入关键词"
+          label={lang.search}
           value={state.q}
           onChange={(e) => {
             state.q = e.target.value.trim();
@@ -69,14 +70,14 @@ const Main = observer((props: IModalProps) => {
         <div className="flex justify-center mt-5 dark:text-white dark:text-opacity-80 text-gray-9c" onClick={() => {
           state.showCondition = true;
         }}>
-          <span className="cursor-pointer flex items-center">条件筛选 <FiFilter className="text-14 ml-1" /></span>
+          <span className="cursor-pointer flex items-center">{lang.filter} <FiFilter className="text-14 ml-1" /></span>
         </div>
       )}
       {state.showCondition && (
         <Fade in={true} timeout={350}> 
           <div className="mt-5 w-[170px] mx-auto opacity-70">
             <TextField
-              label="至少要有几个点赞"
+              label={lang.minimumLikes}
               value={state.minLike}
               onChange={(e) => {
                 const re = /^[0-9]+$/;
@@ -93,7 +94,7 @@ const Main = observer((props: IModalProps) => {
             />
             <div className="mt-3" />
             <TextField
-              label="至少要有几条评论"
+              label={lang.minimumComments}
               value={state.minComment}
               onChange={(e) => {
                 const re = /^[0-9]+$/;
@@ -116,7 +117,7 @@ const Main = observer((props: IModalProps) => {
         className="w-full mt-10"
         onClick={submit}
       >
-        确定
+        {lang.ok}
       </Button>
     </div>
   )

@@ -123,19 +123,19 @@ const UserCard = observer((props: IUserCardProps) => {
               {' '}
               <span className="text-14 font-bold">
                 {user.postCount}
-              </span> 内容{' '}
+              </span> {lang.content}{' '}
             </span>
             <span className="mx-[10px] opacity-50">|</span>
             <span>
               <span className="text-14 font-bold">
                 {user.followingCount}
               </span>{' '}
-              关注{' '}
+              {lang.following}{' '}
             </span>
             <span className="opacity-50 mx-[10px]">|</span>
             <span>
               <span className="text-14 font-bold">{user.followerCount}</span>{' '}
-              被关注
+              {lang.followers}
             </span>
           </div>
 
@@ -143,8 +143,8 @@ const UserCard = observer((props: IUserCardProps) => {
             <div className="absolute top-8 right-5">
               <div>
                 {user.following ?
-                  <Button isDoing={state.submitting} outline onClick={() => changeRelation('unfollow')}>已关注</Button> :
-                  <Button isDoing={state.submitting} onClick={() => changeRelation('follow')}>关注</Button>
+                  <Button isDoing={state.submitting} outline onClick={() => changeRelation('unfollow')}>{lang.followed}</Button> :
+                  <Button isDoing={state.submitting} onClick={() => changeRelation('follow')}>{lang.follow}</Button>
                 }
               </div>
             </div>

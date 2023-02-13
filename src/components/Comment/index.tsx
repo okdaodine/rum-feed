@@ -18,7 +18,7 @@ import Editor from 'components/Editor';
 import Query from 'utils/query';
 import { useHistory } from 'react-router-dom';
 import openLoginModal from 'components/openLoginModal';
-import { v4 } from 'uuid';
+import { v4 as uuid } from 'uuid';
 import base64 from 'utils/base64';
 
 interface IProps {
@@ -211,13 +211,13 @@ export default observer((props: IProps) => {
           minRows={
             inPostDetail && comments.length === 0 ? 3 : 1
           }
-          placeholder={lang.publishYourComment}
+          placeholder={lang.leaveYourComment}
           submit={async (data) => {
             const payload: IActivity = {
               type: 'Create',
               object: {
-                id: v4(),
                 type: 'Note',
+                id: uuid(),
                 content: data.content,
                 inreplyto: {
                   type: 'Note',

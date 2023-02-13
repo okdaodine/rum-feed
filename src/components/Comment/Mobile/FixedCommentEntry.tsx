@@ -5,6 +5,7 @@ import Fade from '@material-ui/core/Fade';
 import classNames from 'classnames';
 import { FaRegComment } from 'react-icons/fa';
 import { RiThumbUpLine, RiThumbUpFill } from 'react-icons/ri';
+import { lang } from 'utils/lang';
 
 interface IProps {
   replyTo: (comment: IComment) => void
@@ -54,8 +55,8 @@ export default observer((props: IProps) => {
             }}
           >
             {topCommentPage.open
-              ? `回复 ${topCommentPage.topComment?.extra.userProfile.name}`
-              : '写评论...'}
+              ? `${lang.reply} ${topCommentPage.topComment?.extra.userProfile.name}`
+              : `${lang.comment}...`}
           </div>
           {!topCommentPage.open && (
             <div className="flex items-center py-1 dark:text-white dark:text-opacity-60 text-gray-99">

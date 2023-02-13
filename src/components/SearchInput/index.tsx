@@ -1,10 +1,8 @@
 import React from 'react';
 import { observer, useLocalObservable } from 'mobx-react-lite';
 import { TextField } from '@material-ui/core';
-import { useStore } from 'store';
 import { MdSearch, MdClose } from 'react-icons/md';
 import sleep from 'utils/sleep';
-import { lang } from 'utils/lang';
 
 import './index.css';
 
@@ -21,7 +19,6 @@ interface IProps {
 }
 
 export default observer((props: IProps) => {
-  const { snackbarStore } = useStore();
   const state = useLocalObservable(() => ({
     value: '',
   }));
@@ -41,10 +38,6 @@ export default observer((props: IProps) => {
       e.preventDefault();
       e.target.blur();
       if (props.required && !state.value) {
-        snackbarStore.show({
-          message: lang.searchText,
-          type: 'error',
-        });
         return;
       }
       await sleep(100);

@@ -21,11 +21,11 @@ if (config.mixinBotKeystore) {
         if (msg.status === 'SENT') {
           const where = { userId: msg.user_id };
           const botSub = await BotSubscription.findOne({ where });
-          if (msg.data === '取消') {
+          if (msg.data === 'cancel') {
             if (botSub) {
               await BotSubscription.update({ status: 'close' }, { where });
             }
-            client.message.sendText(msg.user_id, `订阅已成功取消了。回复任意消息即可重新订阅`);
+            client.message.sendText(msg.user_id, `Subscription has been successfully canceled. Reply to any message to resubscribe`);
           } else {
             if (!botSub) {
               await BotSubscription.create({ status: 'open', ...where });
@@ -33,14 +33,14 @@ if (config.mixinBotKeystore) {
             if (botSub && botSub.status === 'close') {
               await BotSubscription.update({ status: 'open' }, { where });
             }
-            client.message.sendText(msg.user_id, `欢迎您，您已成功订阅动态。之后如果有新的内容发布，我们将会给您推送消息。如果您想取消订阅，可以回复"取消"`);
+            client.message.sendText(msg.user_id, `Welcome, you have successfully subscribed. If new content is released, we will send you a message. If you want to unsubscribe, you can reply "cancel"`);
             const me = await client.user.profile();
             client.message.sendAppCard(msg.user_id, {
               app_id: config.mixinBotKeystore.user_id,
               icon_url: me.app.icon_url,
               title: me.app.name,
               action: me.app.home_uri,
-              description: '点击打开首页',
+              description: 'Launch App',
               shareable: true
             });
           }

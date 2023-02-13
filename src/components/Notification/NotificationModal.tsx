@@ -62,7 +62,7 @@ const Notification = observer((props: IProps) => {
     },
     {
       unreadCount: 0,
-      text: '关注',
+      text: lang.follow,
       type: 'follow',
     }
   ] as ITab[];
@@ -202,7 +202,7 @@ const Notification = observer((props: IProps) => {
             }
             {state.notifications.length === 0 && (
               <div className="py-28 text-center text-14 dark:text-white dark:text-opacity-80 text-gray-400 opacity-80">
-                {lang.empty(lang.message)}
+                {lang.notExist(lang.message)}
               </div>
             )}
           </div>

@@ -3,6 +3,7 @@ import Modal from 'components/Modal';
 import Button from 'components/Button';
 import { useStore } from 'store';
 import { isPc, isMobile } from 'utils/env';
+import { lang } from 'utils/lang';
 
 export default observer(() => {
   const { confirmDialogStore } = useStore();
@@ -13,7 +14,7 @@ export default observer(() => {
     content,
     cancelText,
     cancelDisabled = false,
-    okText = '确定',
+    okText = lang.ok,
     contentClassName,
     loading,
   } = confirmDialogStore;
