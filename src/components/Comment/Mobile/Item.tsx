@@ -12,7 +12,7 @@ import Fade from '@material-ui/core/Fade';
 import { TiArrowForwardOutline } from 'react-icons/ti';
 import copy from 'copy-to-clipboard';
 import { lang } from 'utils/lang';
-import openLoginModal from 'components/openLoginModal';
+import openLoginModal from 'components/Wallet/openLoginModal';
 import { RiThumbUpLine, RiThumbUpFill } from 'react-icons/ri';
 import Images from 'components/Images';
 import openPhotoSwipe from 'components/openPhotoSwipe';

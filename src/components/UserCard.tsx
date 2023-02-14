@@ -11,7 +11,7 @@ import { useHistory } from 'react-router-dom';
 import classNames from 'classnames';
 import { isPc, isMobile } from 'utils/env';
 import Button from 'components/Button';
-import openLoginModal from 'components/openLoginModal';
+import openLoginModal from 'components/Wallet/openLoginModal';
 import { TrxApi } from 'apis';
 import { lang } from 'utils/lang';
 import UserName from 'components/UserName';

@@ -19,7 +19,7 @@ import Fade from '@material-ui/core/Fade';
 import { TiArrowForwardOutline } from 'react-icons/ti';
 import copy from 'copy-to-clipboard';
 import Tooltip from '@material-ui/core/Tooltip';
-import openLoginModal from 'components/openLoginModal';
+import openLoginModal from 'components/Wallet/openLoginModal';
 import sleep from 'utils/sleep';
 import { TrxApi } from 'apis';
 import { FaRegComment } from 'react-icons/fa';

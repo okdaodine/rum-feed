@@ -7,7 +7,7 @@ import Comments from './items';
 import { useStore } from 'store';
 import { TrxStorage } from 'apis/common';
 import { IComment, IPost } from 'apis/types';
-import openLoginModal from 'components/openLoginModal';
+import openLoginModal from 'components/Wallet/openLoginModal';
 import { CommentApi, TrxApi } from 'apis';
 import { FaComment } from 'react-icons/fa';
 import { lang } from 'utils/lang';

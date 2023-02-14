@@ -12,7 +12,7 @@ import ImageEditor from 'components/ImageEditor';
 import { lang } from 'utils/lang';
 import { TextField } from '@material-ui/core';
 import { runInAction } from 'mobx';
-import openLoginModal from 'components/openLoginModal';
+import openLoginModal from 'components/Wallet/openLoginModal';
 import sleep from 'utils/sleep';
 import Modal from 'components/Modal';
 import store from 'store2';
@@ -97,7 +97,7 @@ const ModalWrapper = observer((props: IModalProps) => {
       handleClose();
       await sleep(400);
       snackbarStore.show({
-        message: props.emptyName ? '已保存' : '修改成功',
+        message: lang.saved,
       });
     } catch (err) {
       console.log(err);
@@ -124,24 +124,11 @@ const ModalWrapper = observer((props: IModalProps) => {
                   width={200}
                   placeholderWidth={120}
                   editorPlaceholderWidth={200}
-                  // name="头像"
                   imageUrl={state.profile.avatar}
                   getImageUrl={(url: string) => {
                     state.profile.avatar = url;
                   }}
                 />
-                {/* <div className="px-4" />
-                  <ImageEditor
-                    width={250}
-                    placeholderWidth={150}
-                    editorPlaceholderWidth={250}
-                    ratio={3 / 2}
-                    name="封面"
-                    imageUrl={state.profile.cover}
-                    getImageUrl={(url: string) => {
-                      state.profile.cover = url;
-                    }}
-                  /> */}
               </div>
               <div className="pt-4 px-16">
                 <TextField
@@ -159,23 +146,6 @@ const ModalWrapper = observer((props: IModalProps) => {
                   margin="dense"
                   variant="outlined"
                 />
-
-                {/* <TextField
-                  className="w-full mt-6"
-                  label="简介"
-                  size="small"
-                  multiline
-                  minRows={3}
-                  value={state.profile.intro}
-                  onChange={(e) => {
-                    if (e.target.value.trim().length > 300) {
-                      return;
-                    }
-                    state.profile.intro = e.target.value;
-                  }}
-                  margin="dense"
-                  variant="outlined"
-                /> */}
               </div>
             </div>
           </div>

@@ -13,7 +13,7 @@ import Menu from 'components/ObjectMenu';
 import { useHistory } from 'react-router-dom';
 import sleep from 'utils/sleep';
 import openEditor from 'components/Post/OpenEditor';
-import openLoginModal from 'components/openLoginModal';
+import openLoginModal from 'components/Wallet/openLoginModal';
 import { isMobile, isPc } from 'utils/env';
 import { TiArrowForwardOutline } from 'react-icons/ti';
 import { lang } from 'utils/lang';

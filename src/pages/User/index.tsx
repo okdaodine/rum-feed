@@ -20,7 +20,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { BsFillMicMuteFill } from 'react-icons/bs';
 import { BiLogOutCircle } from 'react-icons/bi';
 import UserListModal from './UserListModal';
-import openLoginModal from 'components/openLoginModal';
+import openLoginModal from 'components/Wallet/openLoginModal';
 import { TrxApi } from 'apis';
 import { lang } from 'utils/lang';
 import store from 'store2';
@@ -29,6 +29,8 @@ import { useActivate, useUnactivate } from 'react-activation';
 import { RouteChildrenProps } from 'react-router-dom';
 import UserName from 'components/UserName';
 import openPhotoSwipe from 'components/openPhotoSwipe';
+import { RiKey2Fill } from 'react-icons/ri';
+import openWalletModal from 'components/Wallet/openWalletModal';
 
 import './index.css';
 
@@ -383,12 +385,22 @@ export default observer((props: RouteChildrenProps) => {
                       {isMyself && (
                         <MenuItem onClick={() => {
                           state.anchorEl = null;
+                          openWalletModal(userStore.privateKey);
+                        }}>  
+                          <div className="py-1 pl-1 pr-3 flex items-center dark:text-white dark:text-opacity-80 text-neutral-700">
+                            <RiKey2Fill className="mr-2 text-16" /> {lang.wallet}
+                          </div>
+                        </MenuItem>
+                      )}
+                      {isMyself && (
+                        <MenuItem onClick={() => {
+                          state.anchorEl = null;
                           confirmDialogStore.show({
                             content: lang.youAreSureTo(lang.exit),
                             ok: async () => {
                               confirmDialogStore.hide();
                               await sleep(400);
-                              store.clear();
+                              userStore.clear();
                               modalStore.pageLoading.show();
                               window.location.href = `/`;
                             },

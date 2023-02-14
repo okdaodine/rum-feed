@@ -11,7 +11,7 @@ import { useStore } from 'store';
 import classNames from 'classnames';
 import useInfiniteScroll from 'react-infinite-scroll-hook';
 import Loading from 'components/Loading';
-import openLoginModal from 'components/openLoginModal';
+import openLoginModal from 'components/Wallet/openLoginModal';
 import Button from 'components/Button';
 import { isMobile } from 'utils/env';
 import TopPlaceHolder, { scrollToTop } from 'components/TopPlaceHolder';

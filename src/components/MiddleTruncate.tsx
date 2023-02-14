@@ -27,7 +27,7 @@ export default observer((props: IProps) => {
     >
       <Tooltip
         placement="top"
-        title={string + `（${lang.copy}）`}
+        title={string}
         arrow
         interactive
         enterDelay={1000}

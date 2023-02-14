@@ -7,20 +7,20 @@ import Modal from 'components/Modal';
 import { useStore } from 'store';
 import { ethers } from 'ethers';
 import store from 'store2';
-import KeystoreModal from './KeystoreModal';
+
 import Button from 'components/Button';
 import sleep from 'utils/sleep';
 import rumSDK from 'rum-sdk-browser';
 import { lang } from 'utils/lang';
+import openWalletModal from './openWalletModal';
+import ImportModal from './ImportModal';
 
 const Main = observer(() => {
   const { userStore, modalStore, snackbarStore, confirmDialogStore } = useStore();
   const state = useLocalObservable(() => ({
-    loadingMixin: false,
     loadingMetaMask: false,
-    loadingGithub: false,
-    loadingRandom: false,
-    openKeystoreModal: false,
+    creatingWallet: false,
+    openImportModal: false
   }));
 
   return (
@@ -95,39 +95,42 @@ const Main = observer(() => {
           className="tracking-widest"
           fullWidth
           onClick={async () => {
-            state.loadingRandom = true;
-            await sleep(200);
+            state.creatingWallet = true;
+            await sleep(10);
             const wallet = ethers.Wallet.createRandom();
-            const password = "123";
-            const keystore = await wallet.encrypt(password, {
-              scrypt: {
-                N: 64
-              }
-            });
-            modalStore.pageLoading.show();
-            userStore.setKeystore(keystore.replaceAll('\\', ''));
-            userStore.setPassword(password);
-            userStore.setAddress(wallet.address);
-            userStore.setPrivateKey(wallet.privateKey);
-            store.remove('groupStatusMap');
-            store.remove('lightNodeGroupMap');
-            window.location.href += '?action=openProfileEditor';
+            await sleep(200);
+            const done = await openWalletModal(wallet.privateKey);
+            state.creatingWallet = false;
+            if (done) {
+              modalStore.pageLoading.show();
+              userStore.saveAddress(wallet.address);
+              userStore.savePrivateKey(wallet.privateKey);
+              store.remove('groupStatusMap');
+              store.remove('lightNodeGroupMap');
+              window.location.href += '?action=openProfileEditor';
+            }
           }}
         >
-          {state.loadingRandom ? lang.creatingAccount : lang.createAccount }
+          {lang.createWallet}{state.creatingWallet && '...'}
         </Button>
       </div>
-      <div className="dark:text-white dark:text-opacity-80 text-gray-88 opacity-60 mt-5 md:mt-[10px] text-center">
-        <span className="cursor-pointer text-12" onClick={() => {
-          state.openKeystoreModal = true;
-        }}>{lang.importPrivateKey}</span>
+      <div className="justify-center mt-6 md:mt-4 w-full flex">
+        <Button
+          className="tracking-widest"
+          fullWidth
+          onClick={async () => {
+            state.openImportModal = true;
+          }}
+        >
+          {lang.importWallet}
+        </Button>
       </div>
-      <KeystoreModal
-        switchingAccount
-        open={state.openKeystoreModal}
+      <ImportModal
+        open={state.openImportModal}
         onClose={() => {
-        state.openKeystoreModal = false;
-      }} />
+          state.openImportModal = false;
+        }}
+      />
     </div>
   )
 });

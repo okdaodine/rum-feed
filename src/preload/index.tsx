@@ -6,10 +6,9 @@ import { lang } from 'utils/lang';
 import Query from 'utils/query';
 import { isEmpty } from 'lodash';
 import openProfileEditor from 'components/openProfileEditor';
-import openLoginModal from 'components/openLoginModal';
+import openLoginModal from 'components/Wallet/openLoginModal';
 import sleep from 'utils/sleep';
 import { useHistory } from 'react-router-dom';
-import store from 'store2';
 
 const Preload = observer(() => {
   const { userStore, groupStore, confirmDialogStore, modalStore, configStore } = useStore();
@@ -108,7 +107,7 @@ const Preload = observer(() => {
         ok: async () => {
           confirmDialogStore.hide();
           await sleep(400);
-          store.clear();
+          userStore.clear();
           modalStore.pageLoading.show();
           window.location.href = `/?action=openLoginModal`;
         },

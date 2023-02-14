@@ -13,7 +13,7 @@ import { useStore } from 'store';
 import { toJS } from 'mobx';
 import { isMobile, isPc } from 'utils/env';
 import Modal from 'components/Modal';
-import openLoginModal from 'components/openLoginModal';
+import openLoginModal from 'components/Wallet/openLoginModal';
 import { IActivity } from 'rum-sdk-browser';
 import Base64 from 'utils/base64';
 import { IImage } from 'apis/image';

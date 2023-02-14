@@ -20,7 +20,7 @@ import { RiSearchLine, RiSearchFill } from 'react-icons/ri';
 import { AiOutlineHome, AiFillHome, AiOutlineSearch, AiOutlineGithub } from 'react-icons/ai';
 import Badge from '@material-ui/core/Badge';
 import classNames from 'classnames';
-import openLoginModal from 'components/openLoginModal';
+import openLoginModal from 'components/Wallet/openLoginModal';
 import MessagesModal from 'components/Notification/NotificationModal';
 import VConsole from 'vconsole';
 import { getSocket } from 'utils/socket';
@@ -137,7 +137,7 @@ export default observer(() => {
       ok: async () => {
         confirmDialogStore.hide();
         await sleep(400);
-        store.clear();
+        userStore.clear();
         modalStore.pageLoading.show();
         window.location.href = `/`;
       },

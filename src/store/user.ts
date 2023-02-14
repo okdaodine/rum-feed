@@ -6,11 +6,7 @@ export function createUserStore() {
     _address: store('address') || '',
 
     privateKey: store('privateKey') || '',
-
-    keystore: store('keystore') || '',
-
-    password: store('password') || '',
-    
+ 
     jwt: store('jwt') || '',
     
     userMap: {} as Record<string, IUser | undefined>,
@@ -29,24 +25,12 @@ export function createUserStore() {
       return this.userMap[this.address]!;
     },
 
-    setAddress(address: string) {
-      this._address = address;
+    saveAddress(address: string) {
       store('address', address);
     },
 
-    setPrivateKey(privateKey: string) {
-      this.privateKey = privateKey;
+    savePrivateKey(privateKey: string) {
       store('privateKey', privateKey);
-    },
-
-    setKeystore(keystore: string) {
-      this.keystore = keystore;
-      store('keystore', keystore);
-    },
-
-    setPassword(password: string) {
-      this.password = password;
-      store('password', password);
     },
 
     setProfile(profile: IProfile) {
@@ -64,9 +48,9 @@ export function createUserStore() {
       }
     },
 
-    setJwt(jwt: string) {
-      this.jwt = jwt;
-      store('jwt', jwt);
-    },
+    clear() {
+      store.remove('address');
+      store.remove('privateKey');
+    }
   };
 }

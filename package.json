@@ -90,6 +90,5 @@
     "postcss": "^8.4.14",
     "tailwindcss": "^3.1.4"
   },
-  "license": "UNLICENSED",
-  "proxy": "https://vault.rumsystem.net/v1/user"
+  "license": "UNLICENSED"
 }

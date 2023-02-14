@@ -26,7 +26,7 @@ import { v4 as uuid } from 'uuid';
 import sleep from 'utils/sleep';
 import { IPost } from 'apis/types';
 import { IImage } from 'apis/types/common';
-import openLoginModal from 'components/openLoginModal';
+import openLoginModal from 'components/Wallet/openLoginModal';
 import { isMobile, isPc } from 'utils/env';
 
 import './index.css';

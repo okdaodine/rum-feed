@@ -17,7 +17,7 @@ import Loading from 'components/Loading';
 import Editor from 'components/Editor';
 import Query from 'utils/query';
 import { useHistory } from 'react-router-dom';
-import openLoginModal from 'components/openLoginModal';
+import openLoginModal from 'components/Wallet/openLoginModal';
 import { v4 as uuid } from 'uuid';
 import base64 from 'utils/base64';
 

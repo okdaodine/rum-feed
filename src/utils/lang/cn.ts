@@ -68,9 +68,8 @@ export const content = {
   install: '安装',
   cancel: '取消',
   redirecting: '跳转中',
-  creatingAccount: '正在创建帐号...',
-  createAccount: '使用随机帐号',
-  importPrivateKey: '密钥登录',
+  createWallet: '创建钱包',
+  importWallet: '导入钱包',
   connectWallet: '连接钱包',
   submitContentToHere: '您的内容将发送到这里',
   shortcut: '快捷键',
@@ -124,7 +123,18 @@ export const content = {
   save: '保存',
   openExternalLink: '打开外部链接',
   processing: '正在处理',
-  done: '已完成'
+  done: '完成',
+  close: '关闭',
+  saved: '已保存',
+  wallet: '钱包',
+  privateKey: '私钥',
+  copyAndSaveYourPrivateKey: '复制并保存好私钥',
+  copyAndSaveYourJsonWallet: '复制并保存好 JSON 钱包',
+  generateJsonWallet: '生成 JSON 钱包',
+  jsonWallet: 'JSON 钱包',
+  generate: '生成',
+  importJsonWallet: '导入 JSON 钱包',
+  password: '密码'
 };
 
 export type Content = typeof content;
