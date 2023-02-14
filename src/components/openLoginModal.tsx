@@ -10,9 +10,7 @@ import store from 'store2';
 import KeystoreModal from './KeystoreModal';
 import Button from 'components/Button';
 import sleep from 'utils/sleep';
-import * as Vault from 'utils/vault';
-import rumsdk from 'rum-sdk-browser';
-import { VaultApi } from 'apis';
+import rumSDK from 'rum-sdk-browser';
 import { lang } from 'utils/lang';
 
 const Main = observer(() => {
@@ -29,27 +27,6 @@ const Main = observer(() => {
     <div className="box-border px-14 pt-6 md:pt-8 pb-10 md:w-[320px]">
       <div className="text-17 font-bold dark:text-white dark:text-opacity-80 text-neutral-700 text-center opacity-90">
         {lang.connectWallet}
-      </div>
-      <div className="flex justify-center w-full mt-[30px] md:mt-6">
-        <Button
-          className="tracking-widest"
-          fullWidth
-          onClick={async () => {
-            state.loadingMixin = true;
-            const {
-              aesKey,
-              keyInHex
-            } = await Vault.createKey();
-            await Vault.saveCryptoKeyToLocalStorage(aesKey);
-            window.location.href = Vault.getMixinOauthUrl({
-              state: keyInHex,
-              return_to: encodeURIComponent(window.location.href),
-              scope: 'PROFILE:READ+COLLECTIBLES:READ'
-            });
-          }}
-        >
-          Mixin {state.loadingMixin && '...'}
-        </Button>
       </div>
       <div className="justify-center mt-6 md:mt-4 w-full hidden md:flex">
         <Button
@@ -71,7 +48,7 @@ const Main = observer(() => {
             }
             state.loadingMetaMask = true;
             try {
-              const { typeTransform } = rumsdk.utils;
+              const { typeTransform } = rumSDK.utils;
               const PREFIX = '\x19Ethereum Signed Message:\n';
               const message = `Rum identity authentication | ${Math.round(Date.now() / 1000)}`;
               const provider = new ethers.providers.Web3Provider((window as any).ethereum);
@@ -93,12 +70,7 @@ const Main = observer(() => {
               if (recoveredAddress.toLowerCase() !== address.toLowerCase()) {
                 throw new Error('invalid address');
               }
-              const { token }: any = await VaultApi.createUserBySignature({
-                address: recoveredAddress,
-                data: rawMsg,
-                signature: signature.replace('0x', '')
-              });
-              window.location.href = `/?token=${token}`;
+              console.log(`[]:`, { rawMsg });
             } catch (err: any) {
               if (err.message === 'invalid address') {
                 snackbarStore.show({
@@ -116,26 +88,6 @@ const Main = observer(() => {
           }}
         >
           MetaMask {state.loadingMetaMask && '...'}
-        </Button>
-      </div>
-      <div className="justify-center mt-6 md:mt-4 w-full flex">
-        <Button
-          className="tracking-widest"
-          fullWidth
-          onClick={async () => {
-            state.loadingGithub = true;
-            const {
-              aesKey,
-              keyInHex
-            } = await Vault.createKey();
-            await Vault.saveCryptoKeyToLocalStorage(aesKey);
-            window.location.href = Vault.getGithubOauthUrl({
-              state: keyInHex,
-              return_to: encodeURIComponent(window.location.href)
-            });
-          }}
-        >
-          Github {state.loadingGithub && '...'}
         </Button>
       </div>
       <div className="justify-center mt-6 md:mt-4 w-full flex">
