@@ -1,7 +1,7 @@
 const Post = require('../database/post');
 const Comment = require('../database/comment');
 const Notification = require('../database/notification');
-const rumsdk = require('rum-sdk-nodejs');
+const rumSDK = require('rum-sdk-nodejs');
 const { trySendSocket } = require('../socket');
 const { getSocketIo } = require('../socket');
 const config = require('../config');
@@ -133,7 +133,7 @@ const pack = async item => {
     objectId: '',
     threadId: '',
     replyId: '',
-    userAddress: rumsdk.utils.pubkeyToAddress(SenderPubkey),
+    userAddress: rumSDK.utils.pubkeyToAddress(SenderPubkey),
     groupId: GroupId,
     trxId: TrxId,
     id,

@@ -1,4 +1,4 @@
-const rumsdk = require('rum-sdk-nodejs');
+const rumSDK = require('rum-sdk-nodejs');
 const sleep = require('../utils/sleep');
 const handlePost = require('./handlePost');
 const handleComment = require('./handleComment');
@@ -25,13 +25,13 @@ const jobShareData = {
 module.exports = (duration) => {
   let stop = false;
 
-  rumsdk.cache.Group.clear();
+  rumSDK.cache.Group.clear();
 
   (async () => {
     while (!stop) {
       const groups = await Group.findAll();
       for (const group of groups) {
-        rumsdk.cache.Group.add(group.seedUrl);
+        rumSDK.cache.Group.add(group.seedUrl);
       }
       if (process.env.NODE_ENV === 'production-debug') {
         stop = true;
@@ -81,7 +81,7 @@ const startJob = async (groupId, duration) => {
             console.log(`[shuffleChainApi]:`, { groupId, chainAPIs });
           }
         }
-        const contents = await rumsdk.chain.Content.list(listOptions);
+        const contents = await rumSDK.chain.Content.list(listOptions);
         console.log(`${moment().format('HH:mm:ss')} ${group.groupName}: fetched and got ${contents.length} contents`);
         while (jobShareData.handling) {
           await sleep(200);

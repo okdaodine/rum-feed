@@ -1,5 +1,5 @@
 const Profile = require('../database/profile');
-const rumsdk = require('rum-sdk-nodejs');
+const rumSDK = require('rum-sdk-nodejs');
 
 module.exports = async (item) => {
   await Profile.upsert(pack(item));
@@ -16,7 +16,7 @@ const pack = (item) => {
     SenderPubkey,
   } = item;
   const data = {
-    userAddress: rumsdk.utils.pubkeyToAddress(SenderPubkey),
+    userAddress: rumSDK.utils.pubkeyToAddress(SenderPubkey),
     groupId: '',
     updatedAt: Date.now()
   };

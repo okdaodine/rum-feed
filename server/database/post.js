@@ -4,7 +4,7 @@ const Profile = require('./profile');
 const UniqueCounter = require('./uniqueCounter');
 const getDefaultProfile = require('../utils/getDefaultProfile');
 const config = require('../config');
-const rumsdk = require('rum-sdk-nodejs');
+const rumSDK = require('rum-sdk-nodejs');
 
 exports.create = async (item) => {
   return await Post.create(item);
@@ -17,16 +17,6 @@ exports.update = async (id, data) => {
     }
   });
 };
-
-// exports.replaceUpdatedTrxId = async (trxId, newTrxId) => {
-//   return await Post.update({
-//     latestTrxId: newTrxId
-//   }, {
-//     where: {
-//       latestTrxId: trxId
-//     }
-//   });
-// }
 
 exports.get = async (id, options = {}) => {
   const query = {
@@ -75,7 +65,7 @@ exports.list = async (query, options = {}) => {
 const bulkAppendExtra = async (items, options = {}) => {
   items = items.map((item) => {
     item.extra = item.extra || {};
-    item.extra.groupName = rumsdk.cache.Group.get(item.groupId).groupName
+    item.extra.groupName = rumSDK.cache.Group.get(item.groupId).groupName
     return item;
   });
 

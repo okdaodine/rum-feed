@@ -1,5 +1,5 @@
 const Post = require('../database/post');
-const rumsdk = require('rum-sdk-nodejs');
+const rumSDK = require('rum-sdk-nodejs');
 const { getSocketIo } = require('../socket');
 const config = require('../config');
 const Mixin = require('../mixin');
@@ -30,7 +30,7 @@ const pack = async item => {
   const post = {
     content,
     title: name || '',
-    userAddress: rumsdk.utils.pubkeyToAddress(SenderPubkey),
+    userAddress: rumSDK.utils.pubkeyToAddress(SenderPubkey),
     groupId: item.GroupId,
     trxId: TrxId,
     id,

@@ -1,5 +1,5 @@
 const { shuffle } = require('lodash');
-const rumsdk = require('rum-sdk-nodejs');
+const rumSDK = require('rum-sdk-nodejs');
 const { assert, Errors } = require('../utils/validator');
 const Group = require('../database/sequelize/group');
 
@@ -20,7 +20,7 @@ module.exports = async groupId => {
       groupId
     }
   })
-  rumsdk.cache.Group.remove(groupId);
-  rumsdk.cache.Group.add(seedUrl);
+  rumSDK.cache.Group.remove(groupId);
+  rumSDK.cache.Group.add(seedUrl);
   return chainAPIs;
 }

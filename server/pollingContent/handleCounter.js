@@ -2,7 +2,7 @@ const UniqueCounter = require('../database/uniqueCounter');
 const Post = require('../database/post');
 const Comment = require('../database/comment');
 const Notification = require('../database/notification');
-const rumsdk = require('rum-sdk-nodejs');
+const rumSDK = require('rum-sdk-nodejs');
 const { trySendSocket } = require('../socket');
 
 const CounterName = {
@@ -116,7 +116,7 @@ const pack = async (item) => {
     objectId: id,
     value: type === 'Like' ? 1 : -1,
     name: '',
-    userAddress: rumsdk.utils.pubkeyToAddress(SenderPubkey),
+    userAddress: rumSDK.utils.pubkeyToAddress(SenderPubkey),
     groupId: GroupId,
     trxId: TrxId
   }

@@ -1,6 +1,6 @@
 const Relation = require('../database/sequelize/relation');
 const Notification = require('../database/notification');
-const rumsdk = require('rum-sdk-nodejs');
+const rumSDK = require('rum-sdk-nodejs');
 const { trySendSocket } = require('../socket');
 
 module.exports = async (item, group) => {
@@ -11,7 +11,7 @@ module.exports = async (item, group) => {
     },
     SenderPubkey,
   } = item;
-  const from = rumsdk.utils.pubkeyToAddress(SenderPubkey)
+  const from = rumSDK.utils.pubkeyToAddress(SenderPubkey)
 
   if (type === 'Follow') {
     await Relation.findOrCreate({
