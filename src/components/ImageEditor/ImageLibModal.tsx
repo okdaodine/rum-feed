@@ -99,7 +99,7 @@ const ImageLib = observer((props: any) => {
             href="https://pixabay.com/zh"
             target="_blank"
             rel="noopener noreferrer"
-            className="absolute top-0 right-0 w-20 -mr-3 mt-5"
+            className="absolute top-0 right-[20px] w-20 mt-5"
           >
             <img src="https://i.xue.cn/172e1214.png" alt="pixabay" />
           </a>

@@ -526,7 +526,7 @@ const Editor = observer((props: IProps) => {
                   onClose={action(() => { state.emoji = false; })}
                 />
               )}
-              {props.editorKey === 'post' && (
+              {groupStore.multiple && props.editorKey === 'post' && (
                 <div className="flex ml-5 mt-[2px] tracking-wider">
                   <Tooltip
                     enterDelay={600}

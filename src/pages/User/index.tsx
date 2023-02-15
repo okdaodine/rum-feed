@@ -23,7 +23,6 @@ import UserListModal from './UserListModal';
 import openLoginModal from 'components/Wallet/openLoginModal';
 import { TrxApi } from 'apis';
 import { lang } from 'utils/lang';
-import store from 'store2';
 import TopPlaceHolder, { scrollToTop } from 'components/TopPlaceHolder';
 import { useActivate, useUnactivate } from 'react-activation';
 import { RouteChildrenProps } from 'react-router-dom';
@@ -62,8 +61,7 @@ export default observer((props: RouteChildrenProps) => {
   const { profile } = state;
   const user = userStore.userMap[userAddress]!;
   const isMyself = userStore.address === userAddress;
-  const DEFAULT_BG_GRADIENT =
-  'https://static-assets.pek3b.qingstor.com/rum-avatars/default_cover.png';
+  const DEFAULT_BG_GRADIENT = './default_cover.png';
   const isTweet = (profile.name || '').includes('\n@');
   const fromWeibo = isTweet && (profile.name || '').includes('\n@weibo');
   const fromTwitter = isTweet && !fromWeibo;

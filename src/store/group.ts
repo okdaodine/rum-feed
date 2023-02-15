@@ -16,6 +16,10 @@ export function createGroupStore() {
       return Object.values(this.map)[0];
     },
 
+    get multiple() {
+      return Object.values(this.map).length > 1;
+    },
+
     setDefaultGroupId(defaultGroupId: string) {
       this.defaultGroupId = defaultGroupId;
     },

@@ -200,7 +200,11 @@ export default observer((props: IProps) => {
   return (
     <Modal
       open={open}
-      onClose={onClose}
+      onClose={async () => {
+        onClose();
+        await sleep(1000);
+        window.location.reload();
+      }}
     >
       <Main { ...props } />
     </Modal>

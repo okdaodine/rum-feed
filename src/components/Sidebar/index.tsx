@@ -29,7 +29,6 @@ import openSearchModal from 'components/openSearchModal';
 import qs from 'query-string';
 import { useAliveController } from 'react-activation';
 import { IoPersonOutline, IoPerson } from 'react-icons/io5';
-import store from 'store2';
 import Button from 'components/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
