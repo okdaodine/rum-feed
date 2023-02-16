@@ -11,7 +11,7 @@ module.exports = async (item, group) => {
     },
     SenderPubkey,
   } = item;
-  const from = rumSDK.utils.pubkeyToAddress(SenderPubkey)
+  const from = rumSDK.utils.pubkeyToAddress(SenderPubkey);
 
   if (type === 'Follow') {
     await Relation.findOrCreate({

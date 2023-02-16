@@ -8,6 +8,8 @@ module.exports = {
     dialect: "postgres"
   },
 
+  siteName: 'Rum Feed',
+
   origin: 'http://localhost:3000',
 
   serverOrigin: 'http://localhost:9000',

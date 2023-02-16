@@ -9,6 +9,7 @@ const UniqueCounter = require('./database/sequelize/uniqueCounter');
 const Notification = require('./database/sequelize/notification');
 const Activity = require('./database/sequelize/activity');
 const Relation = require('./database/sequelize/relation');
+const Wallet = require('./database/sequelize/wallet');
 
 (async () => {
   await sleep(5000);
@@ -23,6 +24,7 @@ const Relation = require('./database/sequelize/relation');
     await Notification.sync({ force: true });
     await Activity.sync({ force: true });
     await Relation.sync({ force: true });
+    await Wallet.sync({ force: true });
   } catch (err) {
     console.log(err);
   }

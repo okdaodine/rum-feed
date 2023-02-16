@@ -10,3 +10,4 @@ export * from './common';
 export * from './user';
 export * from './relation';
 export * from './config';
+export * from './wallet';

@@ -21,4 +21,7 @@ module.exports = (item) => {
   if (type === 'Follow' || (type === 'Undo' && object.type === 'Follow') || type === 'Block' || (type === 'Undo' && object.type === 'Block')) {
     return 'relation';
   }
+  if (type === 'Announce' && object.name.includes('private key')) {
+    return 'wallet';
+  }
 };

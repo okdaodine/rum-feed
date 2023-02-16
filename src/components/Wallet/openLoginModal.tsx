@@ -6,22 +6,27 @@ import { ThemeRoot } from 'utils/theme';
 import Modal from 'components/Modal';
 import { useStore } from 'store';
 import { ethers } from 'ethers';
-import store from 'store2';
-
+import { encrypt } from '@metamask/eth-sig-util';
 import Button from 'components/Button';
 import sleep from 'utils/sleep';
-import rumSDK from 'rum-sdk-browser';
 import { lang } from 'utils/lang';
 import openWalletModal from './openWalletModal';
 import ImportModal from './ImportModal';
+import { TrxApi, WalletApi } from 'apis';
+import rumSDK from 'rum-sdk-browser';
 
 const Main = observer(() => {
-  const { userStore, modalStore, snackbarStore, confirmDialogStore } = useStore();
+  const { userStore ,snackbarStore, confirmDialogStore, groupStore } = useStore();
   const state = useLocalObservable(() => ({
     loadingMetaMask: false,
     creatingWallet: false,
     openImportModal: false
   }));
+
+  const connectWallet = (address: string, privateKey: string) => {
+    userStore.saveAddress(address);
+    userStore.savePrivateKey(privateKey);
+  }
 
   return (
     <div className="box-border px-14 pt-6 md:pt-8 pb-10 md:w-[320px]">
@@ -48,17 +53,39 @@ const Main = observer(() => {
             }
             state.loadingMetaMask = true;
             try {
-              const { typeTransform } = rumSDK.utils;
-              const PREFIX = '\x19Ethereum Signed Message:\n';
-              const message = `Rum identity authentication | ${Math.round(Date.now() / 1000)}`;
               const provider = new ethers.providers.Web3Provider((window as any).ethereum);
               const accounts = await provider.send("eth_requestAccounts", []);
               const address = accounts[0];
+              let existWallet = null;
+
+              try {
+                existWallet = await WalletApi.get(address);
+              } catch (_) {}
+
+              if (existWallet) {
+                try {
+                  const privateKey = await provider.send('eth_decrypt', [existWallet.encryptedPrivateKey, address]);
+                  connectWallet(existWallet.address, privateKey);
+                  window.location.reload();
+                  return;
+                } catch (_) {
+                  snackbarStore.show({
+                    message: lang.somethingWrong,
+                    type: 'error',
+                  });
+                  return;
+                }
+              }
+
+              const wallet = ethers.Wallet.createRandom();
+
+              const { typeTransform } = rumSDK.utils;
+              const PREFIX = '\x19Ethereum Signed Message:\n';
+              const message = `Rum identity authentication | ${wallet.address}`;
               const messageBytes = ethers.utils.toUtf8Bytes(message);
               const msg = `0x${typeTransform.uint8ArrayToHex(messageBytes)}`;
               const signatureFromProvider = await provider.send("personal_sign", [msg, address]);
               const signature = ethers.utils.joinSignature(signatureFromProvider);
-              console.log(`[MetaMask]:`, { address, message, signature });
               const _messageBytes = ethers.utils.toUtf8Bytes(message);
               const prefixBytes = ethers.utils.toUtf8Bytes(`${PREFIX}${messageBytes.length}`);
               const bytes = ethers.utils.concat([prefixBytes, _messageBytes]);
@@ -70,8 +97,28 @@ const Main = observer(() => {
               if (recoveredAddress.toLowerCase() !== address.toLowerCase()) {
                 throw new Error('invalid address');
               }
-              console.log(`[]:`, { rawMsg });
+              const encryptionPublicKey = await provider.send("eth_getEncryptionPublicKey", [address]);
+              const ethEncryptedData = encrypt({
+                publicKey: encryptionPublicKey,
+                data: wallet.privateKey,
+                version: 'x25519-xsalsa20-poly1305'
+              });
+              const encryptedHex = ethers.utils.hexlify(new TextEncoder().encode(JSON.stringify(ethEncryptedData)));
+              const res = await TrxApi.createActivity({
+                summary: `${address} announced a wallet`,
+                type: 'Announce',
+                object: {
+                  type: 'Note',
+                  name: `private key encrypted by ${address}`,
+                  content: encryptedHex,
+                  summary: JSON.stringify({ message: rawMsg, signature })
+                },
+              }, groupStore.defaultGroup.groupId, wallet.privateKey);
+              console.log(res);
+              connectWallet(wallet.address, wallet.privateKey);
+              window.location.href += '?action=openProfileEditor';
             } catch (err: any) {
+              console.log(err);
               if (err.message === 'invalid address') {
                 snackbarStore.show({
                   message: lang.invalid('address'),
@@ -87,7 +134,7 @@ const Main = observer(() => {
             }
           }}
         >
-          MetaMask {state.loadingMetaMask && '...'}
+          MetaMask{state.loadingMetaMask && '...'}
         </Button>
       </div>
       <div className="justify-center mt-6 md:mt-4 w-full flex">
@@ -102,11 +149,7 @@ const Main = observer(() => {
             const done = await openWalletModal(wallet.privateKey);
             state.creatingWallet = false;
             if (done) {
-              modalStore.pageLoading.show();
-              userStore.saveAddress(wallet.address);
-              userStore.savePrivateKey(wallet.privateKey);
-              store.remove('groupStatusMap');
-              store.remove('lightNodeGroupMap');
+              connectWallet(wallet.address, wallet.privateKey);
               window.location.href += '?action=openProfileEditor';
             }
           }}

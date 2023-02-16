@@ -9,3 +9,4 @@ export { default as UserApi } from './user';
 export { default as TrxApi } from './trx';
 export { default as RelationApi } from './relation';
 export { default as ConfigApi } from './config';
+export { default as WalletApi } from './wallet';

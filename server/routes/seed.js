@@ -3,7 +3,6 @@ const { assert, Errors } = require('../utils/validator');
 const rumSDK = require('rum-sdk-nodejs');
 const Group = require('../database/sequelize/group');
 const Seed = require('../database/sequelize/seed');
-const config = require('../config');
 const { ensurePermission } = require('../middleware/api');
 
 router.post('/', ensurePermission, create);

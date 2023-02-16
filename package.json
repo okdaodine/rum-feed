@@ -4,6 +4,7 @@
   "private": false,
   "dependencies": {
     "@material-ui/core": "^4.3.1",
+    "@metamask/eth-sig-util": "^5.0.2",
     "@rpldy/upload-button": "^1.1.0",
     "@rpldy/upload-drop-zone": "^1.1.0",
     "@rpldy/upload-paste": "^1.1.0",

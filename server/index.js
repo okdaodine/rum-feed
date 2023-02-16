@@ -26,6 +26,8 @@ const trx = require('./routes/trx');
 const image = require('./routes/image');
 const relation = require('./routes/relation');
 const config = require('./routes/config');
+const sitemap = require('./routes/sitemap');
+const wallet = require('./routes/wallet');
 const view = require('./routes/view');
 
 const {
@@ -66,8 +68,10 @@ router.use('/api/images', image.routes(), image.allowedMethods());
 router.use('/api/relations', relation.routes(), relation.allowedMethods());
 router.use('/api/:groupId/trx', trx.routes(), trx.allowedMethods());
 router.use('/api/config', config.routes(), config.allowedMethods());
+router.use('/api/sitemap.txt', sitemap.routes(), sitemap.allowedMethods());
+router.use('/api/wallets', wallet.routes(), wallet.allowedMethods());
 
-router.use('(.*)', view.routes(), config.allowedMethods());
+router.use('(.*)', view.routes(), view.allowedMethods());
 
 app.use(router.routes(), router.allowedMethods());
 

@@ -4,7 +4,7 @@ import { IActivity, ITrx, utils } from 'rum-sdk-browser';
 import { Store } from 'store';
 
 export default {
-  async createActivity(activity: IActivity, groupId: string) {
+  async createActivity(activity: IActivity, groupId: string, privateKey?: string) {
     console.log(activity, groupId)
     const { groupStore, userStore } = (window as any).store as Store;
     const group = groupStore.map[groupId]
@@ -14,7 +14,7 @@ export default {
       groupId: group.groupId,
       // version: configStore.config.version,
       aesKey: group.extra.rawGroup.cipherKey,
-      privateKey: userStore.privateKey,
+      privateKey: privateKey || userStore.privateKey,
     });
     console.log(payload);
     const res: { trx_id: string } = await request(`${API_BASE_URL}/${groupId}/trx`, {
