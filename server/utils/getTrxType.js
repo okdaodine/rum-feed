@@ -9,7 +9,7 @@ module.exports = (item) => {
   if (type === 'Like' || type === 'Dislike') {
     return 'counter';
   }
-  if (type === 'Create' && object.type === 'Person') {
+  if (type === 'Create' && object.type === 'Profile') {
     return 'profile';
   }
   if (type === 'Delete' && object.type === 'Note') {

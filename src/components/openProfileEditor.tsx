@@ -60,8 +60,11 @@ const ModalWrapper = observer((props: IModalProps) => {
       const res = await TrxApi.createActivity({
         type: "Create",
         object: {
-          type: "Person",
-          id: store('address'),
+          type: 'Profile',
+          describes: {
+            type: 'Person',
+            id: store('address'),
+          },
           name: state.profile.name,
           ...(state.profile.avatar && state.profile.avatar.startsWith('data:'))
             ? {
@@ -71,7 +74,7 @@ const ModalWrapper = observer((props: IModalProps) => {
                 content: base64.getContent(state.profile.avatar),
               } as any],
             }
-            : {}
+            : {},
         }
       }, groupStore.defaultGroup.groupId);
       console.log(res)
