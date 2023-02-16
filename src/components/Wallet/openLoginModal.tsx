@@ -59,7 +59,7 @@ const Main = observer(() => {
               let existWallet = null;
 
               try {
-                existWallet = await WalletApi.get(address);
+                existWallet = await WalletApi.getByProviderAddress(address);
               } catch (_) {}
 
               if (existWallet) {

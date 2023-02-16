@@ -1,5 +1,5 @@
 export interface IWallet {
   address: string
-  provider: string
+  providerAddress: string
   encryptedPrivateKey: string
 }

@@ -45,8 +45,7 @@ export default observer((props: RouteChildrenProps) => {
       return this.fetchedGroup && this.fetchedPosts
     },
   }));
-  const DEFAULT_BG_GRADIENT =
-  'https://static-assets.pek3b.qingstor.com/rum-avatars/default_cover.png';
+  const DEFAULT_BG_GRADIENT = '/default_cover.png';
 
   useActivate(() => {
     if (state.fetched) {

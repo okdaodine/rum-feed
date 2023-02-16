@@ -134,7 +134,8 @@ export const content = {
   jsonWallet: 'JSON 钱包',
   generate: '生成',
   importJsonWallet: '导入 JSON 钱包',
-  password: '密码'
+  password: '密码',
+  thisWalletWasCreatedBy: '这个钱包的创建者是 '
 };
 
 export type Content = typeof content;
