@@ -364,12 +364,12 @@ export default observer((props: RouteChildrenProps) => {
                       enterDelay={200}
                       enterNextDelay={200}
                       placement="top"
-                      title={`${lang.thisWalletWasCreatedBy}${state.wallet!.providerAddress}`}
+                      title={`${lang.thisWalletWasConnectedTo}${state.wallet!.providerAddress}`}
                       arrow
                       >
                       <div className="mr-5 md:mr-6 h-8 w-8 rounded-full border border-white flex items-center justify-center opacity-60 md:opacity-80" onClick={() => {
                         confirmDialogStore.show({
-                          content: `<div class="text-16 pb-3 font-bold">${lang.thisWalletWasCreatedBy}</div> <div class="text-12">${state.wallet!.providerAddress}</div>`,
+                          content: `<div class="text-16 pb-3 font-bold">${lang.thisWalletWasConnectedTo}</div> <div class="text-12">${state.wallet!.providerAddress}</div>`,
                           contentClassName: 'md:max-w-[330px] break-words',
                           cancelDisabled: true,
                           ok: () => {

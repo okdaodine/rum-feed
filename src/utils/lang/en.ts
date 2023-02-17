@@ -133,5 +133,5 @@ export const content = {
   generate: 'Generate',
   importJsonWallet: 'Import JSON wallet',
   password: 'Password',
-  thisWalletWasCreatedBy: 'This wallet was created by '
+  thisWalletWasConnectedTo: 'This wallet was connected to '
 };

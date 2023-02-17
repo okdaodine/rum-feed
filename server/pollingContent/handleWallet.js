@@ -14,7 +14,7 @@ module.exports = async item => {
 
   const { message, signature } = JSON.parse(object.summary);
   const senderAddress = rumSDK.utils.pubkeyToAddress(SenderPubkey);
-  const [, addressInMessage] = message.split(' | ');
+  const addressInMessage= message.split(': ')[1];
 
   assert(addressInMessage === senderAddress, Errors.ERR_IS_INVALID('address'));
 

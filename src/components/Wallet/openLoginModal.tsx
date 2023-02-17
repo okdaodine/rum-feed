@@ -64,7 +64,8 @@ const Main = observer(() => {
 
               if (existWallet) {
                 try {
-                  const privateKey = await provider.send('eth_decrypt', [existWallet.encryptedPrivateKey, address]);
+                  const message = await provider.send('eth_decrypt', [existWallet.encryptedPrivateKey, address]);
+                  const privateKey = message.split(': ')[1];
                   connectWallet(existWallet.address, privateKey);
                   window.location.reload();
                   return;
@@ -81,7 +82,7 @@ const Main = observer(() => {
 
               const { typeTransform } = rumSDK.utils;
               const PREFIX = '\x19Ethereum Signed Message:\n';
-              const message = `Rum identity authentication | ${wallet.address}`;
+              const message = `https://feed.base.one generated a new wallet for your account. The private key of this wallet will be encrypted by your public key so that only you can decrypt and use it.\n\nThis new wallet address: ${wallet.address}`;
               const messageBytes = ethers.utils.toUtf8Bytes(message);
               const msg = `0x${typeTransform.uint8ArrayToHex(messageBytes)}`;
               const signatureFromProvider = await provider.send("personal_sign", [msg, address]);
@@ -100,7 +101,7 @@ const Main = observer(() => {
               const encryptionPublicKey = await provider.send("eth_getEncryptionPublicKey", [address]);
               const ethEncryptedData = encrypt({
                 publicKey: encryptionPublicKey,
-                data: wallet.privateKey,
+                data: `Private key of the wallet that was encrypted by your public key so that only you can decrypt and use it: ${wallet.privateKey}`,
                 version: 'x25519-xsalsa20-poly1305'
               });
               const encryptedHex = ethers.utils.hexlify(new TextEncoder().encode(JSON.stringify(ethEncryptedData)));
@@ -109,7 +110,7 @@ const Main = observer(() => {
                 type: 'Announce',
                 object: {
                   type: 'Note',
-                  name: `private key encrypted by ${address}`,
+                  name: `The private key encrypted by ${address}`,
                   content: encryptedHex,
                   summary: JSON.stringify({ message: rawMsg, signature })
                 },
