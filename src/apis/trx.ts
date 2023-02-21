@@ -12,7 +12,6 @@ export default {
     const payload = await utils.signTrx({
       data: activity,
       groupId: group.groupId,
-      // version: configStore.config.version,
       aesKey: group.extra.rawGroup.cipherKey,
       privateKey: privateKey || userStore.privateKey,
     });

@@ -15,6 +15,7 @@ import openLoginModal from 'components/Wallet/openLoginModal';
 import { TrxApi } from 'apis';
 import { lang } from 'utils/lang';
 import UserName from 'components/UserName';
+import { i18n } from 'store/i18n';
 
 interface IProps {
   disableHover?: boolean
@@ -125,13 +126,17 @@ const UserCard = observer((props: IUserCardProps) => {
                 {user.postCount}
               </span> {lang.content}{' '}
             </span>
-            <span className="mx-[10px] opacity-50">|</span>
-            <span>
-              <span className="text-14 font-bold">
-                {user.followingCount}
-              </span>{' '}
-              {lang.following}{' '}
-            </span>
+            {i18n.state.lang !== 'en' && (
+              <>  
+                <span className="mx-[10px] opacity-50">|</span>
+                <span>
+                  <span className="text-14 font-bold">
+                    {user.followingCount}
+                  </span>{' '}
+                  {lang.following}{' '}
+                </span>
+              </>
+            )}
             <span className="opacity-50 mx-[10px]">|</span>
             <span>
               <span className="text-14 font-bold">{user.followerCount}</span>{' '}

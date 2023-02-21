@@ -85,24 +85,24 @@ export default observer(() => {
                   delete state.map[group.groupId];
                   await sleep(300);
                   snackbarStore.show({
-                    message: '已移除',
+                    message: lang.deleted,
                   });
                 }
               }}>
                 {group.status === 'connected' && (
                   <div className="flex items-center">
-                    连接<span className="text-emerald-500 font-bold mx-[6px]">{group.extra.rawGroup.chainAPIs.length}</span>个节点
+                    {lang.connected}<span className="text-emerald-500 font-bold mx-[6px]">{group.extra.rawGroup.chainAPIs.length}</span>{lang.nodes}
                   </div>
                 )}
                 {group.status === 'disconnected' && (
                   <div className="flex items-center bg-red-400 dark:text-black text-white p-1 px-2 text-12 rounded-12 mr-2 text-center">
-                    <MdOutlineErrorOutline className="text-16 mr-1" /> 节点无法访问
+                    <MdOutlineErrorOutline className="text-16 mr-1" /> {lang.disconnected}
                   </div>
                 )}
                 <div>
                   {group.contentCount > 0 && (
                     <div>
-                      {group.status === 'connected' && '，'}同步<span className="dark:text-white dark:text-opacity-80 text-gray-64 font-bold mx-[6px]">{group.contentCount}</span>条内容
+                      {group.status === 'connected' && '，'}{lang.synced}<span className="dark:text-white dark:text-opacity-80 text-gray-64 font-bold mx-[6px]">{group.contentCount}</span>{lang.contents}
                     </div>
                   )}
                 </div>
@@ -119,7 +119,7 @@ export default observer(() => {
         }}>
           <RiAddFill className="text-26" />
           {state.groups.length === 0 && (
-            <div className="ml-2">添加种子网络</div>
+            <div className="ml-2">{lang.addSeed}</div>
           )}
         </div>
 

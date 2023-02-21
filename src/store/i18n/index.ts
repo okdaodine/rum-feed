@@ -7,8 +7,10 @@ const allLang = ['en', 'cn'] as const;
 export type AllLanguages = typeof allLang[number];
 type LangData<T> = Record<AllLanguages, { content: T }>;
 
+const defaultLang = (process.env.REACT_APP_DEFAULT_LANG || 'en') as AllLanguages;
+
 const state = observable({
-  lang: 'en' as AllLanguages,
+  lang: defaultLang,
 });
 
 const createLangLoader = <T>(langData: LangData<T>) => {
@@ -31,9 +33,9 @@ const switchLang = action((lang: AllLanguages) => {
 });
 
 const init = action(() => {
-  let value = (localStorage.getItem(STORAGE_KEY) || 'en') as AllLanguages;
+  let value = (localStorage.getItem(STORAGE_KEY) || defaultLang) as AllLanguages;
   if (!allLang.includes(value)) {
-    value = 'en';
+    value = defaultLang;
   }
   state.lang = value;
 });

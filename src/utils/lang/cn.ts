@@ -55,7 +55,7 @@ export const content = {
   seed: '种子',
   copy: '复制',
   node: '节点',
-  disconnected: '节点都访问不了，无法连接',
+  disconnected: '无法连接节点',
   block: '区块',
   loadMore: '加载更多',
   delete: '删除',
@@ -135,7 +135,10 @@ export const content = {
   generate: '生成',
   importJsonWallet: '导入 JSON 钱包',
   password: '密码',
-  thisWalletWasConnectedTo: '这个钱包连接于： '
-};
+  thisWalletWasConnectedTo: '这个钱包连接于： ',
+  connected: '连接',
+  nodes: '个节点',
+  synced: '同步',
+  contents: '条内容'};
 
 export type Content = typeof content;
