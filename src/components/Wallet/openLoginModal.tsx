@@ -82,7 +82,7 @@ const Main = observer(() => {
 
               const { typeTransform } = rumSDK.utils;
               const PREFIX = '\x19Ethereum Signed Message:\n';
-              const message = `https://feed.base.one generated a new wallet for your account. The private key of this wallet will be encrypted by your public key so that only you can decrypt and use it.\n\nThis new wallet address: ${wallet.address}`;
+              const message = `${window.location.origin} generated a new wallet for your account. The private key of this wallet will be encrypted by your public key so that only you can decrypt and use it.\n\nThis new wallet address: ${wallet.address}`;
               const messageBytes = ethers.utils.toUtf8Bytes(message);
               const msg = `0x${typeTransform.uint8ArrayToHex(messageBytes)}`;
               const signatureFromProvider = await provider.send("personal_sign", [msg, address]);

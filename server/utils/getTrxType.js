@@ -6,7 +6,7 @@ module.exports = (item) => {
   if (type === 'Create' && object.type === 'Note' && object.inreplyto && object.inreplyto.type === 'Note') {
     return 'comment';
   }
-  if (type === 'Like' || type === 'Dislike') {
+  if (type === 'Like' || (type === 'Undo' && object.type === 'Like')) {
     return 'counter';
   }
   if (type === 'Create' && object.type === 'Profile') {

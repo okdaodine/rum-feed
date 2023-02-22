@@ -55,15 +55,18 @@ export default observer((props: IProps) => {
       return;
     }
     state.submitting = true;
-    state.likeAnimating = !post.extra.liked;
+    state.likeAnimating = !liked;
     try {
-      const res = await TrxApi.createActivity({
+      const like = {
         type: 'Like',
         object: {
           type: 'Note',
           id,
         }
-      }, post.groupId);
+      };
+      const res = liked ?
+        await TrxApi.createActivity({ type: 'Undo', object: like }, post.groupId) :
+        await TrxApi.createActivity(like, post.groupId);
       console.log(res);
       postStore.updatePost({
         ...post,

@@ -105,16 +105,15 @@ const pack = async (item) => {
     TrxId,
     Data: {
       type,
-      object: {
-        id,
-      }
+      object
     },
     SenderPubkey,
     GroupId,
   } = item;
+  const id = type === 'Undo' ? object.object.id : object.id;
   const data = {
     objectId: id,
-    value: type === 'Like' ? 1 : -1,
+    value: type === 'Undo' ? -1 : 1,
     name: '',
     userAddress: rumSDK.utils.pubkeyToAddress(SenderPubkey),
     groupId: GroupId,

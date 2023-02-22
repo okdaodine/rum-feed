@@ -104,14 +104,17 @@ export default observer((props: IProps) => {
     }
     state.submitting = true;
     state.likeAnimating = !comment.extra.liked;
-    try {  
-      const res = await TrxApi.createActivity({
-        type: comment.extra.liked ? 'Dislike' : 'Like',
+    try {
+      const like = {
+        type: 'Like',
         object: {
           type: 'Note',
           id,
         },
-      }, comment.groupId);
+      }
+      const res = comment.extra.liked ?
+        await TrxApi.createActivity({ type: 'Undo', object: like }, comment.groupId) :
+        await TrxApi.createActivity(like, comment.groupId);
       console.log(res);
       commentStore.updateComment({
         ...comment,

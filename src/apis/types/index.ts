@@ -3,8 +3,6 @@ export * from './content';
 export * from './post';
 export * from './comment';
 export * from './profile';
-export * from './counter';
-export * from './uniqueCounter';
 export * from './notification';
 export * from './common';
 export * from './user';

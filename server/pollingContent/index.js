@@ -106,7 +106,6 @@ const startJob = async (groupId, duration) => {
       } catch (err) {
         await Group.update({ status: 'disconnected' }, { where });
       }
-      await sleep(duration);
     }
     await sleep(duration);
   }
