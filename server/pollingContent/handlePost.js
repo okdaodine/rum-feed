@@ -7,6 +7,13 @@ const truncateByBytes = require('../utils/truncateByBytes');
 
 module.exports = async (item, group) => {
   const post = await pack(item);
+  if (!post.id) {
+    return;
+  }
+  const exist = await Post.get(post.id);
+  if (exist) {
+    return;
+  }
   await Post.create(post);
   if (group.loaded) {
     await notify(post.id);

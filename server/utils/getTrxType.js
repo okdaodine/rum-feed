@@ -1,5 +1,5 @@
 module.exports = (item) => {
-  const { type, object, result } = item.Data;
+  const { type, object } = item.Data;
   if (type === 'Create' && object.type === 'Note' && !object.inreplyto) {
     return 'post';
   }
@@ -14,9 +14,6 @@ module.exports = (item) => {
   }
   if (type === 'Delete' && object.type === 'Note') {
     return 'delete';
-  }
-  if (type === 'Update' && object.type === 'Note' && result?.type === 'Note') {
-    return 'edit';
   }
   if (type === 'Follow' || (type === 'Undo' && object.type === 'Follow') || type === 'Block' || (type === 'Undo' && object.type === 'Block')) {
     return 'relation';
