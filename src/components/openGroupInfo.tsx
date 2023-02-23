@@ -80,6 +80,7 @@ const Main = observer((props: IModalProps) => {
       content: lang.youAreSureTo(lang.delete),
       ok: async () => {
         try {
+          confirmDialogStore.setLoading(true);
           await GroupApi.remove(props.groupId);
           confirmDialogStore.hide();
           handleClose('removed');

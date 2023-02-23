@@ -7,12 +7,19 @@ const { getSocketIo } = require('../socket');
 const config = require('../config');
 const Mixin = require('../mixin');
 const truncateByBytes = require('../utils/truncateByBytes');
+const Orphan = require('../database/sequelize/orphan');
+const within24Hours = require('../utils/within24Hours');
 
 module.exports = async (item, group) => {
   const comment = await pack(item);
 
   if (!comment) {
-    return;
+    await Orphan.create({
+      content: item,
+      groupId: item.GroupId,
+      parentId: `${item.Data.object.inreplyto.id}`,
+    });
+    throw new Error('Orphan');
   }
 
   await Comment.create(comment);
@@ -21,91 +28,86 @@ module.exports = async (item, group) => {
     await notify(comment.id);
   }
 
-  const { objectId, threadId, replyId } = comment;
+  const { objectId, threadId, replyId, timestamp } = comment;
   const from = comment.userAddress;
 
   const post = await Post.get(objectId);
-  if (!post) {
-    return;
-  }
-  post.commentCount = await Comment.count({
-    where: {
-      groupId: post.groupId,
-      objectId: post.id
-    }
-  });
-  await Post.update(post.id, post);
-  if (!threadId && from !== post.userAddress) {
-    const notification = {
-      groupId: '',
-      status: group.loaded ?'unread' : 'read',
-      type: 'comment',
-      to: post.userAddress,
-      toObjectId: post.id,
-      toObjectType: 'post',
-      from,
-      fromObjectId: comment.id,
-      fromObjectType: 'comment',
-      timestamp: Date.now()
-    };
-    await Notification.create(notification);
-    if (group.loaded) {
-      trySendSocket(notification.to, 'notification', notification);
+  if (post) {
+    post.commentCount = await Comment.count({
+      where: {
+        groupId: post.groupId,
+        objectId: post.id
+      }
+    });
+    await Post.update(post.id, post);
+    if (!threadId && from !== post.userAddress) {
+      const notification = {
+        groupId: '',
+        status: within24Hours(timestamp) ?'unread' : 'read',
+        type: 'comment',
+        to: post.userAddress,
+        toObjectId: post.id,
+        toObjectType: 'post',
+        from,
+        fromObjectId: comment.id,
+        fromObjectType: 'comment',
+        timestamp,
+      };
+      await Notification.create(notification);
+      if (group.loaded) {
+        trySendSocket(notification.to, 'notification', notification);
+      }
     }
   }
 
   if (threadId) {
     const threadComment = await Comment.get(threadId);
-    if (!threadComment) {
-      return;
-    }
-    threadComment.commentCount = await Comment.count({
-      where: {
-        groupId: threadComment.groupId,
-        threadId: threadComment.id
-      }
-    });
-    await Comment.update(threadComment.id, threadComment);
-    if (replyId) {
-      const replyComment = await Comment.get(replyId);
-      if (!replyComment) {
-        return;
-      }
-      if (from !== replyComment.userAddress) {
-        const notification = {
-          groupId: '',
-          status: group.loaded ?'unread' : 'read',
-          type: 'comment',
-          to: replyComment.userAddress,
-          toObjectId: replyComment.id,
-          toObjectType: 'comment',
-          from,
-          fromObjectId: comment.id,
-          fromObjectType: 'comment',
-          timestamp: Date.now()
-        };
-        await Notification.create(notification);
-        if (group.loaded) {
-          trySendSocket(notification.to, 'notification', notification);
+    if (threadComment) {
+      threadComment.commentCount = await Comment.count({
+        where: {
+          groupId: threadComment.groupId,
+          threadId: threadComment.id
         }
-      }
-    } else {
-      if (from !== threadComment.userAddress) {
-        const notification = {
-          groupId: '',
-          status: group.loaded ?'unread' : 'read',
-          type: 'comment',
-          toObjectId: threadComment.id,
-          toObjectType: 'comment',
-          to: threadComment.userAddress,
-          from,
-          fromObjectId: comment.id,
-          fromObjectType: 'comment',
-          timestamp: Date.now()
-        };
-        await Notification.create(notification);
-        if (group.loaded) {
-          trySendSocket(notification.to, 'notification', notification);
+      });
+      await Comment.update(threadComment.id, threadComment);
+      if (replyId) {
+        const replyComment = await Comment.get(replyId);
+        if (replyComment && from !== replyComment.userAddress) {
+          const notification = {
+            groupId: '',
+            status: within24Hours(timestamp) ? 'unread' : 'read',
+            type: 'comment',
+            to: replyComment.userAddress,
+            toObjectId: replyComment.id,
+            toObjectType: 'comment',
+            from,
+            fromObjectId: comment.id,
+            fromObjectType: 'comment',
+            timestamp,
+          };
+          await Notification.create(notification);
+          if (group.loaded) {
+            trySendSocket(notification.to, 'notification', notification);
+          }
+        }
+      } else {
+        if (from !== threadComment.userAddress) {
+          const notification = {
+            groupId: '',
+            status: within24Hours(timestamp) ?'unread' : 'read',
+            type: 'comment',
+            toObjectId: threadComment.id,
+            toObjectType: 'comment',
+            to: threadComment.userAddress,
+            from,
+            fromObjectId: comment.id,
+            fromObjectType: 'comment',
+            timestamp,
+          };
+          await Notification.create(notification);
+          if (group.loaded) {
+            trySendSocket(notification.to, 'notification', notification);
+          }
         }
       }
     }
@@ -174,13 +176,15 @@ const notify = async (id) => {
     withExtra: true
   });
   if (comment) {
-    getSocketIo().emit('comment', comment);
-    const name = comment.extra.userProfile.name.split('\n')[0];
-    Mixin.notifyByBot({
-      iconUrl: comment.extra.userProfile.avatar,
-      title: (comment.content || '').slice(0, 30) || 'Image',
-      description: truncateByBytes(name, 14),
-      url: `${config.origin}/posts/${comment.objectId}?commentId=${comment.id}`
-    });
+    if (within24Hours(comment.timestamp)) {
+      getSocketIo().emit('comment', comment);
+      const name = comment.extra.userProfile.name.split('\n')[0];
+      Mixin.notifyByBot({
+        iconUrl: comment.extra.userProfile.avatar,
+        title: (comment.content || '').slice(0, 30) || 'Image',
+        description: truncateByBytes(name, 14),
+        url: `${config.origin}/posts/${comment.objectId}?commentId=${comment.id}`
+      });
+    }
   }
 }

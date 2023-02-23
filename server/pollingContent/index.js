@@ -15,10 +15,11 @@ const moment = require('moment');
 const shuffleChainApi = require('../utils/shuffleChainApi');
 const pendingTrxHelper = require('../utils/pendingTrxHelper');
 const handlePostDelete = require('./handlePostDelete');
+const Orphan = require('../database/sequelize/orphan');
 
 const jobShareData = {
   limit: 0,
-  defaultGroupMap: {},
+  activeGroupMap: {},
   handling: false,
   jobMap: {}
 }
@@ -41,7 +42,7 @@ module.exports = (duration) => {
         console.log('==================================================');
         return;
       }
-      jobShareData.defaultGroupMap = await getDefaultGroupMap(groups);
+      jobShareData.activeGroupMap = await getActiveGroupMap(groups);
       jobShareData.limit = getLimit(groups);
       for (const group of groups) {
         if (!jobShareData.jobMap[group.groupId]) {
@@ -56,13 +57,13 @@ module.exports = (duration) => {
 
 const startJob = async (groupId, duration) => {
   while (true) {
-    const groupCount = await Group.count({ where: { groupId } })
-    if (groupCount === 0) {
+    const group = await Group.findOne({ where: { groupId } })
+    if (!group) {
       delete jobShareData.jobMap[groupId];
       break;
     }
-    const group = jobShareData.defaultGroupMap[groupId];
-    if (group) {
+    const isActive = !!jobShareData.activeGroupMap[groupId];
+    if (isActive) {
       const isLazyGroup = (config.polling?.lazyGroupIds || []).includes(group.groupId);
       if (isLazyGroup) {
         await sleep(5 * 60 * 1000);
@@ -115,6 +116,7 @@ const handleContents = async (group, contents) => {
   const { groupId } = group;
   try {
     for (const content of contents) {
+      let success = false;
       let log = '';
       try {
         pendingTrxHelper.tryRemove(group.groupId, content.TrxId);
@@ -138,12 +140,19 @@ const handleContents = async (group, contents) => {
           default: break;
         }
         console.log(`${content.TrxId} ✅`);
+        success = true;
       } catch (err) {
+        if (err.message === 'Orphan') {
+          const type = getTrxType(content);
+          console.log(`[${type}]: ${content.TrxId} is an orphan 👶`);
+          continue;
+        }
         console.log(content);
         console.log(err);
         log = err;
         console.log(`${content.TrxId} ❌ ${err.message}`);
       }
+
       try {
         await Content.create({
           ...content,
@@ -153,6 +162,28 @@ const handleContents = async (group, contents) => {
       } catch (err) {
         console.log(err);
       }
+
+      if (success) {
+        try {
+          const type = getTrxType(content);
+          if (type === 'post' || type === 'comment') {
+            const orphans = await Orphan.findAll({
+              raw: true,
+              where: {
+                groupId: content.GroupId,
+                parentId: content.Data.object.id
+              }
+            });
+            if (orphans.length > 0) {
+              console.log(`[handle orphans 👶]:`, orphans.map(o => `${o.content.TrxId}`));
+              await handleContents(group, orphans.map(o => o.content));
+            }
+          }
+        } catch (err) {
+          console.log(err);
+        }
+      }
+
     }
     await Group.update({
       startTrx: contents[contents.length - 1].TrxId
@@ -167,7 +198,7 @@ const handleContents = async (group, contents) => {
 }
 
 
-const getDefaultGroupMap = async groups => {
+const getActiveGroupMap = async groups => {
   const map = {};
   const loadedGroups = groups.filter(group => group.loaded);
   const unloadedGroups = groups.filter(group => !group.loaded);

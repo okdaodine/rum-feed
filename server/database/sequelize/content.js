@@ -48,7 +48,7 @@ const Content = sequelize.define('contents', {
   charset: 'utf8mb4',
   timestamps: false,
   indexes: [{
-    fields: ['id']
+    fields: ['TrxId']
   }, {
     fields: ['groupId']
   }]

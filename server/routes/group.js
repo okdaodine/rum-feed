@@ -1,7 +1,6 @@
 const router = require('koa-router')();
 const { assert, Errors } = require('../utils/validator');
 const rumSDK = require('rum-sdk-nodejs');
-const { Op } = require("sequelize");
 const Group = require('../database/sequelize/group');
 const Seed = require('../database/sequelize/seed');
 const Content = require('../database/sequelize/content');
@@ -9,6 +8,7 @@ const Post = require('../database/sequelize/post');
 const Comment = require('../database/sequelize/comment');
 const Profile = require('../database/sequelize/profile');
 const Notification = require('../database/sequelize/notification');
+const Orphan = require('../database/sequelize/orphan');
 const { ensurePermission } = require('../middleware/api');
 const shuffleChainApi = require('../utils/shuffleChainApi');
 const config = require('../config');
@@ -99,6 +99,7 @@ async function remove(ctx) {
   await Comment.destroy({ where: { groupId }});
   await Profile.destroy({ where: { groupId }});
   await Notification.destroy({ where: { groupId }});
+  await Orphan.destroy({ where: { groupId }});
   rumSDK.cache.Group.remove(groupId);
   ctx.body = true;
 }

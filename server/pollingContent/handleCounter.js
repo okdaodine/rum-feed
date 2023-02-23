@@ -4,20 +4,24 @@ const Comment = require('../database/comment');
 const Notification = require('../database/notification');
 const rumSDK = require('rum-sdk-nodejs');
 const { trySendSocket } = require('../socket');
-
-const CounterName = {
-  postLike: 'postLike',
-  commentLike: 'commentLike',
-}
+const Orphan = require('../database/sequelize/orphan');
+const within24Hours = require('../utils/within24Hours');
 
 module.exports = async (item, group) => {
   const counter = await pack(item);
 
   if (!counter) {
-    return;
+    const { Data: { type, object } } = item;
+    const id = type === 'Undo' ? object.object.id : object.id;
+    await Orphan.create({
+      content: item,
+      groupId: item.GroupId,
+      parentId: `${id}`
+    });
+    throw new Error('Orphan');
   }
 
-  const { objectId, value, name } = counter;
+  const { objectId, value, name, timestamp } = counter;
   const from = counter.userAddress;
   const uniqueCounter = {
     name,
@@ -30,7 +34,7 @@ module.exports = async (item, group) => {
     await UniqueCounter.destroy(uniqueCounter);
   }
 
-  if (name.startsWith('post')) {
+  if (name === UniqueCounter.CounterName.postLike) {
     const post = await Post.get(objectId);
     if (post) {
       const count = await UniqueCounter.count({
@@ -39,62 +43,57 @@ module.exports = async (item, group) => {
           objectId: post.id
         }
       });
-      if (name === CounterName.postLike) {
-        post.likeCount = count;
-      }
+      post.likeCount = count;
       await Post.update(post.id, post);
-    }
-    if (value > 0 && from !== post.userAddress) {
-      const notification = {
-        groupId: '',
-        status: group.loaded ? 'unread' : 'read',
-        type: 'like',
-        toObjectId: post.id,
-        toObjectType: 'post',
-        to: post.userAddress,
-        from,
-        fromObjectId: '',
-        fromObjectType: '',
-        timestamp: Date.now()
-      };
-      await Notification.create(notification);
-      if (group.loaded) {
-        trySendSocket(notification.to, 'notification', notification);
+      if (value > 0 && from !== post.userAddress) {
+        const notification = {
+          groupId: '',
+          status: within24Hours(timestamp) ? 'unread' : 'read',
+          type: 'like',
+          toObjectId: post.id,
+          toObjectType: 'post',
+          to: post.userAddress,
+          from,
+          fromObjectId: '',
+          fromObjectType: '',
+          timestamp
+        };
+        await Notification.create(notification);
+        if (group.loaded) {
+          trySendSocket(notification.to, 'notification', notification);
+        }
       }
     }
   }
 
-  if (name.startsWith('comment')) {
+  if (name === UniqueCounter.CounterName.commentLike) {
     const comment = await Comment.get(objectId);
-    if (!comment) {
-      return;
-    }
-    const count = await UniqueCounter.count({
-      where: {
-        name,
-        objectId: comment.id
-      }
-    });
-    if (name === CounterName.commentLike) {
+    if (comment) {
+      const count = await UniqueCounter.count({
+        where: {
+          name,
+          objectId: comment.id
+        }
+      });
       comment.likeCount = count;
-    }
-    await Comment.update(comment.id, comment);
-    if (value > 0 && from !== comment.userAddress) {
-      const notification = {
-        groupId: '',
-        status: group.loaded ? 'unread' : 'read',
-        type: 'like',
-        toObjectId: comment.id,
-        toObjectType: 'comment',
-        to: comment.userAddress,
-        from,
-        fromObjectId: '',
-        fromObjectType: '',
-        timestamp: Date.now()
-      };
-      await Notification.create(notification);
-      if (group.loaded) {
-        trySendSocket(notification.to, 'notification', notification);
+      await Comment.update(comment.id, comment);
+      if (value > 0 && from !== comment.userAddress) {
+        const notification = {
+          groupId: '',
+          status: within24Hours(timestamp) ? 'unread' : 'read',
+          type: 'like',
+          toObjectId: comment.id,
+          toObjectType: 'comment',
+          to: comment.userAddress,
+          from,
+          fromObjectId: '',
+          fromObjectType: '',
+          timestamp
+        };
+        await Notification.create(notification);
+        if (group.loaded) {
+          trySendSocket(notification.to, 'notification', notification);
+        }
       }
     }
   }
@@ -109,6 +108,7 @@ const pack = async (item) => {
     },
     SenderPubkey,
     GroupId,
+    TimeStamp,
   } = item;
   const id = type === 'Undo' ? object.object.id : object.id;
   const data = {
@@ -117,14 +117,15 @@ const pack = async (item) => {
     name: '',
     userAddress: rumSDK.utils.pubkeyToAddress(SenderPubkey),
     groupId: GroupId,
-    trxId: TrxId
+    trxId: TrxId,
+    timestamp: parseInt(String(TimeStamp / 1000000), 10)
   }
   const post = await Post.get(id);
   const comment = await Comment.get(id);
   if (post) {
-    data.name = 'postLike';
+    data.name = UniqueCounter.CounterName.postLike;
   } else if (comment) {
-    data.name = 'commentLike';
+    data.name = UniqueCounter.CounterName.commentLike;
   } else {
     return null;
   }

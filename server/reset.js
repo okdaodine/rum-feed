@@ -10,9 +10,10 @@ const Notification = require('./database/sequelize/notification');
 const Activity = require('./database/sequelize/activity');
 const Relation = require('./database/sequelize/relation');
 const Wallet = require('./database/sequelize/wallet');
+const Orphan = require('./database/sequelize/orphan');
 
 (async () => {
-  await sleep(5000);
+  await sleep(2000);
   try {
     await Group.sync({ force: true });
     await Seed.sync({ force: true });
@@ -25,6 +26,7 @@ const Wallet = require('./database/sequelize/wallet');
     await Activity.sync({ force: true });
     await Relation.sync({ force: true });
     await Wallet.sync({ force: true });
+    await Orphan.sync({ force: true });
   } catch (err) {
     console.log(err);
   }
