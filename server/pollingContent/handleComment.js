@@ -75,7 +75,7 @@ module.exports = async (item, group) => {
         if (replyComment && from !== replyComment.userAddress) {
           const notification = {
             groupId: '',
-            status: within24Hours(timestamp) ? 'unread' : 'read',
+            status: group.loaded && within24Hours(timestamp) ? 'unread' : 'read',
             type: 'comment',
             to: replyComment.userAddress,
             toObjectId: replyComment.id,

@@ -48,7 +48,7 @@ module.exports = async (item, group) => {
       if (value > 0 && from !== post.userAddress) {
         const notification = {
           groupId: '',
-          status: within24Hours(timestamp) ? 'unread' : 'read',
+          status: group.loaded && within24Hours(timestamp) ? 'unread' : 'read',
           type: 'like',
           toObjectId: post.id,
           toObjectType: 'post',
@@ -80,7 +80,7 @@ module.exports = async (item, group) => {
       if (value > 0 && from !== comment.userAddress) {
         const notification = {
           groupId: '',
-          status: within24Hours(timestamp) ? 'unread' : 'read',
+          status: group.loaded && within24Hours(timestamp) ? 'unread' : 'read',
           type: 'like',
           toObjectId: comment.id,
           toObjectType: 'comment',
