@@ -22,11 +22,7 @@ const Preload = observer(() => {
           initGroups(),
           initConfig()
         ]);
-        if (!groupStore.defaultGroup) {
-          history.push('/groups');
-          return;
-        }
-        if (userStore.isLogin) {
+        if (groupStore.total > 0 && userStore.isLogin) {
           const [profile, user] = await Promise.all([
             ProfileApi.get(userStore.address),
             UserApi.get(userStore.address, {
@@ -39,6 +35,10 @@ const Preload = observer(() => {
           userStore.setUser(userStore.address, user);
         }
         groupStore.setLoading(false);
+        if (groupStore.total === 0) {
+          history.push('/groups');
+          return;
+        }
         tryOpenLoginModal();
         tryOpenProfileModal();
         tryLogout();

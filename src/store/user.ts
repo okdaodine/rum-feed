@@ -22,7 +22,7 @@ export function createUserStore() {
     },
 
     get user() {
-      return this.userMap[this.address]!;
+      return this.userMap[this.address] || {} as IUser;
     },
 
     saveAddress(address: string) {

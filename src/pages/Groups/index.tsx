@@ -15,14 +15,17 @@ import { runInAction } from 'mobx';
 import { getMixinContext } from 'utils/env';
 import { MdOutlineErrorOutline } from 'react-icons/md';
 import TopPlaceHolder from 'components/TopPlaceHolder';
+import { useHistory } from 'react-router-dom';
 
 export default observer(() => {
-  const { snackbarStore, groupStore, configStore } = useStore();
+  const { snackbarStore, groupStore, configStore, userStore, confirmDialogStore } = useStore();
+  const history = useHistory();
   const state = useLocalObservable(() => ({
     openAddGroupModal: false,
     loading: true,
     idSet: new Set() as Set<string>,
     map: {} as Record<string, IGroup>,
+    hide: false,
     get groups() {
       return Array.from(this.idSet).map(id => this.map[id]);
     },
@@ -54,12 +57,36 @@ export default observer(() => {
     })();
   }, []);
 
+  React.useEffect(() => {
+    if (configStore.config.groupsPageIsOnlyVisibleToAdmin) {
+      if (groupStore.total > 0) {
+        if (!userStore.isLogin || userStore.user.role !== 'admin') {
+          confirmDialogStore.show({
+            content: lang.noPermission,
+            okText: lang.gotIt,
+            cancelDisabled: true,
+            ok: async () => {
+              confirmDialogStore.hide();
+              await sleep(400);
+              history.replace(`/`);
+            },
+          });
+          state.hide = true;
+        }
+      }
+    }
+  }, []);
+
   if (state.loading) {
     return (
       <div className="pt-[30vh] flex justify-center">
         <Loading />
       </div>
     )
+  }
+
+  if (state.hide) {
+    return null;
   }
 
   return (
@@ -83,6 +110,7 @@ export default observer(() => {
                   await sleep(500);
                   state.idSet.delete(group.groupId);
                   delete state.map[group.groupId];
+                  groupStore.removeGroup(group.groupId);
                   await sleep(300);
                   snackbarStore.show({
                     message: lang.deleted,

@@ -23,37 +23,41 @@ const App = observer(() => {
     <Router>
       <AliveScope>
         <div className="dark:bg-[#181818] bg-gray-f7 min-h-screen w-screen">
-          <Route path="/groups" exact component={Groups} />
 
           <Route path="/" component={Preload} />
+
           {!groupStore.loading && (
             <div>
-              <GlobalSetup />
-              <Route path="/" exact component={() => (
-                <KeepAlive>
-                  <Index />
-                </KeepAlive>
-              )} />
-              <Route path="/groups/:groupId" exact render={props => (
-                <KeepAlive>
-                  <Group { ...props } />
-                </KeepAlive>
-              )} />
-              <Route path="/search" exact component={() => (
-                <KeepAlive name='search'>
-                  <Search />
-                </KeepAlive>
-              )} />
-              <Route path="/posts/:id" exact component={PostDetail} />
-              <Route path="/users/:userAddress" exact render={props => (
-                <KeepAlive name='user' when={() => (
-                  window.location.pathname.startsWith(`/posts`)
-                )}>
-                  <User { ...props } />
-                </KeepAlive>
-              )} />
-              <PostDetailModal />
-              {userStore.isLogin && <CommentReplyModal />}
+              <Route path="/groups" exact component={Groups} />
+
+              {groupStore.total > 0 && <>
+                <GlobalSetup />
+                <Route path="/" exact component={() => (
+                  <KeepAlive>
+                    <Index />
+                  </KeepAlive>
+                )} />
+                <Route path="/groups/:groupId" exact render={props => (
+                  <KeepAlive>
+                    <Group { ...props } />
+                  </KeepAlive>
+                )} />
+                <Route path="/search" exact component={() => (
+                  <KeepAlive name='search'>
+                    <Search />
+                  </KeepAlive>
+                )} />
+                <Route path="/posts/:id" exact component={PostDetail} />
+                <Route path="/users/:userAddress" exact render={props => (
+                  <KeepAlive name='user' when={() => (
+                    window.location.pathname.startsWith(`/posts`)
+                  )}>
+                    <User { ...props } />
+                  </KeepAlive>
+                )} />
+                <PostDetailModal />
+                {userStore.isLogin && <CommentReplyModal />}
+              </>}
             </div>
           )}
 

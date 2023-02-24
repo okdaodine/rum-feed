@@ -20,6 +20,10 @@ export function createGroupStore() {
       return Object.values(this.map).length > 1;
     },
 
+    get total() {
+      return Object.values(this.map).length;
+    },
+
     setDefaultGroupId(defaultGroupId: string) {
       this.defaultGroupId = defaultGroupId;
     },
@@ -30,6 +34,10 @@ export function createGroupStore() {
 
     addGroup(group: IGroup) {
       this.map[group.groupId] = group;
+    },
+
+    removeGroup(groupId: string) {
+      delete this.map[groupId];
     },
 
     addGroups(groups: IGroup[]) {

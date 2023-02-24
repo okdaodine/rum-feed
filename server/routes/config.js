@@ -8,7 +8,8 @@ async function get(ctx) {
     title: config.title || '',
     logo: config.logo || '',
     defaultGroupId: config.defaultGroupId || '',
-    repo: config.repo || ''
+    repo: config.repo || '',
+    groupsPageIsOnlyVisibleToAdmin: config.groupsPageIsOnlyVisibleToAdmin || false
   };
 }
 

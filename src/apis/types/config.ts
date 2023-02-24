@@ -4,4 +4,5 @@ export interface IConfig {
   version: string
   defaultGroupId: string
   repo: string
+  groupsPageIsOnlyVisibleToAdmin: boolean
 }
