@@ -18,7 +18,6 @@ export interface IComment extends ICommentContent {
   timestamp: number
   commentCount: number
   likeCount: number
-  hotCount: number
   extra: ICommentExtra
 }
 

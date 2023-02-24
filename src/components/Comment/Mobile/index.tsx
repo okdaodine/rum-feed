@@ -152,7 +152,6 @@ export default observer((props: IProps) => {
       id: activity.object?.id ?? '',
       storage: TrxStorage.cache,
       commentCount: 0,
-      hotCount: 0,
       likeCount: 0,
       timestamp: Date.now(),
       extra: {

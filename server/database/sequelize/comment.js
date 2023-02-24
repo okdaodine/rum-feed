@@ -57,10 +57,6 @@ const Comment = sequelize.define('comments', {
     type: Sequelize.INTEGER,
     allowNull: false
   },
-  hotCount: {
-    type: Sequelize.INTEGER,
-    allowNull: false
-  },
   imageCount: {
     type: Sequelize.INTEGER,
     defaultValue: 0
@@ -86,8 +82,6 @@ const Comment = sequelize.define('comments', {
     fields: ['commentCount']
   }, {
     fields: ['likeCount']
-  }, {
-    fields: ['hotCount']
   }]
 });
 

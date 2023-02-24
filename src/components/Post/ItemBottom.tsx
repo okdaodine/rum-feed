@@ -222,7 +222,6 @@ export default observer((props: IProps) => {
                           ...post,
                           latestTrxId: '',
                           commentCount: post.commentCount,
-                          hotCount: post.hotCount,
                           likeCount: post.likeCount,
                           timestamp: post.timestamp,
                           storage: TrxStorage.cache,

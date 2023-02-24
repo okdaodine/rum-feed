@@ -141,7 +141,6 @@ const pack = async item => {
     id,
     storage: 'chain',
     commentCount: 0,
-    hotCount: 0,
     likeCount: 0,
     timestamp: parseInt(String(TimeStamp / 1000000), 10)
   };

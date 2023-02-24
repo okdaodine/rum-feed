@@ -17,7 +17,6 @@ export interface IPost extends IPostContent {
   timestamp: number
   commentCount: number
   likeCount: number
-  hotCount: number
   imageCount: number
   extra: IPostExtra
 }

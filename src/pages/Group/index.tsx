@@ -170,7 +170,6 @@ export default observer((props: RouteChildrenProps) => {
       latestTrxId: '',
       storage: TrxStorage.cache,
       commentCount: 0,
-      hotCount: 0,
       likeCount: 0,
       imageCount: (activity.object?.image || []).length,
       timestamp: Date.now(),
