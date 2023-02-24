@@ -167,16 +167,18 @@ const handleContents = async (group, contents) => {
         try {
           const type = getTrxType(content);
           if (type === 'post' || type === 'comment') {
-            const orphans = await Orphan.findAll({
-              raw: true,
-              where: {
-                groupId: content.GroupId,
-                parentId: content.Data.object.id
+            if (content.Data.object.id) {
+              const orphans = await Orphan.findAll({
+                raw: true,
+                where: {
+                  groupId: content.GroupId,
+                  parentId: content.Data.object.id
+                }
+              });
+              if (orphans.length > 0) {
+                console.log(`[handle orphans 👶]:`, orphans.map(o => `${o.content.TrxId}`));
+                await handleContents(group, orphans.map(o => o.content));
               }
-            });
-            if (orphans.length > 0) {
-              console.log(`[handle orphans 👶]:`, orphans.map(o => `${o.content.TrxId}`));
-              await handleContents(group, orphans.map(o => o.content));
             }
           }
         } catch (err) {
