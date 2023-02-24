@@ -167,7 +167,7 @@ const handleContents = async (group, contents) => {
         try {
           const type = getTrxType(content);
           if (type === 'post' || type === 'comment') {
-            if (content.Data.object.id) {
+            if (content.Data.object?.id) {
               const orphans = await Orphan.findAll({
                 raw: true,
                 where: {

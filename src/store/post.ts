@@ -131,6 +131,7 @@ export function createPostStore() {
     removePost(id: string) {
       runInAction(() => {
         this.ids = this.ids.filter(t => t !== id);
+        this.groupIds = this.groupIds.filter(t => t !== id);
         this.userIds = this.userIds.filter(t => t !== id);
         this.searchedIds = this.searchedIds.filter(t => t !== id);
         delete this.map[id];
