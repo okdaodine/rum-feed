@@ -35,7 +35,6 @@ module.exports = async (item, group) => {
   if (post) {
     post.commentCount = await Comment.count({
       where: {
-        groupId: post.groupId,
         objectId: post.id
       }
     });
@@ -65,7 +64,6 @@ module.exports = async (item, group) => {
     if (threadComment) {
       threadComment.commentCount = await Comment.count({
         where: {
-          groupId: threadComment.groupId,
           threadId: threadComment.id
         }
       });
