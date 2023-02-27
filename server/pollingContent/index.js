@@ -171,7 +171,6 @@ const handleContents = async (group, contents) => {
               const orphans = await Orphan.findAll({
                 raw: true,
                 where: {
-                  groupId: content.GroupId,
                   parentId: content.Data.object.id
                 }
               });
