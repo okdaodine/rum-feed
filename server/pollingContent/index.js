@@ -10,7 +10,7 @@ const getTrxType = require('../utils/getTrxType');
 const Content = require('../database/sequelize/content');
 const Group = require('../database/sequelize/group');
 const config = require('../config');
-const { shuffle } = require('lodash');
+const { shuffle, groupBy } = require('lodash');
 const moment = require('moment');
 const shuffleChainApi = require('../utils/shuffleChainApi');
 const pendingTrxHelper = require('../utils/pendingTrxHelper');
@@ -91,7 +91,7 @@ const startJob = async (groupId, duration) => {
         jobShareData.handling = true;
         try {
           if (contents.length > 0) {
-            await handleContents(group, contents.sort((a, b) => a.TimeStamp - b.TimeStamp));
+            await handleContents(group.groupId, contents.sort((a, b) => a.TimeStamp - b.TimeStamp));
             const contentCount = await Content.count({ where });
             await Group.update({ contentCount }, { where });
           }
@@ -112,8 +112,11 @@ const startJob = async (groupId, duration) => {
   }
 }
 
-const handleContents = async (group, contents) => {
-  const { groupId } = group;
+const handleContents = async (groupId, contents) => {
+  const group = await Group.findOne({ where: { groupId } });
+  if (!group) {
+    return;
+  }
   try {
     for (const content of contents) {
       let success = false;
@@ -176,7 +179,10 @@ const handleContents = async (group, contents) => {
               });
               if (orphans.length > 0) {
                 console.log(`[handle orphans 👶]:`, orphans.map(o => `${o.content.TrxId}`));
-                await handleContents(group, orphans.map(o => o.content));
+                const groupedOrphans = groupBy(orphans, 'groupId');
+                for (const [groupId, orphans] of Object.entries(groupedOrphans)) {
+                  await handleContents(groupId, orphans.map(o => o.content));
+                }
               }
             }
           }

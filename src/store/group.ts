@@ -1,5 +1,6 @@
 import { IGroup } from 'apis/types';
 import { runInAction } from 'mobx';
+import { keyBy } from 'lodash';
 
 export function createGroupStore() {
   return {
@@ -9,19 +10,32 @@ export function createGroupStore() {
 
     defaultGroupId: '' as string,
 
+    get groups() {
+      return Object.values(this.map);
+    },
+
     get defaultGroup() {
       if (this.defaultGroupId && this.map[this.defaultGroupId]) {
         return this.map[this.defaultGroupId];
       }
-      return Object.values(this.map)[0];
+      return this.groups[1];
     },
 
     get multiple() {
-      return Object.values(this.map).length > 1;
+      return this.groups.length > 1;
     },
 
     get total() {
-      return Object.values(this.map).length;
+      return this.groups.length;
+    },
+
+    get nameMap() {
+      return keyBy(this.groups, 'groupName');
+    },
+
+    getPublicGroupId(groupId: string) {
+      const group = this.map[groupId];
+      return (this.nameMap[`Public.${group.groupName}`] || group).groupId;
     },
 
     setDefaultGroupId(defaultGroupId: string) {

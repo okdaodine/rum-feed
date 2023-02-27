@@ -114,7 +114,7 @@ const Main = observer(() => {
                   content: encryptedHex,
                   summary: JSON.stringify({ message: rawMsg, signature })
                 },
-              }, groupStore.defaultGroup.groupId, wallet.privateKey);
+              }, groupStore.getPublicGroupId(groupStore.defaultGroup.groupId), wallet.privateKey);
               console.log(res);
               connectWallet(wallet.address, wallet.privateKey);
               window.location.href += '?action=openProfileEditor';

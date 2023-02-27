@@ -34,6 +34,7 @@ export default observer((props: IProps) => {
     postStore,
     modalStore,
     userStore,
+    groupStore
   } = useStore();
   const { post } = props;
   const inPostDetail = props.where.startsWith('postDetail');
@@ -65,8 +66,8 @@ export default observer((props: IProps) => {
         }
       };
       const res = liked ?
-        await TrxApi.createActivity({ type: 'Undo', object: like }, post.groupId) :
-        await TrxApi.createActivity(like, post.groupId);
+        await TrxApi.createActivity({ type: 'Undo', object: like }, groupStore.getPublicGroupId(post.groupId)) :
+        await TrxApi.createActivity(like, groupStore.getPublicGroupId(post.groupId));
       console.log(res);
       postStore.updatePost({
         ...post,
