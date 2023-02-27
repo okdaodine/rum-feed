@@ -17,6 +17,7 @@ Open another terminal window and execute:
 
 ```
 cd server
+cp config.example.js config.js
 yarn install
 yarn dev
 ```
