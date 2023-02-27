@@ -24,8 +24,8 @@ const PostEditor = observer((props: {
   rs: (result?: any) => void
 }) => {
   const { userStore, groupStore } = useStore();
-  const matchedGroupId = window.location.pathname.split('/groups/')[1];
-  const groupId = matchedGroupId ? matchedGroupId : groupStore.defaultGroup.groupId;
+  const matchedGroupName = window.location.pathname.split('/groups/')[1];
+  const groupId = matchedGroupName ? groupStore.nameMap[matchedGroupName].groupId : groupStore.defaultGroup.groupId;
   const group = groupStore.map[groupId];
   const submit = async (activity: IActivity) => {
     if (!userStore.isLogin) {

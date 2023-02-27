@@ -26,7 +26,7 @@ import './index.css';
 
 export default observer((props: RouteChildrenProps) => {
   const { userStore, postStore, groupStore } = useStore();
-  const { groupId } = props.match?.params as { groupId: string };
+  const groupName = (props.match?.params as { groupName: string }).groupName.toLowerCase();
   const state = useLocalObservable(() => ({
     content: '',
     profileMap: {} as Record<string, IProfile>,
@@ -53,7 +53,7 @@ export default observer((props: RouteChildrenProps) => {
         await sleep(200);
         state.invisible = false;
         if (state.fetchedGroup && state.group) {
-          document.title = state.group.groupName;
+          document.title = state.group.groupAlias;
         }
       })();
     }
@@ -74,13 +74,13 @@ export default observer((props: RouteChildrenProps) => {
     }
     (async () => {
       try {
-        const group = groupStore.map[groupId];
+        const group = groupStore.nameMap[groupName];
         if (!group) {
           throw new Error('group not found');
         }
-        await fetchPosts();
+        await fetchPosts(group.groupId);
         state.group = group;
-        document.title = group.groupName;
+        document.title = group.groupAlias;
       } catch (err) {
         console.log(err);
       }
@@ -91,9 +91,9 @@ export default observer((props: RouteChildrenProps) => {
         state.invisible = false;
       }
     })();
-  }, [groupId]);
+  }, [groupName]);
 
-  const fetchPosts = async () => {
+  const fetchPosts = async (groupId: string) => {
     state.fetchingPosts = true;
     try {
       const limit = 15;
@@ -131,7 +131,9 @@ export default observer((props: RouteChildrenProps) => {
     if (state.fetchingPosts) {
       return;
     }
-    fetchPosts();
+    if (state.group) {
+      fetchPosts(state.group.groupId);
+    }
   }, [state.page]);
 
   React.useEffect(() => {
@@ -140,7 +142,9 @@ export default observer((props: RouteChildrenProps) => {
       state.fetchingPosts = true;
       state.page = 1;
       postStore.resetIds();
-      fetchPosts();
+      if (state.group) {
+        fetchPosts(state.group.groupId);
+      }
     }
   }, [postStore.feedType])
 
@@ -158,13 +162,13 @@ export default observer((props: RouteChildrenProps) => {
       openLoginModal();
       return;
     }
-    const res = await TrxApi.createActivity(activity, groupId);
+    const res = await TrxApi.createActivity(activity, state.group!.groupId);
     console.log(res);
     const post: IPost = {
       content: activity.object?.content || '',
       images: activity.object?.image?.map(image => base64.getUrl(image as any)) ?? [],
       userAddress: userStore.address,
-      groupId,
+      groupId: state.group!.groupId,
       trxId: res.trx_id,
       id: activity.object?.id ?? '',
       latestTrxId: '',
@@ -211,7 +215,7 @@ export default observer((props: RouteChildrenProps) => {
                   <div className="absolute top-0 left-0 right-0 bottom-0 blur-layer md:rounded-12" />
                 </div>
                 <div className="z-10 font-bold text-center text-22 md:text-26 text-white w-full py-4 tracking-wider">
-                  {state.group.groupName}
+                  {state.group.groupAlias}
                 </div>
               </div>
               <div className="md:pt-5">

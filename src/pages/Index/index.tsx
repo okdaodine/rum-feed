@@ -18,6 +18,7 @@ import { isMobile } from 'utils/env';
 import TopPlaceHolder from 'components/TopPlaceHolder';
 import { v4 as uuid } from 'uuid';
 import base64 from 'utils/base64';
+import openContractModal from 'components/openContractModal';
 
 export default observer(() => {
   const { userStore, postStore, groupStore } = useStore();
@@ -127,7 +128,11 @@ export default observer(() => {
       <TopPlaceHolder />
       <div className="w-full md:w-[600px] box-border mx-auto relative pb-16">
         <div className="md:pt-5">
-          <div className="hidden md:block">
+          <div className="py-3 px-5 flex justify-between items-center bg-white/30 rounded-12">
+            <div className="text-18 text-white/80">Find your NFT club</div>
+            <Button onClick={() => openContractModal()}>Go</Button>
+          </div>
+          <div className="hidden _md:block">
             <Editor
               groupId={groupStore.defaultGroup.groupId}
               editorKey="post"

@@ -9,6 +9,7 @@ const router = require('koa-router')();
 const serve = require('koa-static');
 const views = require('koa-views');
 const Socket = require('./socket');
+const configFile = require('./config');
 
 const pollingContent = require('./pollingContent');
 require('./mixin');
@@ -28,6 +29,7 @@ const relation = require('./routes/relation');
 const config = require('./routes/config');
 const sitemap = require('./routes/sitemap');
 const wallet = require('./routes/wallet');
+const contract = require('./routes/contract');
 const view = require('./routes/view');
 
 const {
@@ -70,6 +72,7 @@ router.use('/api/:groupId/trx', trx.routes(), trx.allowedMethods());
 router.use('/api/config', config.routes(), config.allowedMethods());
 router.use('/api/sitemap.txt', sitemap.routes(), sitemap.allowedMethods());
 router.use('/api/wallets', wallet.routes(), wallet.allowedMethods());
+router.use('/api/contracts', contract.routes(), contract.allowedMethods());
 
 router.use('(.*)', view.routes(), view.allowedMethods());
 
@@ -85,7 +88,7 @@ server.listen(port, () => {
   console.log(`Node.js v${process.versions.node}`);
   console.log(`Server run at ${port}`);
   setTimeout(() => {
-    pollingContent(config.polling?.duration || 1000);
+    pollingContent(configFile.polling?.duration || 1000);
   }, 2000);
 });
 

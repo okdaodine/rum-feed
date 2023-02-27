@@ -10,6 +10,10 @@ const Group = sequelize.define('groups', {
     type: Sequelize.STRING,
     defaultValue: ''
   },
+  groupAlias: {
+    type: Sequelize.STRING,
+    defaultValue: ''
+  },
   seedUrl: {
     type: Sequelize.TEXT,
     defaultValue: ''
@@ -33,6 +37,8 @@ const Group = sequelize.define('groups', {
   timestamps: false,
   indexes: [{
     fields: ['groupId']
+  }, {
+    fields: ['groupName']
   }]
 });
 

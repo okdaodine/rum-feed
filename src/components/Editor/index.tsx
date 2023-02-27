@@ -527,7 +527,7 @@ const Editor = observer((props: IProps) => {
                 />
               )}
               {groupStore.multiple && props.editorKey === 'post' && (
-                <div className="flex ml-5 mt-[2px] tracking-wider">
+                <div className="ml-5 mt-[2px] tracking-wider hidden">
                   <Tooltip
                     enterDelay={600}
                     enterNextDelay={600}
@@ -537,7 +537,7 @@ const Editor = observer((props: IProps) => {
                     >
                     <div className="bg-[#e3e5e6] bg-opacity-60 dark:bg-opacity-10 text-12 py-[2px] px-2 flex items-center rounded-full">
                       <div className="w-[10px] h-[10px] bg-[#37434D] rounded-full mr-[6px] opacity-30 dark:bg-white dark:opacity-30" />
-                      <span className="text-[#37434D] opacity-[0.6] font-bold dark:text-white dark:opacity-50">{groupStore.map[props.groupId]?.groupName}</span>
+                      <span className="text-[#37434D] opacity-[0.6] font-bold dark:text-white dark:opacity-50">{groupStore.map[props.groupId]?.groupAlias}</span>
                     </div>
                   </Tooltip>
                 </div>

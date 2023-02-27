@@ -37,7 +37,7 @@ const App = observer(() => {
                     <Index />
                   </KeepAlive>
                 )} />
-                <Route path="/groups/:groupId" exact render={props => (
+                <Route path="/groups/:groupName" exact render={props => (
                   <KeepAlive>
                     <Group { ...props } />
                   </KeepAlive>
