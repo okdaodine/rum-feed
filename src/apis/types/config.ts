@@ -1,5 +1,5 @@
 export interface IConfig {
-  title: string
+  siteName: string
   logo: string
   version: string
   defaultGroupId: string

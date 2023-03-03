@@ -5,7 +5,7 @@ router.get('/', get);
 
 async function get(ctx) {
   ctx.body = {
-    title: config.title || '',
+    siteName: config.siteName || '',
     logo: config.logo || '',
     defaultGroupId: config.defaultGroupId || '',
     repo: config.repo || '',
