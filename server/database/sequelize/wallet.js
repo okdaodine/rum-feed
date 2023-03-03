@@ -1,7 +1,7 @@
 const { Sequelize } = require('sequelize');
 const sequelize = require('../index');
 
-const wallet = sequelize.define('wallets', {
+const Wallet = sequelize.define('wallets', {
   address: {
     type: Sequelize.STRING,
     allowNull: false,
@@ -27,6 +27,6 @@ const wallet = sequelize.define('wallets', {
   }]
 });
 
-wallet.sync();
+Wallet.sync();
 
-module.exports = wallet;
+module.exports = Wallet;

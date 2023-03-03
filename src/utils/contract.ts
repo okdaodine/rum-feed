@@ -1,5 +1,3 @@
-const ethers = require('ethers');
-
 const ERC721_ABI = [
   'constructor(string name, string symbol, string baseTokenURI)',
   'event Approval(address indexed owner, address indexed approved, uint256 indexed tokenId)',
@@ -53,22 +51,7 @@ const RPC_MAPPING = {
   rum: 'http://149.56.22.113:8545'
 }
 
-const getContractName = async (mainnet, contractAddress) => {
-  const provider = new ethers.providers.JsonRpcProvider(RPC_MAPPING[mainnet]);
-  const contract = new ethers.Contract(contractAddress, ERC721_ABI, provider);
-  return await contract.name();
-}
-
-const getNFT = async (mainnet, contractAddress, userAddress) => {
-  const provider = new ethers.providers.JsonRpcProvider(RPC_MAPPING[mainnet]);
-  const contract = new ethers.Contract(contractAddress, ERC721_ABI, provider);
-  const ret = await contract.balanceOf(userAddress);
-  const count = parseInt(ethers.utils.formatUnits(ret, 0));
-  console.log({ mainnet, contractAddress, userAddress, count });
-  return count;
-}
-
-module.exports = {
-  getContractName,
-  getNFT
+export default {
+  ERC721_ABI,
+  RPC_MAPPING
 }

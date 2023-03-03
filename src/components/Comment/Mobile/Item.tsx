@@ -43,7 +43,7 @@ export default observer((props: IProps) => {
     expand: false,
     readyToFold: isSafari || isIPhone ? false : true,
   }));
-  const { commentStore, userStore, snackbarStore, groupStore } = useStore();
+  const { commentStore, userStore, snackbarStore } = useStore();
   const commentRef = React.useRef<any>();
   const {
     hideDivider,
@@ -142,8 +142,8 @@ export default observer((props: IProps) => {
         },
       }
       const res = comment.extra.liked ?
-        await TrxApi.createActivity({ type: 'Undo', object: like }, groupStore.getPublicGroupId(comment.groupId)) :
-        await TrxApi.createActivity(like, groupStore.getPublicGroupId(comment.groupId));
+        await TrxApi.createActivity({ type: 'Undo', object: like }, comment.groupId) :
+        await TrxApi.createActivity(like, comment.groupId);
       console.log(res);
       commentStore.updateComment({
         ...comment,

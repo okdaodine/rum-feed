@@ -21,6 +21,7 @@ import sleep from 'utils/sleep';
 import { IActivity } from 'rum-sdk-browser';
 import { v4 as uuid } from 'uuid';
 import base64 from 'utils/base64';
+import useCheckPermission from 'hooks/useCheckPermission';
 
 import './index.css';
 
@@ -46,6 +47,7 @@ export default observer((props: RouteChildrenProps) => {
     },
   }));
   const DEFAULT_BG_GRADIENT = '/default_cover.png';
+  const checkPermission = useCheckPermission(useStore());
 
   useActivate(() => {
     if (state.fetched) {
@@ -158,6 +160,9 @@ export default observer((props: RouteChildrenProps) => {
   });
 
   const submitPost = async (activity: IActivity) => {
+    if (!await checkPermission(state.group!.groupName)) {
+      throw new Error('ERR_INTERRUPTED');
+    }
     if (!userStore.isLogin) {
       openLoginModal();
       return;

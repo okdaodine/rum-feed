@@ -304,13 +304,15 @@ const Editor = observer((props: IProps) => {
           delete state.imageMap[prop];
         }
       }
-    } catch (err) {
+    } catch (err: any) {
       state.submitting = false;
       console.error(err);
-      snackbarStore.show({
-        message: lang.somethingWrong,
-        type: 'error',
-      });
+      if (err.message !== 'ERR_INTERRUPTED') {
+        snackbarStore.show({
+          message: lang.somethingWrong,
+          type: 'error',
+        });
+      }
       if (_draft) {
         localStorage.setItem(draftKey, _draft);
       }

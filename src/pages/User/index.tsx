@@ -210,8 +210,8 @@ export default observer((props: RouteChildrenProps) => {
           },
         };
         const res = type === 'follow' ?
-          await TrxApi.createActivity(follow, groupStore.getPublicGroupId(groupStore.defaultGroup.groupId)) : 
-          await TrxApi.createActivity({ type: 'Undo', object: follow }, groupStore.getPublicGroupId(groupStore.defaultGroup.groupId));
+          await TrxApi.createActivity(follow, groupStore.defaultGroup.groupId) : 
+          await TrxApi.createActivity({ type: 'Undo', object: follow }, groupStore.defaultGroup.groupId);
         console.log(res);
       }
       if (['mute', 'unmute'].includes(type)) {
@@ -223,8 +223,8 @@ export default observer((props: RouteChildrenProps) => {
           },
         }
         const res = type === 'mute' ?
-          await TrxApi.createActivity(block, groupStore.getPublicGroupId(groupStore.defaultGroup.groupId)) :
-          await TrxApi.createActivity({ type: 'Undo', object: block }, groupStore.getPublicGroupId(groupStore.defaultGroup.groupId));
+          await TrxApi.createActivity(block, groupStore.defaultGroup.groupId) :
+          await TrxApi.createActivity({ type: 'Undo', object: block }, groupStore.defaultGroup.groupId);
         console.log(res);
       }
       if (type.includes('follow')) {

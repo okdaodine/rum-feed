@@ -11,6 +11,9 @@ const views = require('koa-views');
 const Socket = require('./socket');
 const configFile = require('./config');
 
+const preset = require('./preset');
+preset();
+
 const pollingContent = require('./pollingContent');
 require('./mixin');
 

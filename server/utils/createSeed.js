@@ -1,7 +1,7 @@
-const { assert, Errors } = require('../../utils/validator');
 const rumSDK = require('rum-sdk-nodejs');
-const Group = require('../../database/sequelize/group');
-const Seed = require('../../database/sequelize/seed');
+const { assert, Errors } = require('./validator');
+const Group = require('../database/sequelize/group');
+const Seed = require('../database/sequelize/seed');
 
 module.exports = async (url) => {
   const existGroup = await Seed.findOne({
@@ -12,6 +12,12 @@ module.exports = async (url) => {
   assert(!existGroup, Errors.ERR_IS_DUPLICATED('url'));
   const { groupId, chainAPIs, groupName } = rumSDK.utils.seedUrlToGroup(url);
   assert(chainAPIs.length > 0, Errors.ERR_IS_REQUIRED('chainAPIs'));
+  const existGroupName = await Group.findOne({
+    where: {
+      groupName
+    }
+  });
+  assert(!existGroupName, Errors.ERR_IS_DUPLICATED('groupName'));
   await Seed.create({
     url,
     groupId,
@@ -50,6 +56,7 @@ module.exports = async (url) => {
       seedUrl: combinedSeedUrl,
       groupId,
       groupName,
+      groupAlias: groupName,
       startTrx: '',
       status: '',
       loaded: false,

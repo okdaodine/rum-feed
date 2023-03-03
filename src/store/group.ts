@@ -15,10 +15,7 @@ export function createGroupStore() {
     },
 
     get defaultGroup() {
-      if (this.defaultGroupId && this.map[this.defaultGroupId]) {
-        return this.map[this.defaultGroupId];
-      }
-      return this.groups.find(group => group.groupName.startsWith('ethereum'))!;
+      return this.nameMap['default']!;
     },
 
     get multiple() {
@@ -31,11 +28,6 @@ export function createGroupStore() {
 
     get nameMap() {
       return keyBy(this.groups, group => group.groupName.toLowerCase());
-    },
-
-    getPublicGroupId(groupId: string) {
-      const group = this.map[groupId];
-      return (this.nameMap[`public.${group.groupName}`.toLowerCase()] || group).groupId;
     },
 
     setDefaultGroupId(defaultGroupId: string) {

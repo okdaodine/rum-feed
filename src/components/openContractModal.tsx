@@ -19,8 +19,8 @@ const ModalWrapper = observer((props: IProps) => {
   const state = useLocalObservable(() => ({
     open: false,
     loading: false,
-    mainnet: '',
-    contractAddress: '',
+    mainnet: 'rum',
+    contractAddress: '0xC83D627e06579e192D7255c014D2eFeC1216a9c4',
   }));
 
   React.useEffect(() => {
@@ -40,7 +40,10 @@ const ModalWrapper = observer((props: IProps) => {
     }
     state.loading = true;
     try {
-      const res = await ContractApi.check(state.mainnet, state.contractAddress);
+      const res = await ContractApi.checkGroup({
+        mainnet: state.mainnet.toLowerCase(),
+        contractAddress: state.contractAddress.toLowerCase()
+      });
       console.log(res);
       window.location.href = `/groups/${res.groupName}`;
     } catch (err) {

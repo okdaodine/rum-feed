@@ -76,7 +76,7 @@ const ModalWrapper = observer((props: IModalProps) => {
             }
             : {},
         }
-      }, groupStore.getPublicGroupId(groupStore.defaultGroup.groupId));
+      }, groupStore.defaultGroup.groupId);
       console.log(res)
       const profile: IProfile = {
         name: state.profile.name,

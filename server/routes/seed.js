@@ -2,7 +2,7 @@ const router = require('koa-router')();
 const { assert, Errors } = require('../utils/validator');
 const Group = require('../database/sequelize/group');
 const { ensurePermission } = require('../middleware/api');
-const createSeed = require('./utils/createSeed');
+const createSeed = require('../utils/createSeed');
 
 router.post('/', ensurePermission, create);
 

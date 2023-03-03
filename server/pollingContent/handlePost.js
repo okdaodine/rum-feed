@@ -1,13 +1,33 @@
 const rumSDK = require('rum-sdk-nodejs');
 const Post = require('../database/post');
+const NFT = require('../database/sequelize/nft');
+const Wallet = require('../database/sequelize/wallet');
 const { getSocketIo } = require('../socket');
 const config = require('../config');
 const Mixin = require('../mixin');
 const truncateByBytes = require('../utils/truncateByBytes');
 const within24Hours = require('../utils/within24Hours');
+const Contract = require('../utils/contract');
 
 module.exports = async (item, group) => {
   const post = await pack(item);
+  const [mainnet, contractAddress] = group.groupName.split('.');
+  const wallet = await Wallet.findOne({ where: { address: post.userAddress }});
+  if (!wallet) {
+    console.log('[Handle post]: Could not found wallet then skip it 🤷‍♂️');
+    return;
+  }
+  const existNFT = await NFT.findOne({ where: { mainnet, contractAddress, userAddress: wallet.providerAddress } });
+  if (!existNFT) {
+    const count = await Contract.getNFT(mainnet, contractAddress, wallet.providerAddress);
+    if (count > 0) {
+      await NFT.create({ mainnet, contractAddress, userAddress: wallet.providerAddress, count });
+      console.log('Got and saved NFT');
+    } else {
+      console.log('[Handle post]: Could not found NFT then skip it 🤷‍♂️');
+      return;
+    }
+  }
   if (!post.id) {
     return;
   }

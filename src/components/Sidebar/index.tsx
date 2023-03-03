@@ -289,7 +289,8 @@ export default observer(() => {
       </div>
       {isPc && (
         <div className='mt-10 mr-[-430px] scale-100 bottom-[30px] right-[50%] fixed'>
-          {(isMyUserPage || (isGroupPage && userStore.isLogin) || (isHomePage && userStore.isLogin)) && (
+          {/* {(isMyUserPage || (isGroupPage && userStore.isLogin) || (isHomePage && userStore.isLogin)) && ( */}
+          {isGroupPage && userStore.isLogin && (
             <Fade in={true} timeout={350}>
               <div
                 className='mt-10 w-10 h-10 mx-auto flex items-center justify-center rounded-full cursor-pointer border border-black dark:bg-white bg-black'

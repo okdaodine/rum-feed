@@ -114,8 +114,13 @@ const Main = observer(() => {
                   content: encryptedHex,
                   summary: JSON.stringify({ message: rawMsg, signature })
                 },
-              }, groupStore.getPublicGroupId(groupStore.defaultGroup.groupId), wallet.privateKey);
+              }, groupStore.defaultGroup.groupId, wallet.privateKey);
               console.log(res);
+
+              // const provider = new ethers.providers.JsonRpcProvider(Contract.RPC_MAPPING[mainnet]);
+              // const contract = new ethers.Contract(contractAddress, Contract.ERC721_ABI, provider);
+              // const contractName = await contract.name();
+
               connectWallet(wallet.address, wallet.privateKey);
               window.location.href += '?action=openProfileEditor';
             } catch (err: any) {
@@ -151,6 +156,7 @@ const Main = observer(() => {
             state.creatingWallet = false;
             if (done) {
               connectWallet(wallet.address, wallet.privateKey);
+              await sleep(500);
               window.location.href += '?action=openProfileEditor';
             }
           }}
