@@ -22,15 +22,15 @@ import { IActivity } from 'rum-sdk-browser';
 import { v4 as uuid } from 'uuid';
 import base64 from 'utils/base64';
 import useCheckPermission from 'hooks/useCheckPermission';
+import Tooltip from '@material-ui/core/Tooltip';
 
 import './index.css';
 
 export default observer((props: RouteChildrenProps) => {
-  const { userStore, postStore, groupStore } = useStore();
+  const { userStore, postStore, groupStore, confirmDialogStore, snackbarStore, commentStore } = useStore();
   const groupName = (props.match?.params as { groupName: string }).groupName.toLowerCase();
   const state = useLocalObservable(() => ({
     content: '',
-    profileMap: {} as Record<string, IProfile>,
     invisibleOverlay: false,
     fetchingPosts: false,
     fetchedPosts: false,
@@ -41,9 +41,6 @@ export default observer((props: RouteChildrenProps) => {
     invisible: false,
     nfts: [] as INFT[],
     fetchedNFTs: false,
-    get myProfile () {
-      return this.profileMap[userStore.address]
-    },
     get fetched() {
       return this.fetchedGroup && this.fetchedPosts
     },
@@ -215,6 +212,67 @@ export default observer((props: RouteChildrenProps) => {
     state.content = '';
   }
 
+  const setAvatar = (avatar: string) => {
+    confirmDialogStore.show({
+      content: 'Are you sure to set this NFT as avatar ?',
+      ok: async () => {
+        try {
+          confirmDialogStore.setLoading(true);
+          const ret: any = await base64.getFromBlobUrl(avatar);
+          const imageBase64 = ret.url;
+          console.log(`[]:`, { imageBase64 });
+          const res = await TrxApi.createActivity({
+            type: "Create",
+            object: {
+              type: 'Profile',
+              describes: {
+                type: 'Person',
+                id: userStore.address,
+              },
+              name: userStore.profile.name,
+              image: [{
+                type: 'Image',
+                mediaType: base64.getMimeType(imageBase64),
+                content: base64.getContent(imageBase64),
+              } as any]
+            }
+          }, groupStore.defaultGroup.groupId);
+          console.log(res)
+          const profile: IProfile = {
+            name: userStore.profile.name,
+            avatar: imageBase64,
+            groupId: groupStore.defaultGroup.groupId,
+            userAddress: userStore.address
+          };
+          runInAction(() => {
+            userStore.setProfile(profile);
+            for (const post of [...postStore.posts, ...postStore.userPosts]) {
+              if (post.userAddress === userStore.address) {
+                post.extra.userProfile = profile;
+              }
+            }
+            for (const comment of commentStore.comments) {
+              if (comment.userAddress === userStore.address) {
+                comment.extra.userProfile = profile;
+              }
+            }
+          })
+          confirmDialogStore.hide();
+          await sleep(400);
+          snackbarStore.show({
+            message: lang.saved,
+          });
+        } catch (err) {
+          console.log(err);
+          snackbarStore.show({
+            message: lang.somethingWrong,
+          });
+          confirmDialogStore.setLoading(false);
+        }
+      },
+    });
+  }
+
   return (
     <div className="box-border w-full h-screen overflow-auto bg-white dark:bg-[#181818] md:bg-transparent posts-page" ref={rootRef}>
       <TopPlaceHolder />
@@ -282,8 +340,16 @@ export default observer((props: RouteChildrenProps) => {
                         </div>
                       )}
                       {state.fetchedNFTs && state.nfts.map(nft => (
-                        <div key={nft.tokenId} className="mr-3">
-                          <img className="w-[28px] h-[28px] rounded-2" src={nft.image} alt={`${nft.tokenId}`} />
+                        <div key={nft.tokenId} className="mr-3" onClick={() => setAvatar(nft.image)}>
+                          <Tooltip
+                            enterDelay={200}
+                            enterNextDelay={200}
+                            placement="top"
+                            title='Set this NFT as avatar'
+                            arrow
+                            >
+                            <img className="cursor-pointer w-[28px] h-[28px] rounded-2" src={nft.image} alt={`${nft.tokenId}`} />
+                          </Tooltip>
                         </div>
                       ))}
                     </div>
