@@ -9,18 +9,24 @@ import Button from 'components/Button';
 import { TextField } from '@material-ui/core';
 import { ContractApi } from 'apis';
 import { useStore } from 'store';
+import sleep from 'utils/sleep';
 
 interface IProps {
+  mainnet?: string
+  contractAddress?: string
+}
+
+interface IModalProps extends IProps {
   rs: (done: boolean) => void
 }
 
-const ModalWrapper = observer((props: IProps) => {
+const ModalWrapper = observer((props: IModalProps) => {
   const { snackbarStore } = useStore();
   const state = useLocalObservable(() => ({
     open: false,
     loading: false,
-    mainnet: 'rum',
-    contractAddress: '0xC83D627e06579e192D7255c014D2eFeC1216a9c4',
+    mainnet: props.mainnet || '',
+    contractAddress: props.contractAddress || '',
   }));
 
   React.useEffect(() => {
@@ -28,6 +34,15 @@ const ModalWrapper = observer((props: IProps) => {
       state.open = true;
     });
   }, []);
+
+  React.useEffect(() => {
+    if (props.mainnet && props.contractAddress) {
+      (async () => {
+        await sleep(1000);
+        submit();
+      })(); 
+    }
+  }, [])
 
   const handleClose = (done: boolean) => {
     state.open = false;
@@ -103,14 +118,14 @@ const ModalWrapper = observer((props: IProps) => {
             submit();
           }}
         >
-          {lang.ok}
+          {state.loading ? 'Initializing' : lang.ok}
         </Button>
       </div>
     </Modal>
   )
 });
 
-export default async () => new Promise((rs) => {
+export default async (props?: IProps) => new Promise((rs) => {
   const div = document.createElement('div');
   document.body.append(div);
   const unmount = () => {
@@ -122,6 +137,7 @@ export default async () => new Promise((rs) => {
       <ThemeRoot>
         <StoreProvider>
           <ModalWrapper
+            {...props || {}}
             rs={(done: boolean) => {
               rs(done);
               setTimeout(unmount, 500);

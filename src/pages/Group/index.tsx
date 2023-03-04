@@ -23,6 +23,7 @@ import { v4 as uuid } from 'uuid';
 import base64 from 'utils/base64';
 import useCheckPermission from 'hooks/useCheckPermission';
 import Tooltip from '@material-ui/core/Tooltip';
+import openContractModal from 'components/openContractModal';
 
 import './index.css';
 
@@ -77,7 +78,13 @@ export default observer((props: RouteChildrenProps) => {
       try {
         const group = groupStore.nameMap[groupName];
         if (!group) {
-          throw new Error('group not found');
+          await sleep(1000);
+          const [mainnet, contractAddress] = groupName.split('.');
+          openContractModal({
+            mainnet,
+            contractAddress
+          });
+          return;
         }
         await fetchPosts(group.groupId);
         state.group = group;
