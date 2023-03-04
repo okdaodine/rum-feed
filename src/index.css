@@ -134,7 +134,8 @@ ul {
 .MuiTextField-root fieldset {
   border-color: rgba(0, 0, 0, 0.23) !important;
 }
-.dark .MuiTextField-root fieldset {
+.dark .MuiTextField-root fieldset,
+.dark .MuiInputBase-root fieldset {
   border-color: rgba(255, 255, 255, 0.23) !important;
 }
 .MuiTextField-root .MuiOutlinedInput-input {
@@ -146,7 +147,8 @@ ul {
 .MuiTextField-root .MuiOutlinedInput-multiline {
   padding: 0 !important;
 }
-.dark .MuiFormLabel-root {
+.dark .MuiFormLabel-root,
+.dark .MuiSelect-icon {
   color: rgba(255, 255, 255, 0.54);
 }
 .MuiFormLabel-root.Mui-focused {

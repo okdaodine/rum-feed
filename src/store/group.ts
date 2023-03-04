@@ -8,8 +8,6 @@ export function createGroupStore() {
 
     map: {} as Record<string, IGroup>,
 
-    defaultGroupId: '' as string,
-
     get groups() {
       return Object.values(this.map);
     },
@@ -28,10 +26,6 @@ export function createGroupStore() {
 
     get nameMap() {
       return keyBy(this.groups, group => group.groupName.toLowerCase());
-    },
-
-    setDefaultGroupId(defaultGroupId: string) {
-      this.defaultGroupId = defaultGroupId;
     },
 
     setLoading(loading: boolean) {

@@ -18,21 +18,18 @@ import { isMobile } from 'utils/env';
 import TopPlaceHolder from 'components/TopPlaceHolder';
 import { v4 as uuid } from 'uuid';
 import base64 from 'utils/base64';
-import openContractModal from 'components/openContractModal';
+import GroupsModal from './GroupsModal';
 
 export default observer(() => {
   const { userStore, postStore, groupStore } = useStore();
   const state = useLocalObservable(() => ({
     content: '',
-    profileMap: {} as Record<string, IProfile>,
     invisibleOverlay: false,
     fetching: false,
     fetched: false,
     hasMore: false,
     page: 1,
-    get myProfile () {
-      return this.profileMap[userStore.address]
-    }
+    showGroupsModal: false,
   }));
 
   const fetchData = async () => {
@@ -130,7 +127,15 @@ export default observer(() => {
         <div className="md:pt-5">
           <div className="py-3 px-5 flex justify-between items-center bg-white/30 rounded-12">
             <div className="text-18 text-white/80">Find your NFT club</div>
-            <Button onClick={() => openContractModal()}>Go</Button>
+            <Button onClick={() => {
+              state.showGroupsModal = true;
+            }}>Go</Button>
+            <GroupsModal
+              open={state.showGroupsModal}
+              onClose={() => {
+                state.showGroupsModal = false;
+              }}
+            />
           </div>
           <div className="hidden _md:block">
             <Editor

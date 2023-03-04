@@ -12,7 +12,7 @@ export const content = {
   selectProvider: '选择操作方式',
   moveOrDragImage: '移动或缩放图片',
   like: '赞',
-  open: '查看',
+  open: '打开',
   lastSeenHere: '上次看到这里',
   replyYourComment: '回复了你的评论',
   replyYourContent: '评论了你的内容',

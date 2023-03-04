@@ -6,7 +6,7 @@ import { StoreProvider } from 'store';
 import { ThemeRoot } from 'utils/theme';
 import { lang } from 'utils/lang';
 import Button from 'components/Button';
-import { TextField } from '@material-ui/core';
+import { TextField, InputLabel, MenuItem, FormControl, Select } from '@material-ui/core';
 import { ContractApi } from 'apis';
 import { useStore } from 'store';
 import sleep from 'utils/sleep';
@@ -15,6 +15,16 @@ interface IProps {
   mainnet?: string
   contractAddress?: string
 }
+
+const mainnetList = [
+  'Ethereum',
+  'Arbitrum',
+  'Optimism',
+  'Polygon',
+  'Avalanche',
+  'Bsc',
+  'Rum'
+];
 
 interface IModalProps extends IProps {
   rs: (done: boolean) => void
@@ -28,6 +38,7 @@ const ModalWrapper = observer((props: IModalProps) => {
     mainnet: props.mainnet || '',
     contractAddress: props.contractAddress || '',
   }));
+  const autoInit = props.mainnet && props.contractAddress;
 
   React.useEffect(() => {
     setTimeout(() => {
@@ -36,7 +47,7 @@ const ModalWrapper = observer((props: IModalProps) => {
   }, []);
 
   React.useEffect(() => {
-    if (props.mainnet && props.contractAddress) {
+    if (autoInit) {
       (async () => {
         await sleep(1000);
         submit();
@@ -54,6 +65,7 @@ const ModalWrapper = observer((props: IModalProps) => {
       return;
     }
     state.loading = true;
+    await sleep(400);
     try {
       const res = await ContractApi.checkGroup({
         mainnet: state.mainnet.toLowerCase(),
@@ -73,27 +85,32 @@ const ModalWrapper = observer((props: IModalProps) => {
 
   return (
     <Modal open={state.open} onClose={() => handleClose(false)}>
-      <div className="p-8 relative w-full md:w-[400px] h-[40vh] md:h-auto box-border">
+      <div className="p-8 relative w-full md:w-[380px] h-[40vh] md:h-auto box-border">
         <div className="text-18 font-bold dark:text-white dark:text-opacity-80 text-gray-700 text-center">
           <div className="flex items-center justify-center">
             Find your NFT club
           </div>
         </div>
         <div className="pt-8 px-2">
-          <TextField
-            name="Mainnet"
-            label="Mainnet"
-            value={state.mainnet}
-            onChange={(e) => { state.mainnet = e.target.value; }}
-            onKeyDown={(e: any) => {
-              if (e.key === 'Enter') {
-                submit();
-              }
-            }}
+          <FormControl
+            className="w-full"
             variant="outlined"
-            fullWidth
-            margin="dense"
-          />
+            margin="dense">
+            <InputLabel>Select Network</InputLabel>
+            <Select
+              value={state.mainnet}
+              label="Select Network"
+              onChange={(e: any) => {
+                state.mainnet = e.target.value;
+              }}
+            >
+              {mainnetList.map(mainnet => (
+                <MenuItem value={mainnet.toLowerCase()}>
+                  <span className="font-bold tracking-wider text-16 py-1">{mainnet}</span>
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
           <div className="pt-2" />
           <TextField
             name='Contract address'
@@ -118,7 +135,7 @@ const ModalWrapper = observer((props: IModalProps) => {
             submit();
           }}
         >
-          {state.loading ? 'Initializing' : lang.ok}
+          {state.loading && autoInit ? 'Initializing' : lang.ok}
         </Button>
       </div>
     </Modal>

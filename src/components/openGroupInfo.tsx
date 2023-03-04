@@ -22,7 +22,7 @@ interface IModalProps {
 }
 
 const Main = observer((props: IModalProps) => {
-  const { snackbarStore, confirmDialogStore } = useStore();
+  const { snackbarStore, confirmDialogStore, userStore } = useStore();
   const state = useLocalObservable(() => ({
     group: {} as IGroup,
     loading: true,
@@ -109,8 +109,8 @@ const Main = observer((props: IModalProps) => {
           {!state.loading && (
             <div>
               <div className="text-18 font-bold dark:text-white dark:text-opacity-80 text-gray-700 text-center">
-                <div className="flex items-center justify-center">
-                  {state.group.groupName}
+                <div className="text-center px-10 break-words">
+                  {state.group.groupAlias}
                 </div>
                 <div className="mt-1 text-12 opacity-40">
                   {state.group.groupId}
@@ -216,7 +216,9 @@ const Main = observer((props: IModalProps) => {
                   </div>
                 </div>
               )}
-              <Button className="w-full mt-8" color="red" outline onClick={remove}>{lang.delete}</Button>
+              {userStore.isLogin && userStore.user!.role === 'admin' && (
+                <Button className="w-full mt-8" color="red" outline onClick={remove}>{lang.delete}</Button>
+              )}
             </div>
           )}
         </div>
