@@ -1,4 +1,5 @@
 const ethers = require('ethers');
+const axios = require('axios');
 
 const ERC721_ABI = [
   'constructor(string name, string symbol, string baseTokenURI)',
@@ -59,7 +60,7 @@ const getContractName = async (mainnet, contractAddress) => {
   return await contract.name();
 }
 
-const getNFT = async (mainnet, contractAddress, userAddress) => {
+const getNFTCount = async (mainnet, contractAddress, userAddress) => {
   const provider = new ethers.providers.JsonRpcProvider(RPC_MAPPING[mainnet]);
   const contract = new ethers.Contract(contractAddress, ERC721_ABI, provider);
   const ret = await contract.balanceOf(userAddress);
@@ -68,7 +69,28 @@ const getNFT = async (mainnet, contractAddress, userAddress) => {
   return count;
 }
 
+const getNFTs = async (mainnet, contractAddress, userAddress, count) => {
+  const provider = new ethers.providers.JsonRpcProvider(RPC_MAPPING[mainnet]);
+  const contract = new ethers.Contract(contractAddress, ERC721_ABI, provider);
+  return await Promise.all(Array(count).fill().map(async (_, index) => {
+    const tokenId = getInt(await contract.tokenOfOwnerByIndex(userAddress, index));
+    const tokenURI = await contract.tokenURI(tokenId);
+    const fileRes = await axios.get(getFileUrl(tokenURI));
+    const image = getFileUrl(fileRes.data.image);
+    return { mainnet, contractAddress, userAddress, image, tokenId }
+  }));
+}
+
+const getFileUrl = (url) => {
+  return url.replace('ipfs://', 'https://ipfs.io/ipfs/');
+}
+
+const getInt = (bn) => {
+  return parseInt(ethers.utils.formatUnits(bn, 0));
+}
+
 module.exports = {
   getContractName,
-  getNFT
+  getNFTCount,
+  getNFTs
 }

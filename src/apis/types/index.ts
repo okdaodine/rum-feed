@@ -9,3 +9,4 @@ export * from './user';
 export * from './relation';
 export * from './config';
 export * from './wallet';
+export * from './contract';

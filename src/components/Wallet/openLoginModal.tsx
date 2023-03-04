@@ -8,10 +8,7 @@ import { useStore } from 'store';
 import { ethers } from 'ethers';
 import { encrypt } from '@metamask/eth-sig-util';
 import Button from 'components/Button';
-import sleep from 'utils/sleep';
 import { lang } from 'utils/lang';
-import openWalletModal from './openWalletModal';
-import ImportModal from './ImportModal';
 import { TrxApi, WalletApi } from 'apis';
 import rumSDK from 'rum-sdk-browser';
 
@@ -19,8 +16,6 @@ const Main = observer(() => {
   const { userStore ,snackbarStore, confirmDialogStore, groupStore } = useStore();
   const state = useLocalObservable(() => ({
     loadingMetaMask: false,
-    creatingWallet: false,
-    openImportModal: false
   }));
 
   const connectWallet = (address: string, privateKey: string) => {
@@ -116,11 +111,6 @@ const Main = observer(() => {
                 },
               }, groupStore.defaultGroup.groupId, wallet.privateKey);
               console.log(res);
-
-              // const provider = new ethers.providers.JsonRpcProvider(Contract.RPC_MAPPING[mainnet]);
-              // const contract = new ethers.Contract(contractAddress, Contract.ERC721_ABI, provider);
-              // const contractName = await contract.name();
-
               connectWallet(wallet.address, wallet.privateKey);
               window.location.href += '?action=openProfileEditor';
             } catch (err: any) {
@@ -143,44 +133,6 @@ const Main = observer(() => {
           MetaMask{state.loadingMetaMask && '...'}
         </Button>
       </div>
-      <div className="justify-center mt-6 md:mt-4 w-full flex">
-        <Button
-          className="tracking-widest"
-          fullWidth
-          onClick={async () => {
-            state.creatingWallet = true;
-            await sleep(10);
-            const wallet = ethers.Wallet.createRandom();
-            await sleep(200);
-            const done = await openWalletModal(wallet.privateKey);
-            state.creatingWallet = false;
-            if (done) {
-              connectWallet(wallet.address, wallet.privateKey);
-              await sleep(500);
-              window.location.href += '?action=openProfileEditor';
-            }
-          }}
-        >
-          {lang.createWallet}{state.creatingWallet && '...'}
-        </Button>
-      </div>
-      <div className="justify-center mt-6 md:mt-4 w-full flex">
-        <Button
-          className="tracking-widest"
-          fullWidth
-          onClick={async () => {
-            state.openImportModal = true;
-          }}
-        >
-          {lang.importWallet}
-        </Button>
-      </div>
-      <ImportModal
-        open={state.openImportModal}
-        onClose={() => {
-          state.openImportModal = false;
-        }}
-      />
     </div>
   )
 });

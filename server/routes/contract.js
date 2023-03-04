@@ -52,18 +52,19 @@ async function checkUserAddress(ctx) {
   assert(group, Errors.ERR_NOT_FOUND('group'));
   const wallet = await Wallet.findOne({ where: { address: userAddress }});
   assert(wallet, Errors.ERR_NOT_FOUND('wallet'));
-  const nft = await NFT.findOne({ where: { mainnet, contractAddress, userAddress }});
-  if (nft) {
-    ctx.body = true;
+  const nfts = await NFT.findAll({ where: { mainnet, contractAddress, userAddress: wallet.providerAddress }});
+  if (nfts.length > 0) {
+    ctx.body = nfts;
     return;
   }
-  const count = await Contract.getNFT(mainnet, contractAddress, wallet.providerAddress);
+  const count = await Contract.getNFTCount(mainnet, contractAddress, wallet.providerAddress);
   if (count > 0) {
-    await NFT.create({ mainnet, contractAddress, userAddress, count });
+    const nfts = await Contract.getNFTs(mainnet, contractAddress, wallet.providerAddress, count);
+    await NFT.bulkCreate(nfts);
+    ctx.body = nfts;
   } else {
-    throws(Errors.ERR_NOT_FOUND('NFT'));
+    ctx.body = [];
   }
-  ctx.body = true;
 }
 
 module.exports = router;

@@ -1,10 +1,10 @@
 import React from 'react';
 import { runInAction } from 'mobx';
 import { observer, useLocalObservable } from 'mobx-react-lite';
-import { IPost, IProfile, IGroup } from 'apis/types';
+import { IPost, IProfile, IGroup, INFT } from 'apis/types';
 import { TrxStorage } from 'apis/common';
 import PostItem from 'components/Post/Item';
-import { PostApi, TrxApi } from 'apis';
+import { PostApi, TrxApi, ContractApi } from 'apis';
 import Editor from 'components/Editor';
 import { lang } from 'utils/lang';
 import { useStore } from 'store';
@@ -39,6 +39,8 @@ export default observer((props: RouteChildrenProps) => {
     page: 1,
     group: null as IGroup | null,
     invisible: false,
+    nfts: [] as INFT[],
+    fetchedNFTs: false,
     get myProfile () {
       return this.profileMap[userStore.address]
     },
@@ -83,6 +85,9 @@ export default observer((props: RouteChildrenProps) => {
         await fetchPosts(group.groupId);
         state.group = group;
         document.title = group.groupAlias;
+        if (userStore.isLogin) {
+          fetchNFTs(group.groupName, userStore.address);
+        }
       } catch (err) {
         console.log(err);
       }
@@ -148,7 +153,22 @@ export default observer((props: RouteChildrenProps) => {
         fetchPosts(state.group.groupId);
       }
     }
-  }, [postStore.feedType])
+  }, [postStore.feedType]);
+
+  const fetchNFTs = async (groupName: string, userAddress: string) => {
+    try {
+      const [mainnet, contractAddress] = groupName.split('.');
+      const nfts = await ContractApi.checkUserAddress({
+        mainnet,
+        contractAddress,
+        userAddress
+      });
+      state.nfts = nfts;
+    } catch (err) {
+      console.log(err);
+    }
+    state.fetchedNFTs = true;
+  }
 
   const [sentryRef, { rootRef }] = useInfiniteScroll({
     loading: state.fetchingPosts,
@@ -224,7 +244,7 @@ export default observer((props: RouteChildrenProps) => {
                 </div>
               </div>
               <div className="md:pt-5">
-                <div className="hidden md:block">
+                <div className="hidden md:block relative">
                   <Editor
                     groupId={state.group.groupId}
                     editorKey="post"
@@ -251,6 +271,23 @@ export default observer((props: RouteChildrenProps) => {
                     }}
                     enabledImage
                   />
+                  {userStore.isLogin && (
+                    <div className="flex items-center absolute bottom-0 left-[80px]">
+                      {!state.fetchedNFTs && <div className="mt-[-28px]"><Loading size={12} /></div>}
+                      {state.fetchedNFTs && state.nfts.length === 0 && (
+                        <div className="mt-[-28px]">
+                          <div className="bg-[#e3e5e6] bg-opacity-60 dark:bg-opacity-10 text-12 py-[2px] px-2 flex items-center rounded-full">
+                            <span className="text-[#37434D] opacity-[0.6] font-bold dark:text-white dark:opacity-50">You don't have this NFT</span>
+                          </div>
+                        </div>
+                      )}
+                      {state.fetchedNFTs && state.nfts.map(nft => (
+                        <div key={nft.tokenId} className="mr-3">
+                          <img className="w-[28px] h-[28px] rounded-2" src={nft.image} alt={`${nft.tokenId}`} />
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
                 <div className={classNames({
                   'opacity-0': state.invisibleOverlay || !state.fetched || postStore.groupTotal === 0

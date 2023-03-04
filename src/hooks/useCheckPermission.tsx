@@ -9,12 +9,19 @@ export default (store: Store) => {
   return React.useCallback(async (groupName: string) => {
     const [mainnet, contractAddress] = groupName.split('.');
     try {
-      const res = await ContractApi.checkUserAddress({
+      const nfts = await ContractApi.checkUserAddress({
         mainnet,
         contractAddress,
         userAddress: userStore.address
       });
-      console.log(res);
+      console.log({ nfts });
+      if (nfts.length === 0) {
+        snackbarStore.show({
+          message: `You don't have this NFT`,
+          type: 'error',
+        });
+        return false;
+      }
       return true;
     } catch (err: any) {
       console.log(err);

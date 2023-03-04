@@ -20,7 +20,11 @@ const NFT = sequelize.define('nfts', {
     type: Sequelize.STRING,
     allowNull: false,
   },
-  count: {
+  image: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+  tokenId: {
     type: Sequelize.INTEGER,
     allowNull: false,
   },
@@ -28,7 +32,6 @@ const NFT = sequelize.define('nfts', {
   charset: 'utf8mb4',
   timestamps: false,
   indexes: [{
-    unique: true,
     fields: ['mainnet', 'contractAddress', 'userAddress']
   }]
 });
