@@ -361,7 +361,7 @@ export default observer(() => {
                     {
                       'dark:text-white dark:text-opacity-80 text-black': isHomePage,
                     },
-                    'px-4 text-center',
+                    'px-4 text-center flex flex-col items-center',
                   )}
                   onClick={() => {
                     const path = `/`;
@@ -389,7 +389,7 @@ export default observer(() => {
                     {
                       'dark:text-white dark:text-opacity-80 text-black': isSearchPage,
                     },
-                    'px-4 text-center',
+                    'px-4 text-center flex flex-col items-center',
                   )}
                   onClick={async () => {
                     if (!userStore.isLogin) {
@@ -411,7 +411,7 @@ export default observer(() => {
                     {
                       'dark:text-white dark:text-opacity-80 text-black': isMyUserPage,
                     },
-                    'px-4 text-center',
+                    'px-4 text-center flex flex-col items-center',
                   )}
                   onClick={() => {
                     if (!userStore.isLogin) {

@@ -124,13 +124,13 @@ export default observer((props: IProps) => {
   return (
     <div>
       {!props.hideBottom && (
-        <div className="pl-12 ml-1 flex items-center dark:text-white dark:text-opacity-50 text-gray-88 leading-none text-12">
+        <div className="pl-12 ml-1 flex items-center dark:text-white dark:text-opacity-50 text-gray-88 leading-none text-12 pt-[2px]">
           <div
             className={classNames(
               {
                 'dark:text-white dark:text-opacity-80 text-black text-opacity-60 font-bold': liked,
               },
-              'flex items-center pl-0 p-2 pr-5 cursor-pointer tracking-wide',
+              'flex items-center pl-0 md:pl-2 mr-3 cursor-pointer tracking-wide',
             )}
             onClick={() => {
               updateCounter(post.id);
@@ -146,18 +146,23 @@ export default observer((props: IProps) => {
             {likeCount ? (
               <span className={classNames({
                 'dark:opacity-90': liked
-              }, "mr-[10px] md:mr-1")}>{likeCount || ''}</span>
+              }, "mr-[20px] md:mr-[10px]")}>{likeCount || ''}</span>
             )
-              : <span className={classNames({
-                'invisible': isMobile
-              })}>{lang.like}</span>}
+              : (
+                <>
+                  <span className={classNames({
+                    'hidden': isMobile
+                  }, 'mr-2')}>{lang.like}</span>
+                  <span className="mr-4 md:hidden" />
+                </>
+              )}
           </div>
           <div
             className={classNames(
               {
                 'dark:text-white dark:text-opacity-80 text-black text-opacity-60': state.showComment,
               },
-              'flex items-center p-2 pl-0 md:pl-2 mr-3 cursor-pointer tracking-wide mt-[-1px]',
+              'flex items-center pl-0 md:pl-2 mr-3 cursor-pointer tracking-wide mt-[-1px]',
             )}
             onClick={() => {
               if (inPostDetail) {
@@ -179,9 +184,14 @@ export default observer((props: IProps) => {
               )}
             </div>
             {post.commentCount ? (
-              <span className="mr-1 mt-[1px]">{post.commentCount}</span>
+              <span className="mr-2 md:mr-[10px] mt-[1px]">{post.commentCount}</span>
             )
-              : <span className="hidden md:block">{lang.comment}</span>}
+              : (
+                <>
+                  <span className="hidden md:block mr-2">{lang.comment}</span>
+                  <span className="mr-1 md:hidden" />
+                </>
+              )}
           </div>
           <div
             className='flex items-center p-2 py-1 mr-5 cursor-pointer tracking-wide dark:text-white dark:text-opacity-50 opacity-80'

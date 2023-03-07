@@ -39,7 +39,7 @@ const Main = observer((props: IProps) => {
   }
 
   return (
-    <div className="p-8 relative w-full md:w-[360px] h-[40vh] md:h-auto box-border">
+    <div className="p-8 relative w-full md:w-[360px] box-border">
       <div className="text-18 font-bold dark:text-white dark:text-opacity-80 text-gray-700 text-center">
         <div className="flex items-center justify-center">
           {lang.generateJsonWallet}

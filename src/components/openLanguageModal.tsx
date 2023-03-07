@@ -28,7 +28,7 @@ const ModalWrapper = observer((props: { rs: () => void }) => {
 
   return (
     <Modal open={state.open} onClose={() => handleClose()}>
-      <div className="p-8 relative w-full md:w-[240px] h-[40vh] md:h-auto box-border">
+      <div className="p-8 relative w-full md:w-[240px] box-border">
         <div className="pt-2 px-6 pb-5">
           <div className="text-18 font-bold dark:text-white dark:text-opacity-80 text-gray-700 text-center pb-5">
             {lang.language}
