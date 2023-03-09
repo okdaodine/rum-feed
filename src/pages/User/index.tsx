@@ -4,8 +4,8 @@ import { isMobile } from 'utils/env';
 import Button from 'components/Button';
 import { BiEditAlt } from 'react-icons/bi';
 import { useStore } from 'store';
-import { ProfileApi, UserApi, PostApi, WalletApi } from 'apis';
-import { IProfile, IWallet } from 'apis/types';
+import { ProfileApi, UserApi, PostApi } from 'apis';
+import { IProfile } from 'apis/types';
 import openProfileEditor from 'components/openProfileEditor';
 import PostItem from 'components/Post/Item';
 import classNames from 'classnames';
@@ -18,7 +18,7 @@ import { RiMoreFill } from 'react-icons/ri';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import { BsFillMicMuteFill } from 'react-icons/bs';
-import { BiLogOutCircle, BiWallet } from 'react-icons/bi';
+import { BiLogOutCircle } from 'react-icons/bi';
 import UserListModal from './UserListModal';
 import openLoginModal from 'components/Wallet/openLoginModal';
 import { TrxApi } from 'apis';
@@ -30,7 +30,6 @@ import UserName from 'components/UserName';
 import openPhotoSwipe from 'components/openPhotoSwipe';
 import { RiKey2Fill } from 'react-icons/ri';
 import openWalletModal from 'components/Wallet/openWalletModal';
-import Tooltip from '@material-ui/core/Tooltip';
 
 import './index.css';
 
@@ -45,7 +44,6 @@ export default observer((props: RouteChildrenProps) => {
   } = useStore();
   const state = useLocalObservable(() => ({
     profile: {} as IProfile,
-    wallet: null as IWallet | null,
     notFound: false,
     postPage: 1,
     invisible: false,
@@ -125,15 +123,8 @@ export default observer((props: RouteChildrenProps) => {
     document.title = state.profile.name;
   }
 
-  const fetchWallet = async () => {
-    try {
-      state.wallet = await WalletApi.get(userAddress);
-    } catch (_) {}
-  }
-
   React.useEffect(() => {
     fetchProfile();
-    fetchWallet();
   }, []);
 
   const fetchPosts = async () => {
@@ -359,28 +350,6 @@ export default observer((props: RouteChildrenProps) => {
               </div>
               <div className="mt-5 md:mt-12 pt-4 mr-3 md:mr-5 absolute top-0 right-0">
                 <div className="flex items-center">
-                  {state.wallet && (
-                    <Tooltip
-                      enterDelay={200}
-                      enterNextDelay={200}
-                      placement="top"
-                      title={`${lang.thisWalletWasConnectedTo}${state.wallet!.providerAddress}`}
-                      arrow
-                      >
-                      <div className="mr-5 md:mr-6 h-8 w-8 rounded-full border border-white flex items-center justify-center opacity-60 md:opacity-80" onClick={() => {
-                        confirmDialogStore.show({
-                          content: `<div class="text-16 pb-3 font-bold">${lang.thisWalletWasConnectedTo}</div> <div class="text-12">${state.wallet!.providerAddress}</div>`,
-                          contentClassName: 'md:max-w-[330px] break-words',
-                          cancelDisabled: true,
-                          ok: () => {
-                            confirmDialogStore.hide()
-                          }
-                        });
-                      }}>
-                        <BiWallet className="text-20 text-white cursor-pointer" />
-                      </div>
-                    </Tooltip>
-                  )}
                   {!user.muted && (
                     <div
                       className="mr-5 md:mr-6 h-8 w-8 rounded-full border border-white flex items-center justify-center opacity-60 md:opacity-80"
@@ -411,7 +380,7 @@ export default observer((props: RouteChildrenProps) => {
                           </div>
                         </MenuItem>
                       )}
-                      {isMyself && (
+                      {isMyself && !['web3', 'mixin'].includes(userStore.vaultAppUser.provider) && (
                         <MenuItem onClick={() => {
                           state.anchorEl = null;
                           openWalletModal(userStore.privateKey);

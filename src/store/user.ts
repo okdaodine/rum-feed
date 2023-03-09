@@ -1,4 +1,4 @@
-import { IProfile, IUser } from 'apis/types';
+import { IProfile, IUser, IVaultAppUser } from 'apis/types';
 import store from 'store2';
 
 export function createUserStore() {
@@ -8,13 +8,15 @@ export function createUserStore() {
     privateKey: store('privateKey') || '',
  
     jwt: store('jwt') || '',
+
+    vaultAppUser: (store('vaultAppUser') || {}) as IVaultAppUser,
     
     userMap: {} as Record<string, IUser | undefined>,
 
     profile: {} as IProfile,
 
     get address() {
-      return this._address;
+      return this._address || this.vaultAppUser.eth_address;
     },
 
     get isLogin() {
@@ -48,9 +50,25 @@ export function createUserStore() {
       }
     },
 
+    setJwt(jwt: string) {
+      this.jwt = jwt;
+      store('jwt', jwt);
+    },
+
+    setVaultAppUser(vaultAppUser: IVaultAppUser | null) {
+      if (vaultAppUser) {
+        this.vaultAppUser = vaultAppUser;
+        store('vaultAppUser', vaultAppUser);
+      } else {
+        this.vaultAppUser = {} as IVaultAppUser;
+        store.remove('vaultAppUser');
+      }
+    },
+
     clear() {
       store.remove('address');
       store.remove('privateKey');
-    }
+    },
+
   };
 }

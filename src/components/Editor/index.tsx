@@ -134,7 +134,7 @@ export default (props: IProps) => {
 };
 
 const Editor = observer((props: IProps) => {
-  const { snackbarStore, userStore, groupStore } = useStore();
+  const { snackbarStore, userStore } = useStore();
   const draftKey = `${props.editorKey.toUpperCase()}_DRAFT_${props.groupId}`;
   const state = useLocalObservable(() => ({
     content: props.post ? props.post.content : '',
@@ -304,13 +304,15 @@ const Editor = observer((props: IProps) => {
           delete state.imageMap[prop];
         }
       }
-    } catch (err) {
+    } catch (err: any) {
       state.submitting = false;
       console.error(err);
-      snackbarStore.show({
-        message: lang.somethingWrong,
-        type: 'error',
-      });
+      if (err.message !== 'ERR_INTERRUPTED') {
+        snackbarStore.show({
+          message: lang.somethingWrong,
+          type: 'error',
+        });
+      }
       if (_draft) {
         localStorage.setItem(draftKey, _draft);
       }
@@ -525,22 +527,6 @@ const Editor = observer((props: IProps) => {
                   onSelectEmoji={handleInsertEmoji}
                   onClose={action(() => { state.emoji = false; })}
                 />
-              )}
-              {groupStore.multiple && props.editorKey === 'post' && (
-                <div className="flex ml-5 mt-[2px] tracking-wider">
-                  <Tooltip
-                    enterDelay={600}
-                    enterNextDelay={600}
-                    placement="top"
-                    title={lang.submitContentToHere}
-                    arrow
-                    >
-                    <div className="bg-[#e3e5e6] bg-opacity-60 dark:bg-opacity-10 text-12 py-[2px] px-2 flex items-center rounded-full">
-                      <div className="w-[10px] h-[10px] bg-[#37434D] rounded-full mr-[6px] opacity-30 dark:bg-white dark:opacity-30" />
-                      <span className="text-[#37434D] opacity-[0.6] font-bold dark:text-white dark:opacity-50">{groupStore.map[props.groupId]?.groupName}</span>
-                    </div>
-                  </Tooltip>
-                </div>
               )}
             </div>
             <Tooltip

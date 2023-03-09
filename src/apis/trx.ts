@@ -14,6 +14,9 @@ export default {
       groupId: group.groupId,
       aesKey: group.extra.rawGroup.cipherKey,
       privateKey: privateKey || userStore.privateKey,
+      ...(userStore.jwt ? getVaultTrxCreateParam({
+        ethPubKey: userStore.vaultAppUser.eth_pub_key, jwt: userStore.jwt
+      }) : {})
     });
     console.log(payload);
     const res: { trx_id: string } = await request(`${API_BASE_URL}/${groupId}/trx`, {
@@ -27,4 +30,32 @@ export default {
     const res: ITrx = await request(`${API_BASE_URL}/${groupId}/trx/${trxId}`);
     return res;
   }
+}
+
+interface IVaultOptions {
+  ethPubKey: string
+  jwt: string 
+}
+
+const getVaultTrxCreateParam = (vaultOptions: IVaultOptions) => {
+  const { ethPubKey, jwt } = vaultOptions;
+  const VAULT_API_BASE_URL = 'https://vault.rumsystem.net/v1';
+  const VAULT_APP_ID = 1065804423237;
+  return {
+    publicKey: ethPubKey,
+    sign: async (m: string) => {
+      const res = await request(`/app/user/sign`, {
+        base: VAULT_API_BASE_URL,
+        method: 'POST',
+        body: {
+          appid: VAULT_APP_ID,
+          hash: `0x${m}`
+        },
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        } 
+      });
+      return res.signature.replace(/^0x/, '');
+    },
+  };
 }

@@ -16,10 +16,6 @@ export function createGroupStore() {
       return Object.values(this.map)[0];
     },
 
-    get multiple() {
-      return Object.values(this.map).length > 1;
-    },
-
     get total() {
       return Object.values(this.map).length;
     },

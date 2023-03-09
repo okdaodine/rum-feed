@@ -18,9 +18,11 @@ import { isMobile } from 'utils/env';
 import TopPlaceHolder from 'components/TopPlaceHolder';
 import { v4 as uuid } from 'uuid';
 import base64 from 'utils/base64';
+import useCheckPermission from 'hooks/useCheckPermission';
 
 export default observer(() => {
   const { userStore, postStore, groupStore } = useStore();
+  const checkPermission = useCheckPermission(useStore());
   const state = useLocalObservable(() => ({
     content: '',
     profileMap: {} as Record<string, IProfile>,
@@ -91,6 +93,9 @@ export default observer(() => {
   });
 
   const submitPost = async (activity: IActivity) => {
+    if (!checkPermission()) {
+      throw new Error('ERR_INTERRUPTED');
+    }
     if (!userStore.isLogin) {
       openLoginModal();
       return;

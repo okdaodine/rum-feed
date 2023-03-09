@@ -5,7 +5,6 @@ const handleComment = require('./handleComment');
 const handleCounter = require('./handleCounter');
 const handleProfile = require('./handleProfile');
 const handleRelation = require('./handleRelation');
-const handleWallet = require('./handleWallet');
 const getTrxType = require('../utils/getTrxType');
 const Content = require('../database/sequelize/content');
 const Group = require('../database/sequelize/group');

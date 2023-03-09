@@ -6,20 +6,19 @@ import { ThemeRoot } from 'utils/theme';
 import Modal from 'components/Modal';
 import { useStore } from 'store';
 import { ethers } from 'ethers';
-import { encrypt } from '@metamask/eth-sig-util';
 import Button from 'components/Button';
 import sleep from 'utils/sleep';
 import { lang } from 'utils/lang';
 import openWalletModal from './openWalletModal';
 import ImportModal from './ImportModal';
-import { TrxApi, WalletApi } from 'apis';
-import rumSDK from 'rum-sdk-browser';
+import * as Vault from 'utils/vault';
 
 const Main = observer(() => {
-  const { userStore ,snackbarStore, confirmDialogStore, groupStore } = useStore();
+  const { userStore } = useStore();
   const state = useLocalObservable(() => ({
     loadingMetaMask: false,
     creatingWallet: false,
+    loadingMixin: false,
     openImportModal: false
   }));
 
@@ -38,104 +37,20 @@ const Main = observer(() => {
           className="tracking-widest"
           fullWidth
           onClick={async () => {
-            if (!(window as any).ethereum) {
-              confirmDialogStore.show({
-                content: lang.installMetaMaskFirst,
-                cancelText: lang.gotIt,
-                okText: lang.install,
-                ok: () => {
-                  confirmDialogStore.okText = lang.redirecting;
-                  confirmDialogStore.setLoading(true);
-                  window.location.href = 'https://metamask.io';
-                },
-              });
-              return;
-            }
-            state.loadingMetaMask = true;
-            try {
-              const provider = new ethers.providers.Web3Provider((window as any).ethereum);
-              const accounts = await provider.send("eth_requestAccounts", []);
-              const address = accounts[0];
-              let existWallet = null;
-
-              try {
-                existWallet = await WalletApi.getByProviderAddress(address);
-              } catch (_) {}
-
-              if (existWallet) {
-                try {
-                  const message = await provider.send('eth_decrypt', [existWallet.encryptedPrivateKey, address]);
-                  const privateKey = message.split(': ')[1];
-                  connectWallet(existWallet.address, privateKey);
-                  window.location.reload();
-                  return;
-                } catch (_) {
-                  snackbarStore.show({
-                    message: lang.somethingWrong,
-                    type: 'error',
-                  });
-                  return;
-                }
-              }
-
-              const wallet = ethers.Wallet.createRandom();
-
-              const { typeTransform } = rumSDK.utils;
-              const PREFIX = '\x19Ethereum Signed Message:\n';
-              const message = `${window.location.origin} generated a new wallet for your account. The private key of this wallet will be encrypted by your public key so that only you can decrypt and use it.\n\nThis new wallet address: ${wallet.address}`;
-              const messageBytes = ethers.utils.toUtf8Bytes(message);
-              const msg = `0x${typeTransform.uint8ArrayToHex(messageBytes)}`;
-              const signatureFromProvider = await provider.send("personal_sign", [msg, address]);
-              const signature = ethers.utils.joinSignature(signatureFromProvider);
-              const _messageBytes = ethers.utils.toUtf8Bytes(message);
-              const prefixBytes = ethers.utils.toUtf8Bytes(`${PREFIX}${messageBytes.length}`);
-              const bytes = ethers.utils.concat([prefixBytes, _messageBytes]);
-              const rawMsg = ethers.utils.toUtf8String(bytes);
-              const hash = ethers.utils.keccak256(bytes).toString();
-              const digest = typeTransform.hexToUint8Array(hash);
-              const recoveredAddress = ethers.utils.recoverAddress(digest, signature);
-              console.log(`[MetaMask]:`, { recoveredAddress });
-              if (recoveredAddress.toLowerCase() !== address.toLowerCase()) {
-                throw new Error('invalid address');
-              }
-              const encryptionPublicKey = await provider.send("eth_getEncryptionPublicKey", [address]);
-              const ethEncryptedData = encrypt({
-                publicKey: encryptionPublicKey,
-                data: `Private key of the wallet that was encrypted by your public key so that only you can decrypt and use it: ${wallet.privateKey}`,
-                version: 'x25519-xsalsa20-poly1305'
-              });
-              const encryptedHex = ethers.utils.hexlify(new TextEncoder().encode(JSON.stringify(ethEncryptedData)));
-              const res = await TrxApi.createActivity({
-                summary: `${address} announced a wallet`,
-                type: 'Announce',
-                object: {
-                  type: 'Note',
-                  name: `The private key encrypted by ${address}`,
-                  content: encryptedHex,
-                  summary: JSON.stringify({ message: rawMsg, signature })
-                },
-              }, groupStore.defaultGroup.groupId, wallet.privateKey);
-              console.log(res);
-              connectWallet(wallet.address, wallet.privateKey);
-              window.location.href += '?action=openProfileEditor';
-            } catch (err: any) {
-              console.log(err);
-              if (err.message === 'invalid address') {
-                snackbarStore.show({
-                  message: lang.invalid('address'),
-                  type: 'error'
-                });
-              } else {
-                snackbarStore.show({
-                  message: lang.somethingWrong,
-                  type: 'error',
-                });
-              }
-              state.loadingMetaMask = false;
-            }
+            state.loadingMixin = true;
+            const {
+              aesKey,
+              keyInHex
+            } = await Vault.createKey();
+            await Vault.saveCryptoKeyToLocalStorage(aesKey);
+            window.location.href = Vault.getMixinOauthUrl({
+              state: keyInHex,
+              return_to: encodeURIComponent(window.location.href),
+              scope: 'PROFILE:READ+COLLECTIBLES:READ'
+            });
           }}
         >
-          MetaMask{state.loadingMetaMask && '...'}
+          Mixin 登录{state.loadingMixin && '...'}
         </Button>
       </div>
       <div className="justify-center mt-6 md:mt-4 w-full flex">

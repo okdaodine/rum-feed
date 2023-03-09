@@ -311,16 +311,6 @@ export default observer((props: IProps) => {
             {(post.images || []).length > 0 && <div className="pb-2">
               <Images images={post.images || []} />
             </div>}
-            {groupStore.multiple && (
-              <div className="flex pt-2 pb-2 tracking-wider">
-                <div className="bg-[#EFF3F4] bg-opacity-100 dark:bg-opacity-10 text-12 py-[2px] px-2 flex items-center rounded-full cursor-pointer" onClick={() => {
-                  history.push(`/groups/${post.groupId}`)
-                }}>
-                  <div className="w-[10px] h-[10px] bg-[#37434D] rounded-full mr-[6px] opacity-30 dark:bg-white dark:opacity-30" />
-                  <span className="text-[#37434D] opacity-[0.55] font-bold dark:text-white dark:opacity-50">{post.extra.groupName}</span>
-                </div>
-              </div>
-            )}
           </div>
         </div>
 

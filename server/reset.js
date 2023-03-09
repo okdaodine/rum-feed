@@ -9,7 +9,6 @@ const UniqueCounter = require('./database/sequelize/uniqueCounter');
 const Notification = require('./database/sequelize/notification');
 const Activity = require('./database/sequelize/activity');
 const Relation = require('./database/sequelize/relation');
-const Wallet = require('./database/sequelize/wallet');
 const Orphan = require('./database/sequelize/orphan');
 
 (async () => {
