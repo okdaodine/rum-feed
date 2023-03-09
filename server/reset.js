@@ -10,6 +10,7 @@ const Notification = require('./database/sequelize/notification');
 const Activity = require('./database/sequelize/activity');
 const Relation = require('./database/sequelize/relation');
 const Orphan = require('./database/sequelize/orphan');
+const V1Content = require('./database/sequelize/v1Content');
 
 (async () => {
   await sleep(2000);
@@ -24,8 +25,8 @@ const Orphan = require('./database/sequelize/orphan');
     await Notification.sync({ force: true });
     await Activity.sync({ force: true });
     await Relation.sync({ force: true });
-    await Wallet.sync({ force: true });
     await Orphan.sync({ force: true });
+    await V1Content.sync({ force: true });
   } catch (err) {
     console.log(err);
   }

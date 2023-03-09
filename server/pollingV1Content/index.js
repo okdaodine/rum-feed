@@ -1,11 +1,11 @@
-const rumSDK = require('rum-sdk-nodejs');
+const rumSDK = require('quorum-light-node-sdk-nodejs');
 const sleep = require('../utils/sleep');
 const handlePost = require('./handlePost');
 const handleComment = require('./handleComment');
 const handleCounter = require('./handleCounter');
 const handleProfile = require('./handleProfile');
 const handleRelation = require('./handleRelation');
-const getTrxType = require('../utils/getTrxType');
+const getTrxType = require('./getTrxType');
 const Content = require('../database/sequelize/content');
 const Group = require('../database/sequelize/group');
 const config = require('../config');
@@ -13,8 +13,6 @@ const { shuffle } = require('lodash');
 const moment = require('moment');
 const shuffleChainApi = require('../utils/shuffleChainApi');
 const pendingTrxHelper = require('../utils/pendingTrxHelper');
-const handlePostDelete = require('./handlePostDelete');
-const Orphan = require('../database/sequelize/orphan');
 const getGroupVersion = require('../utils/getGroupVersion');
 
 const jobShareData = {
@@ -31,7 +29,7 @@ module.exports = (duration) => {
 
   (async () => {
     while (!stop) {
-      const groups = (await Group.findAll()).filter(group => getGroupVersion(group) === 'v2');
+      const groups = (await Group.findAll()).filter(group => getGroupVersion(group) === 'v1');
       for (const group of groups) {
         rumSDK.cache.Group.add(group.seedUrl);
       }
@@ -57,13 +55,13 @@ module.exports = (duration) => {
 
 const startJob = async (groupId, duration) => {
   while (true) {
-    const group = await Group.findOne({ where: { groupId } })
-    if (!group) {
+    const groupCount = await Group.count({ where: { groupId } })
+    if (groupCount === 0) {
       delete jobShareData.jobMap[groupId];
       break;
     }
-    const isActive = !!jobShareData.activeGroupMap[groupId];
-    if (isActive) {
+    const group = jobShareData.activeGroupMap[groupId];
+    if (group) {
       const isLazyGroup = (config.polling?.lazyGroupIds || []).includes(group.groupId);
       if (isLazyGroup) {
         await sleep(5 * 60 * 1000);
@@ -79,13 +77,12 @@ const startJob = async (groupId, duration) => {
         }
         if (pendingTrxHelper.isTimeOut(group.groupId)) {
           const chainAPIs = await shuffleChainApi(group.groupId);
-          if (chainAPIs.length > 1) {
-            console.log(`[shuffleChainApi]:`, { groupId, chainAPIs });
-          }
+          console.log(`[shuffleChainApi]:`, { groupId, chainAPIs });
         }
         const contents = await rumSDK.chain.Content.list(listOptions);
-        console.log(`${moment().format('HH:mm:ss')} ${group.groupName}: fetched and got ${contents.length} contents`);
+        console.log(`${group.groupName} 请求回来了，获得 ${contents.length} 条`);
         while (jobShareData.handling) {
+          console.log(`${group.groupName}: 别人正在 handling，我等待 ...`);
           await sleep(200);
         }
         jobShareData.handling = true;
@@ -107,6 +104,7 @@ const startJob = async (groupId, duration) => {
       } catch (err) {
         await Group.update({ status: 'disconnected' }, { where });
       }
+      await sleep(duration);
     }
     await sleep(duration);
   }
@@ -116,7 +114,6 @@ const handleContents = async (group, contents) => {
   const { groupId } = group;
   try {
     for (const content of contents) {
-      let success = false;
       let log = '';
       try {
         pendingTrxHelper.tryRemove(group.groupId, content.TrxId);
@@ -131,28 +128,19 @@ const handleContents = async (group, contents) => {
         const type = getTrxType(content);
         switch(type) {
           case 'post': await handlePost(content, group); break;
-          case 'delete': await handlePostDelete(content, group); break;
           case 'comment': await handleComment(content, group); break;
           case 'counter': await handleCounter(content, group); break;
           case 'profile': await handleProfile(content); break;
-          case 'relation': await handleRelation(content, group); break;
-          case 'wallet': await handleWallet(content); break;
+          case 'relation': await handleRelation(content); break;
           default: break;
         }
         console.log(`${content.TrxId} ✅`);
-        success = true;
       } catch (err) {
-        if (err.message === 'Orphan') {
-          const type = getTrxType(content);
-          console.log(`[${type}]: ${content.TrxId} is an orphan 👶`);
-          continue;
-        }
         console.log(content);
         console.log(err);
         log = err;
         console.log(`${content.TrxId} ❌ ${err.message}`);
       }
-
       try {
         await Content.create({
           ...content,
@@ -162,29 +150,6 @@ const handleContents = async (group, contents) => {
       } catch (err) {
         console.log(err);
       }
-
-      if (success) {
-        try {
-          const type = getTrxType(content);
-          if (type === 'post' || type === 'comment') {
-            if (content.Data.object?.id) {
-              const orphans = await Orphan.findAll({
-                raw: true,
-                where: {
-                  parentId: content.Data.object.id
-                }
-              });
-              if (orphans.length > 0) {
-                console.log(`[handle orphans 👶]:`, orphans.map(o => `${o.content.TrxId}`));
-                await handleContents(group, orphans.map(o => o.content));
-              }
-            }
-          }
-        } catch (err) {
-          console.log(err);
-        }
-      }
-
     }
     await Group.update({
       startTrx: contents[contents.length - 1].TrxId

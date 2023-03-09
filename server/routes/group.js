@@ -9,6 +9,7 @@ const Comment = require('../database/sequelize/comment');
 const Profile = require('../database/sequelize/profile');
 const Notification = require('../database/sequelize/notification');
 const Orphan = require('../database/sequelize/orphan');
+const V1Content = require('../database/sequelize/v1Content');
 const { ensurePermission } = require('../middleware/api');
 const shuffleChainApi = require('../utils/shuffleChainApi');
 
@@ -77,6 +78,7 @@ async function remove(ctx) {
   await Profile.destroy({ where: { groupId }});
   await Notification.destroy({ where: { groupId }});
   await Orphan.destroy({ where: { groupId }});
+  await V1Content.destroy({ where: { groupId }});
   rumSDK.cache.Group.remove(groupId);
   ctx.body = true;
 }

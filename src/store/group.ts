@@ -8,11 +8,11 @@ export function createGroupStore() {
     map: {} as Record<string, IGroup>,
 
     get defaultGroup() {
-      return Object.values(this.map).find(group => group.groupName.includes('default'))!;
+      return Object.values(this.map).find(group => group.groupName.startsWith('mixin.') && group.groupName.includes('default'))!;
     },
 
     get postGroup() {
-      return Object.values(this.map).find(group => group.groupName.includes('post'))!;
+      return Object.values(this.map).find(group => group.groupName.startsWith('mixin.') && group.groupName.includes('post'))!;
     },
 
     get total() {
