@@ -18,6 +18,7 @@ import * as JsBase64 from 'js-base64';
 import openNftAuthModal from './openNftAuthModal';
 import store from 'store2';
 
+
 const Preload = observer(() => {
   const { userStore, groupStore, confirmDialogStore, modalStore, configStore } = useStore();
   const history = useHistory();
@@ -57,6 +58,28 @@ const Preload = observer(() => {
           userStore.setUser(userStore.address, user);
         }
         groupStore.setLoading(false);
+        if (!groupStore.defaultGroup && window.location.pathname !== '/groups') {
+          confirmDialogStore.show({
+            content: '请添加 default group',
+            cancelDisabled: true,
+            ok: () => {
+              history.push('/groups');
+              confirmDialogStore.hide();
+            },
+          });
+          return;
+        }
+        if (!groupStore.postGroup && window.location.pathname !== '/groups') {
+          confirmDialogStore.show({
+            content: '请添加 post group',
+            cancelDisabled: true,
+            ok: () => {
+              history.push('/groups');
+              confirmDialogStore.hide();
+            },
+          });
+          return;
+        }
         if (groupStore.total === 0) {
           history.push('/groups');
           return;
@@ -141,7 +164,7 @@ const Preload = observer(() => {
     try {
       const { vaultAppUser } = userStore;
       if (['mixin', 'web3'].includes(vaultAppUser.provider) && vaultAppUser.status !== 'allow') {
-        const res = await PermissionApi.tryAdd(groupStore.defaultGroup.groupId, vaultAppUser.eth_pub_key, vaultAppUser.provider, vaultAppUser.access_token);
+        const res = await PermissionApi.tryAdd(groupStore.postGroup.groupId, vaultAppUser.eth_pub_key, vaultAppUser.provider, vaultAppUser.access_token);
         console.log(`[PermissionApi.tryAdd]`, vaultAppUser.eth_pub_key, { res });
         if (res.allow) {
           userStore.setVaultAppUser({

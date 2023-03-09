@@ -18,22 +18,17 @@ import { IActivity } from 'rum-sdk-browser';
 import Base64 from 'utils/base64';
 import { IImage } from 'apis/image';
 import { v4 as uuid } from 'uuid';
-import useCheckPermission from 'hooks/useCheckPermission';
 
 const PostEditor = observer((props: {
   post?: IPost
   rs: (result?: any) => void
 }) => {
   const { userStore, groupStore } = useStore();
-  const checkPermission = useCheckPermission(useStore());
   const matchedGroupId = window.location.pathname.split('/groups/')[1];
-  const groupId = matchedGroupId ? matchedGroupId : groupStore.defaultGroup.groupId;
+  const groupId = matchedGroupId ? matchedGroupId : groupStore.postGroup.groupId;
   const group = groupStore.map[groupId];
 
   const submit = async (activity: IActivity) => {
-    if (!checkPermission()) {
-      throw new Error('ERR_INTERRUPTED');
-    }
     if (!userStore.isLogin) {
       openLoginModal();
       return;

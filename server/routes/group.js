@@ -11,9 +11,7 @@ const Notification = require('../database/sequelize/notification');
 const Orphan = require('../database/sequelize/orphan');
 const { ensurePermission } = require('../middleware/api');
 const shuffleChainApi = require('../utils/shuffleChainApi');
-const config = require('../config');
 
-router.get('/default', getDefaultGroup);
 router.get('/:groupId', get);
 router.get('/:groupId/shuffle', _shuffleChainApi);
 router.get('/:groupId/ping', ping);
@@ -37,27 +35,6 @@ async function list(ctx) {
     ]
   });
   ctx.body = groups.map(group => pack(group.toJSON()));
-}
-
-async function getDefaultGroup(ctx) {
-  if (config.defaultGroupId) {
-    const group = await Group.findOne({
-      where: {
-        groupId: config.defaultGroupId
-      }
-    });
-    assert(group, Errors.ERR_NOT_FOUND('group'));
-    ctx.body = pack(group.toJSON());
-    return;
-  }
-  const groups = await Group.findAll({
-    order: [
-      ['contentCount', 'DESC']
-    ]
-  });
-  const group = groups.find(g => g.seedUrl.includes('group_timeline') && g.status === 'connected');
-  assert(group, Errors.ERR_NOT_FOUND('group'));
-  ctx.body = pack(group.toJSON());
 }
 
 async function _shuffleChainApi(ctx) {

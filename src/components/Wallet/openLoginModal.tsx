@@ -12,9 +12,11 @@ import { lang } from 'utils/lang';
 import openWalletModal from './openWalletModal';
 import ImportModal from './ImportModal';
 import * as Vault from 'utils/vault';
+import { VaultApi } from 'apis';
+import rumSDK from 'rum-sdk-browser';
 
 const Main = observer(() => {
-  const { userStore } = useStore();
+  const { userStore, confirmDialogStore, snackbarStore } = useStore();
   const state = useLocalObservable(() => ({
     loadingMetaMask: false,
     creatingWallet: false,
@@ -51,6 +53,73 @@ const Main = observer(() => {
           }}
         >
           Mixin 登录{state.loadingMixin && '...'}
+        </Button>
+      </div>
+      <div className="justify-center mt-6 md:mt-4 w-full hidden md:flex">
+        <Button
+          className="tracking-widest"
+          fullWidth
+          onClick={async () => {
+            if (!(window as any).ethereum) {
+              confirmDialogStore.show({
+                content: '请先安装 MetaMask 插件',
+                cancelText: '我知道了',
+                okText: '去安装',
+                ok: () => {
+                  confirmDialogStore.okText = '跳转中';
+                  confirmDialogStore.setLoading(true);
+                  window.location.href = 'https://metamask.io';
+                },
+              });
+              return;
+            }
+            state.loadingMetaMask = true;
+            try {
+              const { typeTransform } = rumSDK.utils;
+              const PREFIX = '\x19Ethereum Signed Message:\n';
+              const message = `Rum 身份认证 | ${Math.round(Date.now() / 1000)}`;
+              const provider = new ethers.providers.Web3Provider((window as any).ethereum);
+              const accounts = await provider.send("eth_requestAccounts", []);
+              const address = accounts[0];
+              const messageBytes = ethers.utils.toUtf8Bytes(message);
+              const msg = `0x${typeTransform.uint8ArrayToHex(messageBytes)}`;
+              const signatureFromProvider = await provider.send("personal_sign", [msg, address]);
+              const signature = ethers.utils.joinSignature(signatureFromProvider);
+              console.log(`[MetaMask]:`, { address, message, signature });
+              const _messageBytes = ethers.utils.toUtf8Bytes(message);
+              const prefixBytes = ethers.utils.toUtf8Bytes(`${PREFIX}${messageBytes.length}`);
+              const bytes = ethers.utils.concat([prefixBytes, _messageBytes]);
+              const rawMsg = ethers.utils.toUtf8String(bytes);
+              const hash = ethers.utils.keccak256(bytes).toString();
+              const digest = typeTransform.hexToUint8Array(hash);
+              const recoveredAddress = ethers.utils.recoverAddress(digest, signature);
+              console.log(`[MetaMask]:`, { recoveredAddress });
+              if (recoveredAddress.toLowerCase() !== address.toLowerCase()) {
+                throw new Error('invalid address');
+              }
+              const { token }: any = await VaultApi.createUserBySignature({
+                address: recoveredAddress,
+                data: rawMsg,
+                signature: signature.replace('0x', '')
+              });
+              window.location.href = `/?token=${token}&action=openProfileEditor`;
+            } catch (err: any) {
+              if (err.message === 'invalid address') {
+                snackbarStore.show({
+                  message: '加解密的 address 不匹配',
+                  type: 'error'
+                });
+              } else {
+                snackbarStore.show({
+                  message: lang.somethingWrong,
+                  type: 'error',
+                });
+              }
+              state.loadingMetaMask = false;
+            }
+          }}
+        >
+          MetaMask 登录{state.loadingMetaMask && '...'}
         </Button>
       </div>
       <div className="justify-center mt-6 md:mt-4 w-full flex">

@@ -28,6 +28,7 @@ import { IPost } from 'apis/types';
 import { IImage } from 'apis/types/common';
 import openLoginModal from 'components/Wallet/openLoginModal';
 import { isMobile, isPc } from 'utils/env';
+import useHandleNoPermission from 'hooks/useHandleNoPermission';
 
 import './index.css';
 
@@ -135,6 +136,7 @@ export default (props: IProps) => {
 
 const Editor = observer((props: IProps) => {
   const { snackbarStore, userStore } = useStore();
+  const handleNoPermission = useHandleNoPermission(useStore());
   const draftKey = `${props.editorKey.toUpperCase()}_DRAFT_${props.groupId}`;
   const state = useLocalObservable(() => ({
     content: props.post ? props.post.content : '',
@@ -307,7 +309,9 @@ const Editor = observer((props: IProps) => {
     } catch (err: any) {
       state.submitting = false;
       console.error(err);
-      if (err.message !== 'ERR_INTERRUPTED') {
+      if (err.code === 'ERR_NOT_PERMISSION') {
+        handleNoPermission();
+      } else {
         snackbarStore.show({
           message: lang.somethingWrong,
           type: 'error',

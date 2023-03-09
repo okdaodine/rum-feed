@@ -38,6 +38,7 @@ import copy from 'copy-to-clipboard';
 import { lang } from 'utils/lang';
 import { RiTwitterLine } from 'react-icons/ri';
 import openTweetModal from './openTweetModal';
+import store from 'store2';
 
 export default observer(() => {
   const {
@@ -137,7 +138,7 @@ export default observer(() => {
       ok: async () => {
         confirmDialogStore.hide();
         await sleep(400);
-        userStore.clear();
+        store.clear();
         modalStore.pageLoading.show();
         window.location.href = `/`;
       },

@@ -18,11 +18,9 @@ import { isMobile } from 'utils/env';
 import TopPlaceHolder from 'components/TopPlaceHolder';
 import { v4 as uuid } from 'uuid';
 import base64 from 'utils/base64';
-import useCheckPermission from 'hooks/useCheckPermission';
 
 export default observer(() => {
   const { userStore, postStore, groupStore } = useStore();
-  const checkPermission = useCheckPermission(useStore());
   const state = useLocalObservable(() => ({
     content: '',
     profileMap: {} as Record<string, IProfile>,
@@ -93,20 +91,17 @@ export default observer(() => {
   });
 
   const submitPost = async (activity: IActivity) => {
-    if (!checkPermission()) {
-      throw new Error('ERR_INTERRUPTED');
-    }
     if (!userStore.isLogin) {
       openLoginModal();
-      return;
+    return;
     }
-    const res = await TrxApi.createActivity(activity, groupStore.defaultGroup.groupId);
+    const res = await TrxApi.createActivity(activity, groupStore.postGroup.groupId);
     console.log(res);
     const post: IPost = {
       content: activity.object?.content || '',
       images: activity.object?.image?.map(image => base64.getUrl(image as any)) ?? [],
       userAddress: userStore.address,
-      groupId: groupStore.defaultGroup.groupId,
+      groupId: groupStore.postGroup.groupId,
       trxId: res.trx_id,
       id: activity.object?.id ?? '',
       latestTrxId: '',
@@ -117,7 +112,7 @@ export default observer(() => {
       timestamp: Date.now(),
       extra: {
         userProfile: userStore.profile,
-        groupName: groupStore.defaultGroup.groupName
+        groupName: groupStore.postGroup.groupName
       }
     };
     postStore.addPost(post);
@@ -134,7 +129,7 @@ export default observer(() => {
         <div className="md:pt-5">
           <div className="hidden md:block">
             <Editor
-              groupId={groupStore.defaultGroup.groupId}
+              groupId={groupStore.postGroup.groupId}
               editorKey="post"
               placeholder={lang.whatsHappening}
               autoFocusDisabled

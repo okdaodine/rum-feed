@@ -36,7 +36,7 @@ const Main = observer((props: {
       while (!stop) {
         try {
           const { vaultAppUser } = userStore;
-          await PermissionApi.get(groupStore.defaultGroup.groupId, vaultAppUser.eth_pub_key);
+          await PermissionApi.get(groupStore.postGroup.groupId, vaultAppUser.eth_pub_key);
           userStore.setVaultAppUser({
             ...userStore.vaultAppUser,
             status: 'allow'

@@ -130,7 +130,7 @@ export default observer((props: IProps) => {
               {
                 'dark:text-white dark:text-opacity-80 text-black text-opacity-60 font-bold': liked,
               },
-              'flex items-center pl-0 md:pl-2 mr-3 cursor-pointer tracking-wide',
+              'flex items-center pl-0 mr-3 cursor-pointer tracking-wide',
             )}
             onClick={() => {
               updateCounter(post.id);

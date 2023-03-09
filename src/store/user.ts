@@ -68,6 +68,7 @@ export function createUserStore() {
     clear() {
       store.remove('address');
       store.remove('privateKey');
+      store.remove('vaultAppUser');
     },
 
   };
