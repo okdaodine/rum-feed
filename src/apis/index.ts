@@ -12,3 +12,4 @@ export { default as RelationApi } from './relation';
 export { default as PermissionApi } from './permission';
 export { default as TweetApi } from './tweet';
 export { default as ConfigApi } from './config';
+export { default as V1ContentApi } from './v1Content';

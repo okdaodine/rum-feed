@@ -36,9 +36,14 @@ module.exports = async (item, group) => {
         type: 'Note',
         id: comment.trxId,
         content: comment.content,
+        ...(
+          comment.images ?
+          { image: comment.images.map(image => ({ type: 'Image', ...image })) } :
+          {}
+        ),
         inreplyto: {
           type: 'Note',
-          id: item.Data.inreplyto,
+          id: item.Data.inreplyto.trxid,
         },
       }
     },
@@ -155,9 +160,9 @@ const pack = async item => {
     userAddress: rumSDK.utils.pubkeyToAddress(item.SenderPubkey),
     groupId: item.GroupId,
     trxId: item.TrxId,
+    id: item.TrxId,
     storage: 'chain',
     commentCount: 0,
-    hotCount: 0,
     likeCount: 0,
     timestamp: parseInt(String(item.TimeStamp / 1000000), 10)
   };

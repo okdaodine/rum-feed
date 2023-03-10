@@ -8,6 +8,8 @@ import { useLocation, useHistory } from 'react-router-dom';
 import Sidebar from 'components/Sidebar';
 import { isMobile } from 'utils/env';
 import { lang } from 'utils/lang';
+import { V1ContentApi, TrxApi } from 'apis';
+import sleep from 'utils/sleep';
 
 export default observer(() => {
   const {
@@ -16,7 +18,8 @@ export default observer(() => {
     postStore,
     pathStore,
     confirmDialogStore,
-    configStore
+    configStore,
+    groupStore
   } = useStore();
   const location = useLocation();
   const history = useHistory();
@@ -145,6 +148,40 @@ export default observer(() => {
         pathStore.pop();
       }
     })
+  }, []);
+
+  React.useEffect(() => {
+    if (userStore.isLogin) {
+      (async () => {
+        while (true) {
+          await sleep(10 * 1000);
+          try {
+            const trxIds = await V1ContentApi.listTrxIds(userStore.address);
+            if (trxIds.length > 0) {
+              console.log(`Handling ${trxIds.length} v1Contents`);
+            }
+            for (const trxId of trxIds) {
+              await sleep(500);
+              try {
+                const v1Content = await V1ContentApi.get(trxId);
+                if (v1Content && v1Content.status !== 'done') {
+                  const isPost = v1Content.data.type === 'Create' && v1Content.data.object!.type === 'Note' && !v1Content.data.object!.inreplyto;
+                  await TrxApi.createActivity(v1Content.data, (isPost ? groupStore.postGroup : groupStore.defaultGroup).groupId, '', {
+                    trxId: v1Content.trxId,
+                    timestamp: Number(v1Content.raw.TimeStamp.slice(0, -6)),
+                  });
+                  await V1ContentApi.done(v1Content.trxId);
+                }
+              } catch (err) {
+                console.log(err);
+              }
+            }
+          } catch (err) {
+            console.log(err);
+          }
+        }
+      })();
+    }
   }, []);
 
   if (!state.ready) {

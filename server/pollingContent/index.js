@@ -57,7 +57,7 @@ module.exports = (duration) => {
 
 const startJob = async (groupId, duration) => {
   while (true) {
-    const group = await Group.findOne({ where: { groupId } })
+    const group = await Group.findOne({ where: { groupId } });
     if (!group) {
       delete jobShareData.jobMap[groupId];
       break;
@@ -91,7 +91,7 @@ const startJob = async (groupId, duration) => {
         jobShareData.handling = true;
         try {
           if (contents.length > 0) {
-            await handleContents(group, contents.sort((a, b) => a.TimeStamp - b.TimeStamp));
+            await handleContents(groupId, contents.sort((a, b) => a.TimeStamp - b.TimeStamp));
             const contentCount = await Content.count({ where });
             await Group.update({ contentCount }, { where });
           }
@@ -112,35 +112,32 @@ const startJob = async (groupId, duration) => {
   }
 }
 
-const handleContents = async (group, contents) => {
-  const { groupId } = group;
+const handleContents = async (groupId, contents) => {
+  const group = await Group.findOne({ where: { groupId } });
   try {
     for (const content of contents) {
       let success = false;
       let log = '';
       try {
         pendingTrxHelper.tryRemove(group.groupId, content.TrxId);
-        const existContent = await Content.findOne({
-          where: {
-            TrxId: content.TrxId
-          }
-        });
-        if (existContent) {
+        const existContent = await Content.findOne({ where: { TrxId: content.TrxId }});
+        if (existContent && existContent.GroupId === content.GroupId) {
           continue;
         }
-        const type = getTrxType(content);
-        switch(type) {
-          case 'post': await handlePost(content, group); break;
-          case 'delete': await handlePostDelete(content, group); break;
-          case 'comment': await handleComment(content, group); break;
-          case 'counter': await handleCounter(content, group); break;
-          case 'profile': await handleProfile(content); break;
-          case 'relation': await handleRelation(content, group); break;
-          case 'wallet': await handleWallet(content); break;
-          default: break;
+        if (!existContent) {
+          const type = getTrxType(content);
+          switch(type) {
+            case 'post': await handlePost(content, group); break;
+            case 'delete': await handlePostDelete(content, group); break;
+            case 'comment': await handleComment(content, group); break;
+            case 'counter': await handleCounter(content, group); break;
+            case 'profile': await handleProfile(content); break;
+            case 'relation': await handleRelation(content, group); break;
+            default: break;
+          }
+          console.log(`${content.TrxId} ✅`);
+          success = true;
         }
-        console.log(`${content.TrxId} ✅`);
-        success = true;
       } catch (err) {
         if (err.message === 'Orphan') {
           const type = getTrxType(content);
@@ -176,7 +173,9 @@ const handleContents = async (group, contents) => {
               });
               if (orphans.length > 0) {
                 console.log(`[handle orphans 👶]:`, orphans.map(o => `${o.content.TrxId}`));
-                await handleContents(group, orphans.map(o => o.content));
+                for (const orphan of orphans) {
+                  await handleContents(orphan.content.GroupId, [orphan.content]);
+                }
               }
             }
           }

@@ -3701,10 +3701,10 @@ rum-fullnode-sdk@^1.0.2:
     moment "^2.29.4"
     query-string "^7.0.1"
 
-rum-sdk-nodejs@^1.1.6:
-  version "1.1.6"
-  resolved "https://registry.npmjs.org/rum-sdk-nodejs/-/rum-sdk-nodejs-1.1.6.tgz#e623ac66104771193c8bede1c347472d11973bf1"
-  integrity sha512-DtDfYYLNZFqkizotBTCQvzOsarzOph14+28M8KXGUU33DQd0XLJEnyBIjs/5bPo/oQ4Kc0GCwMQkIRz1Gj/jQg==
+rum-sdk-nodejs@^1.1.7:
+  version "1.1.7"
+  resolved "https://registry.npmjs.org/rum-sdk-nodejs/-/rum-sdk-nodejs-1.1.7.tgz#9eb97aa9aff5049b3ca4878f509343888090c0be"
+  integrity sha512-sAR7dp9lBZBSGP4MtudRe274WCkyfz9YOuKxiiZnCHIv3l65YWATsYlNpOjXvE8UhVIW28bfNl/UsicmeSa4Sw==
   dependencies:
     "@types/crypto-js" "^4.1.1"
     "@types/node-localstorage" "^1.3.0"

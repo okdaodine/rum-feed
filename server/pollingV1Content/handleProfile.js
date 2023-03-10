@@ -10,7 +10,12 @@ module.exports = async (item) => {
       type: 'Create',
       object: {
         type: 'Profile',
-        name: profile.name || '',
+        name: item.Data.name || '',
+        ...(
+          item.Data.image ? 
+          { image: [{ type: 'Image', mediaType: item.Data.image.mediaType, content: item.Data.image.content,}] } :
+          {}
+        ),
         describes: {
           type: 'Person',
           id: profile.userAddress,

@@ -3,6 +3,7 @@ const V1Content = require('../database/sequelize/v1Content');
 
 router.get('/', list);
 router.post('/:trxId', done);
+router.get('/:trxId', get);
 router.get('/summary', summary);
 
 async function list(ctx) {
@@ -11,7 +12,7 @@ async function list(ctx) {
     where: {},
     limit: Math.min(~~ctx.query.limit || 10, 100),
     offset: ctx.query.offset || 0,
-    order: [['id', 'DESC']],
+    order: [['id', 'ASC']],
   };
   if (status) {
     query.where.status = status;
@@ -25,6 +26,10 @@ async function list(ctx) {
     };
   }
   const contents = await V1Content.findAll(query);
+  if (ctx.query.trxIdOnly) {
+    ctx.body = contents.map(c => c.trxId);
+    return;
+  }
   ctx.body = contents;
 }
 
@@ -39,6 +44,12 @@ async function done(ctx) {
   });
   console.log(`v1 content done ${trxId} ✅ `);
   ctx.body = true;
+}
+
+async function get(ctx) {
+  const { trxId } = ctx.params;
+  const v1Content = await V1Content.findOne({ where: { trxId } });
+  ctx.body = v1Content;
 }
 
 async function summary(ctx) {

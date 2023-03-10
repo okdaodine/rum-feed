@@ -4,7 +4,10 @@ import { IActivity, ITrx, utils } from 'rum-sdk-browser';
 import { Store } from 'store';
 
 export default {
-  async createActivity(activity: IActivity, groupId: string, privateKey?: string) {
+  async createActivity(activity: IActivity, groupId: string, privateKey?: string, options?: {
+    trxId?: string;
+    timestamp?: number;
+  }) {
     console.log(activity, groupId)
     const { groupStore, userStore } = (window as any).store as Store;
     const group = groupStore.map[groupId]
@@ -16,7 +19,8 @@ export default {
       privateKey: privateKey || userStore.privateKey,
       ...(userStore.jwt ? getVaultTrxCreateParam({
         ethPubKey: userStore.vaultAppUser.eth_pub_key, jwt: userStore.jwt
-      }) : {})
+      }) : {}),
+      ...(options || {})
     });
     console.log(payload);
     const res: { trx_id: string } = await request(`${API_BASE_URL}/${groupId}/trx`, {
