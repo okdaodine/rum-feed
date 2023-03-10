@@ -33,13 +33,13 @@ const PostEditor = observer((props: {
       openLoginModal();
       return;
     }
-    const res = await TrxApi.createActivity(activity, group.groupId);
+    const res = await TrxApi.createActivity(activity, groupStore.defaultGroup.groupId);
     console.log(res);
     const post: IPost = {
       content: activity.object?.content || '',
       images: (activity.object?.image || []).map(image => Base64.getUrl(image as any as IImage)),
       userAddress: userStore.address,
-      groupId: group.groupId,
+      groupId: groupStore.defaultGroup.groupId,
       trxId: res.trx_id,
       id: activity.object?.id ?? '',
       latestTrxId: '',

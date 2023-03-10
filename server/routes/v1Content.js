@@ -3,8 +3,8 @@ const V1Content = require('../database/sequelize/v1Content');
 
 router.get('/', list);
 router.post('/:trxId', done);
-router.get('/:trxId', get);
 router.get('/summary', summary);
+router.get('/:trxId', get);
 
 async function list(ctx) {
   const { status, userAddress, raw } = ctx.query;
