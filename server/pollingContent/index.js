@@ -24,7 +24,7 @@ const jobShareData = {
   jobMap: {}
 }
 
-module.exports = (duration) => {
+module.exports = (duration = config.polling?.duration || 1000) => {
   let stop = false;
 
   rumSDK.cache.Group.clear();

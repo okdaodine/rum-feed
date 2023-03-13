@@ -88,8 +88,8 @@ server.listen(port, () => {
   console.log(`Node.js v${process.versions.node}`);
   console.log(`Server run at ${port}`);
   setTimeout(() => {
-    pollingContent(config.polling?.duration || 1000);
-    pollingV1Content(config.polling?.duration || 1000);
+    pollingContent();
+    pollingV1Content();
   }, 2000);
 });
 
