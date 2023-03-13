@@ -51,9 +51,10 @@ const pack = async item => {
     likeCount: 0,
     timestamp: parseInt(String(TimeStamp / 1000000), 10)
   }
-  if (image && Array.isArray(image)) {
-    post.images = image;
-    post.imageCount = image.length;
+  if (image) {
+    const images = Array.isArray(image) ? image : [image];
+    post.images = images;
+    post.imageCount = images.length;
   }
   return post
 }

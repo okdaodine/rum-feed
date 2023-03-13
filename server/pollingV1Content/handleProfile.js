@@ -13,7 +13,7 @@ module.exports = async (item) => {
         name: item.Data.name || '',
         ...(
           item.Data.image ? 
-          { image: [{ type: 'Image', mediaType: item.Data.image.mediaType, content: item.Data.image.content,}] } :
+          { image: { type: 'Image', mediaType: item.Data.image.mediaType, content: item.Data.image.content } } :
           {}
         ),
         describes: {

@@ -88,7 +88,7 @@ export default observer((props: IProps) => {
     console.log(res);
     const comment: IComment = {
       content: activity.object?.content || '',
-      images: activity.object?.image?.map(image => base64.getUrl(image as any)) ?? [],
+      images: (activity.object?.image as [])?.map(image => base64.getUrl(image as any)) ?? [],
       objectId: props.post.id,
       threadId: '',
       replyId: '',

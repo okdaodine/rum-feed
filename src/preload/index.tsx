@@ -140,11 +140,11 @@ const Preload = observer(() => {
               id: store('address'),
             },
             name: vaultUser.display_name,
-            image: [{
+            image: {
               type: 'Image',
               mediaType: Base64.getMimeType(avatar.url),
               content: Base64.getContent(avatar.url),
-            }],
+            },
           }
         }, groupStore.defaultGroup.groupId);
         console.log(res);
