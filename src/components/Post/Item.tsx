@@ -19,7 +19,6 @@ import BFSReplace from 'utils/BFSReplace';
 import Query from 'utils/query';
 import escapeStringRegexp from 'escape-string-regexp';
 import UserName from 'components/UserName';
-import { useStore } from 'store';
 
 import './index.css';
 
@@ -136,7 +135,6 @@ const Images = observer((props: { images: string[] }) => {
 });
 
 export default observer((props: IProps) => {
-  const { groupStore } = useStore();
   const { post } = props;
   const inPostDetail = props.where.startsWith('postDetail');
   const state = useLocalObservable(() => ({
