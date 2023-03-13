@@ -68,11 +68,11 @@ const ModalWrapper = observer((props: IModalProps) => {
           name: state.profile.name,
           ...(state.profile.avatar && state.profile.avatar.startsWith('data:'))
             ? {
-              image: [{
+              image: {
                 type: 'Image',
                 mediaType: base64.getMimeType(state.profile.avatar),
                 content: base64.getContent(state.profile.avatar),
-              } as any],
+              },
             }
             : {},
         }

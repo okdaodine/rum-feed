@@ -35,7 +35,7 @@
     "pg": "8.5.1",
     "pg-hstore": "2.3.3",
     "pm2": "^5.2.0",
-    "rum-sdk-nodejs": "^1.1.6",
+    "rum-sdk-nodejs": "^1.1.8",
     "sequelize": "6.3.5",
     "socket.io": "^4.5.1",
     "winston": "^3.8.2"

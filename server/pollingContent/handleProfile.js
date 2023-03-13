@@ -23,8 +23,8 @@ const pack = (item) => {
   if (name) {
     data.name = name;
   }
-  if (image && image.length) {
-    const img = image[0];
+  if (image) {
+    const img = Array.isArray(image) ? image[0] : image;
     const mediaType = img.mediaType
     const content = img.content
     const url = `data:${mediaType};base64,${content}`

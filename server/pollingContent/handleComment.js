@@ -142,9 +142,10 @@ const pack = async item => {
     likeCount: 0,
     timestamp: parseInt(String(TimeStamp / 1000000), 10)
   };
-  if (image && Array.isArray(image)) {
-    comment.images = image;
-    comment.imageCount = image.length;
+  if (image) {
+    const images = Array.isArray(image) ? image : [image];
+    comment.images = images;
+    comment.imageCount = images.length;
   }
   if (inreplyto) {
     const toId = inreplyto.id;
