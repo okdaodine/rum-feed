@@ -15,7 +15,7 @@ import isJWT from 'utils/isJWT';
 import { useHistory } from 'react-router-dom';
 import { ethers } from 'ethers';
 import * as JsBase64 from 'js-base64';
-import openNftAuthModal from './openNftAuthModal';
+// import openNftAuthModal from './openNftAuthModal';
 import store from 'store2';
 
 
@@ -163,7 +163,8 @@ const Preload = observer(() => {
   const handlePermission = async () => {
     try {
       const { vaultAppUser } = userStore;
-      if (['mixin', 'web3'].includes(vaultAppUser.provider) && vaultAppUser.status !== 'allow') {
+      if (['mixin', 'web3'].includes(vaultAppUser.provider)) {
+      // if (['mixin', 'web3'].includes(vaultAppUser.provider) && vaultAppUser.status !== 'allow') {
         const res = await PermissionApi.tryAdd(groupStore.postGroup.groupId, vaultAppUser.eth_pub_key, vaultAppUser.provider, vaultAppUser.access_token);
         console.log(`[PermissionApi.tryAdd]`, vaultAppUser.eth_pub_key, { res });
         if (res.allow) {
@@ -176,7 +177,7 @@ const Preload = observer(() => {
             ...userStore.vaultAppUser,
             status: 'no_allow'
           });
-          openNftAuthModal(res.nft.meta.icon_url);
+          // openNftAuthModal(res.nft.meta.icon_url);
         }
       }
     } catch (err: any) {

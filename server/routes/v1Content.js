@@ -10,7 +10,7 @@ async function list(ctx) {
   const { status, userAddress, raw } = ctx.query;
   const query = {
     where: {},
-    limit: Math.min(~~ctx.query.limit || 10, 100),
+    limit: Math.min(~~ctx.query.limit || 10, 9999),
     offset: ctx.query.offset || 0,
     order: [['id', 'ASC']],
   };

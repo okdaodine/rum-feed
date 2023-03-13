@@ -102,7 +102,7 @@ const Main = observer(() => {
                 data: rawMsg,
                 signature: signature.replace('0x', '')
               });
-              window.location.href = `/?token=${token}&action=openProfileEditor`;
+              window.location.href = `/?token=${token}`;
             } catch (err: any) {
               if (err.message === 'invalid address') {
                 snackbarStore.show({

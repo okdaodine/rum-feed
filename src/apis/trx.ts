@@ -8,9 +8,10 @@ export default {
     trxId?: string;
     timestamp?: number;
   }) {
-    console.log(activity, groupId)
     const { groupStore, userStore } = (window as any).store as Store;
-    const group = groupStore.map[groupId]
+    const group = groupStore.map[groupId];
+
+    console.log(activity, { group: group.groupName });
 
     const payload = await utils.signTrx({
       data: activity,
