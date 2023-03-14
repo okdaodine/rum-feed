@@ -161,7 +161,7 @@ export default observer(() => {
               console.log(`Handling ${trxIds.length} v1Contents`);
             }
             for (const trxId of trxIds) {
-              await sleep(500);
+              await sleep(200);
               try {
                 const v1Content = await V1ContentApi.get(trxId);
                 if (v1Content && v1Content.status !== 'done') {
