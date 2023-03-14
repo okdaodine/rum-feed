@@ -34,7 +34,7 @@ const Main = observer(() => {
       <div className="text-17 font-bold dark:text-white dark:text-opacity-80 text-neutral-700 text-center opacity-90">
         {lang.connectWallet}
       </div>
-      <div className="justify-center mt-6 md:mt-4 w-full hidden md:flex">
+      <div className="justify-center mt-6 md:mt-4 w-full">
         <Button
           className="tracking-widest"
           fullWidth
