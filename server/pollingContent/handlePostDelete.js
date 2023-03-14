@@ -1,7 +1,7 @@
 const Post = require('../database/post');
 const rumSDK = require('rum-sdk-nodejs');
 
-module.exports = async (item, group) => {
+module.exports = async (item) => {
   const {
     Data: {
       object: {
