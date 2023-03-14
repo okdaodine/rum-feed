@@ -6,6 +6,11 @@ const rumSDK = require('rum-sdk-nodejs');
 const { trySendSocket } = require('../socket');
 const V1Content = require('../database/v1Content');
 
+const CounterName = {
+  postLike: 'postLike',
+  commentLike: 'commentLike',
+}
+
 module.exports = async (item, group) => {
   const counter = await pack(item);
 
@@ -62,11 +67,10 @@ module.exports = async (item, group) => {
   if (post) {
     const count = await UniqueCounter.count({
       where: {
-        name,
         objectId: post.trxId
       }
     });
-    if (name === UniqueCounter.CounterName.postLike) {
+    if (name === CounterName.postLike) {
       post.likeCount = count;
     }
     await Post.update(post.trxId, post);
@@ -94,11 +98,10 @@ module.exports = async (item, group) => {
   if (comment) {
     const count = await UniqueCounter.count({
       where: {
-        name,
         objectId: comment.trxId
       }
     });
-    if (name === UniqueCounter.CounterName.commentLike) {
+    if (name === CounterName.commentLike) {
       comment.likeCount = count;
     }
     await Comment.update(comment.trxId, comment);
@@ -136,9 +139,9 @@ const pack = async (item) => {
   const post = await Post.get(id);
   const comment = await Comment.get(id);
   if (post) {
-    data.name = UniqueCounter.CounterName.postLike;
+    data.name = CounterName.postLike;
   } else if (comment) {
-    data.name = UniqueCounter.CounterName.commentLike;
+    data.name = CounterName.commentLike;
   }
   return data;
 }

@@ -7,6 +7,11 @@ const { trySendSocket } = require('../socket');
 const Orphan = require('../database/sequelize/orphan');
 const within24Hours = require('../utils/within24Hours');
 
+const CounterName = {
+  postLike: 'postLike',
+  commentLike: 'commentLike',
+}
+
 module.exports = async (item, group) => {
   const counter = await pack(item);
 
@@ -34,12 +39,11 @@ module.exports = async (item, group) => {
     await UniqueCounter.destroy(uniqueCounter);
   }
 
-  if (name === UniqueCounter.CounterName.postLike) {
+  if (name === CounterName.postLike) {
     const post = await Post.get(objectId);
     if (post) {
       const count = await UniqueCounter.count({
         where: {
-          name,
           objectId: post.id
         }
       });
@@ -66,12 +70,11 @@ module.exports = async (item, group) => {
     }
   }
 
-  if (name === UniqueCounter.CounterName.commentLike) {
+  if (name === CounterName.commentLike) {
     const comment = await Comment.get(objectId);
     if (comment) {
       const count = await UniqueCounter.count({
         where: {
-          name,
           objectId: comment.id
         }
       });
@@ -123,9 +126,9 @@ const pack = async (item) => {
   const post = await Post.get(id);
   const comment = await Comment.get(id);
   if (post) {
-    data.name = UniqueCounter.CounterName.postLike;
+    data.name = CounterName.postLike;
   } else if (comment) {
-    data.name = UniqueCounter.CounterName.commentLike;
+    data.name = CounterName.commentLike;
   } else {
     return null;
   }

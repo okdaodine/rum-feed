@@ -83,7 +83,6 @@ module.exports = async (item, group) => {
   }
   post.likeCount = await UniqueCounter.count({
     where: {
-      name: 'like',
       objectId: post.trxId
     }
   });

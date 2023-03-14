@@ -19,7 +19,6 @@ module.exports = async (item, group) => {
 
   comment.likeCount = await UniqueCounter.count({
     where: {
-      name: 'like',
       objectId: comment.trxId
     }
   });
