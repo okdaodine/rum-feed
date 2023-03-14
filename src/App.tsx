@@ -29,7 +29,7 @@ const App = observer(() => {
             <div>
               <Route path="/groups" exact component={Groups} />
 
-              {groupStore.total > 0 && <>
+              {groupStore.defaultGroup && groupStore.postGroup && <>
                 <GlobalSetup />
                 <Route path="/" exact component={() => (
                   <KeepAlive>

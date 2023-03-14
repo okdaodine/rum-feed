@@ -148,6 +148,7 @@ export default observer((props: IProps) => {
   const fromTwitter = (post.title || '').startsWith('https://twitter.com');
   const fromWeibo = (post.title || '').startsWith('https://weibo.com');
   const isTweet = fromTwitter || fromWeibo;
+  const isIndexedBy = (post.title || '').includes('indexed by');
 
   React.useEffect(() => {
     if (inPostDetail || !post.content) {
@@ -225,15 +226,15 @@ export default observer((props: IProps) => {
               </UserCard>
               <div
                 className={classNames({
-                  'mt-[-2px]': isTweet
+                  'mt-[-2px]': isTweet && !isIndexedBy
                 }, "flex items-center text-gray-88 opacity-70 dark:text-white dark:opacity-40 text-12 tracking-wide cursor-pointer")}
                 onClick={() => {
                   if (isMobile || !inPostDetail) {
-                    history.push(`/posts/${post.id}`);
+                    history.push(`/posts/${post.trxId}`);
                   }
                 }}
               >
-                {(isPc || !isTweet) && (
+                {(isPc || !isTweet || isIndexedBy) && (
                   <span className="mx-[6px] transform scale-150 opacity-50">·</span>
                 )}
                 {ago(post.timestamp, {
@@ -258,7 +259,7 @@ export default observer((props: IProps) => {
                   dangerouslySetInnerHTML={{
                     __html: replaceContent(`${post.content}`, {
                       disabled: isMobile && !inPostDetail
-                    }) +`${isTweet ? ` <a class="text-sky-500 text-12" href="${post.title || ''}" ${isMobile && !inPostDetail ? 'disabled' : ''}>查看原文</a>` : ''}`,
+                    }) +`${isTweet ? ` <a class="text-sky-400 text-12" href="${(post.title || '').split(' ')[0]}" ${isMobile && !inPostDetail ? 'disabled' : ''}>${post.title?.includes('indexed by') ? '来自推特' : '查看原文'}</a>` : ''}`,
                   }}
                   onClick={() => {
                     if (isMobile) {

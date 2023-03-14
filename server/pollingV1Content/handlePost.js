@@ -101,6 +101,11 @@ module.exports = async (item, group) => {
         id: post.id,
         content: post.content,
         ...(
+          post.name ?
+          { name: post.name } :
+          {}
+        ),
+        ...(
           post.images ?
           { image: post.images.map(image => ({ type: 'Image', ...image })) } :
           {}
