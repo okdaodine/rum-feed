@@ -101,8 +101,8 @@ module.exports = async (item, group) => {
         id: post.id,
         content: post.content,
         ...(
-          post.name ?
-          { name: post.name } :
+          post.title ?
+          { name: post.title } :
           {}
         ),
         ...(
