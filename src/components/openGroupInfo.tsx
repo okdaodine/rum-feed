@@ -218,7 +218,7 @@ const Main = observer((props: IModalProps) => {
                   </div>
                 </div>
               )}
-              {state.group.groupName.includes('v1') && (
+              {state.group.extra.rawGroup.appKey.includes('v1') && (
                 <>
                   <Button className="w-full mt-8" onClick={() => {
                     state.openMigrateGroupModal = true;
