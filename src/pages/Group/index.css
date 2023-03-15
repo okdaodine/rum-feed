@@ -1,0 +1,9 @@
+.posts-page .blur-layer {
+  background: -webkit-linear-gradient(
+    rgba(32, 32, 32, 0) 14%,
+    rgba(32, 32, 32, 0.56) 100%
+  );
+  background: linear-gradient(rgba(32, 32, 32, 0) 14%, rgba(32, 32, 32, 0.56) 100%);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+}

@@ -165,15 +165,14 @@ export default observer(() => {
               try {
                 const v1Content = await V1ContentApi.get(trxId);
                 if (v1Content && v1Content.status !== 'done') {
-                  const isPost = (
-                    (v1Content.data.type === 'Create' && v1Content.data.object!.type === 'Note' && !v1Content.data.object!.inreplyto) ||
-                    (v1Content.data.type === 'Delete' && v1Content.data.object!.type === 'Note')
-                  )
-                  await TrxApi.createActivity(v1Content.data, (isPost ? groupStore.postGroup : groupStore.defaultGroup).groupId, '', {
-                    trxId: v1Content.trxId,
-                    timestamp: Number(v1Content.raw.TimeStamp.slice(0, -6)),
-                  });
-                  await V1ContentApi.done(v1Content.trxId);
+                  const group = groupStore.map[v1Content.groupId];
+                  if (!group.groupName.includes('v1')){
+                    await TrxApi.createActivity(v1Content.data, v1Content.groupId, '', {
+                      trxId: v1Content.trxId,
+                      timestamp: Number(v1Content.raw.TimeStamp.slice(0, -6)),
+                    });
+                    await V1ContentApi.done(v1Content.trxId);
+                  }
                 }
               } catch (err) {
                 console.log(err);

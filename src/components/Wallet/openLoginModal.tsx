@@ -21,6 +21,7 @@ const Main = observer(() => {
     loadingMetaMask: false,
     creatingWallet: false,
     loadingMixin: false,
+    loadingGithub: false,
     openImportModal: false
   }));
 
@@ -120,6 +121,26 @@ const Main = observer(() => {
           }}
         >
           MetaMask 登录{state.loadingMetaMask && '...'}
+        </Button>
+      </div>
+      <div className="justify-center mt-6 md:mt-4 w-full flex">
+        <Button
+          className="tracking-widest"
+          fullWidth
+          onClick={async () => {
+            state.loadingGithub = true;
+            const {
+              aesKey,
+              keyInHex
+            } = await Vault.createKey();
+            await Vault.saveCryptoKeyToLocalStorage(aesKey);
+            window.location.href = Vault.getGithubOauthUrl({
+              state: keyInHex,
+              return_to: encodeURIComponent(window.location.href)
+            });
+          }}
+        >
+          Github 登录{state.loadingGithub && '...'}
         </Button>
       </div>
       <div className="justify-center mt-6 md:mt-4 w-full flex">

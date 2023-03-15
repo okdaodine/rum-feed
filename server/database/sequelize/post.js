@@ -12,10 +12,6 @@ const Post = sequelize.define('posts', {
     type: Sequelize.STRING,
     defaultValue: ''
   },
-  latestTrxId: {
-    type: Sequelize.STRING,
-    defaultValue: ''
-  },
   title: {
     type: Sequelize.STRING
   },

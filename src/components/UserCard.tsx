@@ -73,8 +73,8 @@ const UserCard = observer((props: IUserCardProps) => {
         },
       }
       const res = type === 'follow' ?
-        await TrxApi.createActivity(follow, groupStore.defaultGroup.groupId) : 
-        await TrxApi.createActivity({ type: 'Undo', object: follow }, groupStore.defaultGroup.groupId);
+        await TrxApi.createActivity(follow, groupStore.relationGroup.groupId) : 
+        await TrxApi.createActivity({ type: 'Undo', object: follow }, groupStore.relationGroup.groupId);
       console.log(res);
       userStore.updateUser(props.userAddress, {
         followerCount: user.followerCount + (type === 'follow' ? 1 : -1),

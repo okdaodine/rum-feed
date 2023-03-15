@@ -14,7 +14,6 @@ interface IProps {
     trxId: string,
     userAddress: string
   }
-  onClickUpdateMenu: () => void
   onClickDeleteMenu: () => void
 }
 
@@ -111,19 +110,6 @@ export default observer((props: IProps) => {
         )}
         {userStore.isLogin && (userStore.address === data.userAddress || userStore.user.role === 'admin') && (
           <div>
-            {/* <MenuItem
-              onClick={() => {
-              props.onClickUpdateMenu();
-              handleMenuClose();
-            }}
-            >
-              <div className="flex items-center dark:text-white dark:text-opacity-40 text-gray-600 leading-none pl-1 py-2 font-bold pr-2">
-                <span className="flex items-center mr-3">
-                  <MdOutlineEdit className="text-18 opacity-50" />
-                </span>
-                <span>编辑</span>
-              </div>
-            </MenuItem> */}
             <MenuItem onClick={() => {
               props.onClickDeleteMenu();
               handleMenuClose();

@@ -7,9 +7,6 @@ const truncateByBytes = require('../utils/truncateByBytes');
 const within24Hours = require('../utils/within24Hours');
 
 module.exports = async (item, group) => {
-  if (!group.groupName.includes('post')) {
-    return;
-  }
   const post = await pack(item);
   if (!post.id) {
     return;
@@ -45,7 +42,6 @@ const pack = async item => {
     groupId: item.GroupId,
     trxId: TrxId,
     id,
-    latestTrxId: '',
     storage: 'chain',
     commentCount: 0,
     likeCount: 0,

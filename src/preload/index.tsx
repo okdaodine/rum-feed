@@ -1,7 +1,7 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
 import { useStore } from 'store';
-import { GroupApi, ProfileApi, UserApi, VaultApi, PermissionApi, TrxApi, ConfigApi } from 'apis';
+import { GroupApi, ProfileApi, UserApi, VaultApi, TrxApi, ConfigApi } from 'apis';
 import { lang } from 'utils/lang';
 import Query from 'utils/query';
 import * as Vault from 'utils/vault';
@@ -15,7 +15,6 @@ import isJWT from 'utils/isJWT';
 import { useHistory } from 'react-router-dom';
 import { ethers } from 'ethers';
 import * as JsBase64 from 'js-base64';
-import openNftAuthModal from './openNftAuthModal';
 import store from 'store2';
 
 
@@ -58,38 +57,20 @@ const Preload = observer(() => {
           userStore.setUser(userStore.address, user);
         }
         groupStore.setLoading(false);
-        if (!groupStore.defaultGroup && window.location.pathname !== '/groups') {
-          confirmDialogStore.show({
-            content: '请添加 default group',
-            cancelDisabled: true,
-            ok: () => {
-              history.push('/groups');
-              confirmDialogStore.hide();
-            },
-          });
-          return;
-        }
-        if (!groupStore.postGroup && window.location.pathname !== '/groups') {
-          confirmDialogStore.show({
-            content: '请添加 post group',
-            cancelDisabled: true,
-            ok: () => {
-              history.push('/groups');
-              confirmDialogStore.hide();
-            },
-          });
-          return;
-        }
         if (groupStore.total === 0) {
-          history.push('/groups');
+          confirmDialogStore.show({
+            content: '请添加 group',
+            cancelDisabled: true,
+            ok: () => {
+              history.push('/groups');
+              confirmDialogStore.hide();
+            },
+          });
           return;
         }
         tryOpenLoginModal();
         tryOpenProfileModal();
         tryLogout();
-        if (userStore.isLogin) {
-          handlePermission();
-        }
       } catch (err: any) {
         console.log(err);
         confirmDialogStore.show({
@@ -160,43 +141,6 @@ const Preload = observer(() => {
     }
   }
 
-  const handlePermission = async () => {
-    try {
-      const { vaultAppUser } = userStore;
-      if (['mixin', 'web3'].includes(vaultAppUser.provider) && vaultAppUser.status !== 'allow') {
-        const res = await PermissionApi.tryAdd(groupStore.postGroup.groupId, vaultAppUser.eth_pub_key, vaultAppUser.provider, vaultAppUser.access_token);
-        console.log(`[PermissionApi.tryAdd]`, vaultAppUser.eth_pub_key, { res });
-        if (res.allow) {
-          userStore.setVaultAppUser({
-            ...userStore.vaultAppUser,
-            status: 'allow'
-          });
-        } else {
-          userStore.setVaultAppUser({
-            ...userStore.vaultAppUser,
-            status: 'no_allow'
-          });
-          openNftAuthModal(res.nft.meta.icon_url);
-        }
-      }
-    } catch (err: any) {
-      if (err.code === 'ERR_NOT_FOUND' && err.message.includes('userId')) {
-        userStore.setVaultAppUser({
-          ...userStore.vaultAppUser,
-          status: 'token_expired'
-        });
-      }
-      if (err.code === 'ERR_NOT_FOUND' && err.message.includes('nft')) {
-        const collectionInfo = JSON.parse(err.message.split(' ')[0]);
-        userStore.setVaultAppUser({
-          ...userStore.vaultAppUser,
-          status: 'no_nft',
-          nft_info: collectionInfo
-        });
-      }
-    }
-  }
-
   const initGroups = async () => {
     try {
       const groups = await GroupApi.list();
@@ -210,6 +154,9 @@ const Preload = observer(() => {
     try {
       const config = await ConfigApi.get();
       configStore.set(config);
+      if (config.defaultGroupId) {
+        groupStore.setDefaultGroupId(config.defaultGroupId);
+      }
     } catch (err) {
       console.log(err);
     }

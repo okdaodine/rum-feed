@@ -95,16 +95,15 @@ export default observer(() => {
       openLoginModal();
     return;
     }
-    const res = await TrxApi.createActivity(activity, groupStore.postGroup.groupId);
+    const res = await TrxApi.createActivity(activity, groupStore.defaultGroup.groupId);
     console.log(res);
     const post: IPost = {
       content: activity.object?.content || '',
       images: (activity.object?.image as [])?.map(image => base64.getUrl(image as any)) ?? [],
       userAddress: userStore.address,
-      groupId: groupStore.postGroup.groupId,
+      groupId: groupStore.defaultGroup.groupId,
       trxId: res.trx_id,
       id: activity.object?.id ?? '',
-      latestTrxId: '',
       storage: TrxStorage.cache,
       commentCount: 0,
       likeCount: 0,
@@ -112,7 +111,7 @@ export default observer(() => {
       timestamp: Date.now(),
       extra: {
         userProfile: userStore.profile,
-        groupName: groupStore.postGroup.groupName
+        groupName: groupStore.defaultGroup.groupName
       }
     };
     postStore.addPost(post);
@@ -129,7 +128,7 @@ export default observer(() => {
         <div className="md:pt-5">
           <div className="hidden md:block">
             <Editor
-              groupId={groupStore.postGroup.groupId}
+              groupId={groupStore.defaultGroup.groupId}
               editorKey="post"
               placeholder={lang.whatsHappening}
               autoFocusDisabled

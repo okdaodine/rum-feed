@@ -46,7 +46,7 @@ router.get('/', async ctx => {
         },
         limit: 10,
       });
-      content = posts.map(post => `<a href="/posts/${post.trxId}">${post.content}</a>`).join('');
+      content = posts.map(post => `<a href="/posts/${post.id}">${post.content}</a>`).join('');
       title = `${userName} - ${siteName}`;
       description = `${userName} - ${siteName}`;
     }

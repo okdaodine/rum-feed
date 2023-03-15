@@ -2,6 +2,7 @@ const router = require('koa-router')();
 const { assert, Errors, throws } = require('../utils/validator');
 const rumSDK = require('rum-sdk-nodejs');
 const pendingTrxHelper = require('../utils/pendingTrxHelper');
+const Content = require('../database/sequelize/content');
 
 router.post('/', sendTrx);
 router.get('/:trxId', get);
@@ -25,17 +26,13 @@ async function sendTrx(ctx) {
 }
 
 async function get(ctx) {
-  try {
-    ctx.body = await rumSDK.chain.Trx.get(ctx.params.groupId, ctx.params.trxId);
-  } catch (err) {
-    console.log(err);
-    const { status } = err.response || {};
-    if (status > 200 && status < 500) {
-      throws(Errors.ERR_NO_PERMISSION('request'));
-    } else {
-      throws(Errors.ERR_IS_REQUEST_FAILED());
-    }
-  }
+  const content = await Content.findOne({
+    attributes: { exclude: ['id', 'log', 'groupId', 'Data'] },
+    where: { GroupId: ctx.params.groupId, TrxId: ctx.params.trxId }
+  });
+  console.log(content);
+  assert(content, Errors.ERR_NOT_FOUND('trx'));
+  ctx.body = content;
 }
 
 module.exports = router;

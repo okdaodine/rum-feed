@@ -12,7 +12,6 @@ export interface IPost extends IPostContent {
   groupId: string
   trxId: string
   id: string
-  latestTrxId: string
   storage: TrxStorage
   timestamp: number
   commentCount: number

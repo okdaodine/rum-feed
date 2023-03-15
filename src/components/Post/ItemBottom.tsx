@@ -4,7 +4,6 @@ import { IPost } from 'apis/types';
 import { RiThumbUpLine, RiThumbUpFill } from 'react-icons/ri';
 import Comment from 'components/Comment';
 import CommentMobile from 'components/Comment/Mobile';
-import { TrxStorage } from 'apis/common';
 import Fade from '@material-ui/core/Fade';
 import { useStore } from 'store';
 import classNames from 'classnames';
@@ -12,7 +11,6 @@ import ContentSyncStatus from 'components/ContentSyncStatus';
 import Menu from 'components/ObjectMenu';
 import { useHistory } from 'react-router-dom';
 import sleep from 'utils/sleep';
-import openEditor from 'components/Post/OpenEditor';
 import openLoginModal from 'components/Wallet/openLoginModal';
 import { isMobile, isPc } from 'utils/env';
 import { TiArrowForwardOutline } from 'react-icons/ti';
@@ -34,7 +32,6 @@ export default observer((props: IProps) => {
     postStore,
     modalStore,
     userStore,
-    groupStore,
   } = useStore();
   const { post } = props;
   const inPostDetail = props.where.startsWith('postDetail');
@@ -66,8 +63,8 @@ export default observer((props: IProps) => {
         }
       };
       const res = liked ?
-        await TrxApi.createActivity({ type: 'Undo', object: like }, groupStore.defaultGroup.groupId) :
-        await TrxApi.createActivity(like, groupStore.defaultGroup.groupId);
+        await TrxApi.createActivity({ type: 'Undo', object: like }, post.groupId) :
+        await TrxApi.createActivity(like, post.groupId);
       console.log(res);
       postStore.updatePost({
         ...post,
@@ -101,7 +98,7 @@ export default observer((props: IProps) => {
           type: 'Note',
           id: postId,
         },
-      }, groupStore.postGroup.groupId);
+      }, post.groupId);
       console.log(res);
     } catch (err) {
       console.log(err);
@@ -225,19 +222,6 @@ export default observer((props: IProps) => {
                       groupId: post.groupId,
                       trxId: post.trxId,
                       userAddress: post.userAddress
-                    }}
-                    onClickUpdateMenu={async () => {
-                      const newPost = await openEditor(post);
-                      if (newPost) {
-                        postStore.updatePost({
-                          ...post,
-                          latestTrxId: '',
-                          commentCount: post.commentCount,
-                          likeCount: post.likeCount,
-                          timestamp: post.timestamp,
-                          storage: TrxStorage.cache,
-                        });
-                      }
                     }}
                     onClickDeleteMenu={() => {
                       const deleteByAdmin = userStore.user.role === 'admin' && post.userAddress !== userStore.address;

@@ -1,6 +1,3 @@
 module.exports = group => {
-  if (group.groupName.startsWith('mixin.')) {
-    return 'v2';
-  }
-  return 'v1';
+  return group.groupName.includes('v1') ? 'v1' : 'v2';
 }

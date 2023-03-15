@@ -15,6 +15,7 @@ import { MdOutlineErrorOutline } from 'react-icons/md';
 import { FaSeedling } from 'react-icons/fa';
 import { BiCopy, BiSearch } from 'react-icons/bi';
 import Button from 'components/Button';
+import MigrateGroupModal from './migrateGroupModal';
 
 interface IModalProps {
   groupId: string
@@ -29,6 +30,7 @@ const Main = observer((props: IModalProps) => {
     open: false,
     contents: [] as IContent[],
     hasMoreContent: true,
+    openMigrateGroupModal: false
   }));
 
   React.useEffect(() => {
@@ -216,7 +218,22 @@ const Main = observer((props: IModalProps) => {
                   </div>
                 </div>
               )}
-              <Button className="w-full mt-8" color="red" outline onClick={remove}>{lang.delete}</Button>
+              {state.group.groupName.includes('v1') && (
+                <>
+                  <Button className="w-full mt-8" onClick={() => {
+                    state.openMigrateGroupModal = true;
+                  }}>升级</Button>
+                  <MigrateGroupModal
+                    oldGroupId={state.group.groupId}
+                    open={state.openMigrateGroupModal}
+                    onClose={() => state.openMigrateGroupModal = false}
+                    addGroup={() => {
+                      window.location.reload();
+                    }}
+                  />
+                </>
+              )}
+              <Button className="w-full mt-5" color="red" outline onClick={remove}>{lang.delete}</Button>
             </div>
           )}
         </div>

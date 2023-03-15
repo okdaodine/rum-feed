@@ -53,6 +53,7 @@ if (config.mixinBotKeystore) {
 }
 
 let isBusy = false;
+let cache = {};
 exports.notifyByBot = async (data) => {
   if (!config.mixinBotKeystore) {
     return;
@@ -61,9 +62,16 @@ exports.notifyByBot = async (data) => {
     console.log(`别人正在 mixin notifying，我等待 ...`);
     await sleep(1000);
   }
-  isBusy = true;
   try {
     const { iconUrl, title, description, url } = data;
+
+    if (cache[url]) {
+      return;
+    }
+    cache[url] = true;
+
+    isBusy = true;
+    
     const botSubs = await BotSubscription.findAll({ where: { status: 'open' } });
     const client = MixinApi({
       keystore: {

@@ -7,16 +7,29 @@ export function createGroupStore() {
 
     map: {} as Record<string, IGroup>,
 
+    defaultGroupId: '',
+
     get defaultGroup() {
-      return Object.values(this.map).find(group => group.groupName.startsWith('mixin.') && group.groupName.includes('default'))!;
+      if (this.defaultGroupId && this.map[this.defaultGroupId]) {
+        return this.map[this.defaultGroupId];
+      }
+      return Object.values(this.map).find(group => group.extra.rawGroup.appKey.includes('timeline'))!;
     },
 
-    get postGroup() {
-      return Object.values(this.map).find(group => group.groupName.startsWith('mixin.') && group.groupName.includes('post'))!;
+    get relationGroup() {
+      return Object.values(this.map).find(group => group.extra.rawGroup.appKey.includes('relations')) || this.defaultGroup;
     },
 
     get total() {
       return Object.values(this.map).length;
+    },
+
+    get multiple() {
+      return this.total > 0
+    },
+
+    setDefaultGroupId(defaultGroupId: string) {
+      this.defaultGroupId = defaultGroupId;
     },
 
     setLoading(loading: boolean) {

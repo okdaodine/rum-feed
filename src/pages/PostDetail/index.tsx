@@ -31,10 +31,6 @@ export default observer(() => {
         const post = await PostApi.get(id, {
           viewer: userStore.address
         });
-        if (post.latestTrxId) {
-          history.push(`/posts/${post.latestTrxId}`);
-          return;
-        }
         if (post) {
           postStore.tryAddPostToMap(post);
           document.title = post.content.slice(0, 50);

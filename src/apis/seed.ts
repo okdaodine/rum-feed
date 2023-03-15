@@ -11,5 +11,16 @@ export default {
       }
     });
     return item;
+  },
+
+  async migrate(seedUrl: string, oldGroupId: string) {
+    const item: IGroup = await request(`${API_BASE_URL}/seeds/migrate`, {
+      method: 'POST',
+      body: {
+        url: seedUrl,
+        oldGroupId
+      }
+    });
+    return item;
   }
 }

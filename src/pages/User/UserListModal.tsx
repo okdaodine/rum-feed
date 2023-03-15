@@ -80,7 +80,7 @@ const UserList = observer((props: IProps) => {
             type: 'Person',
             id: relation.to,
           },
-        }, groupStore.defaultGroup.groupId);
+        }, groupStore.relationGroup.groupId);
         console.log(res);
       }
 
@@ -91,7 +91,7 @@ const UserList = observer((props: IProps) => {
             type: 'Person',
             id: relation.to,
           },
-        }, groupStore.defaultGroup.groupId);
+        }, groupStore.relationGroup.groupId);
         console.log(res);
       }
       

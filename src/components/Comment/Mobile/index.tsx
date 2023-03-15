@@ -138,7 +138,7 @@ export default observer((props: IProps) => {
       openLoginModal();
       return;
     }
-    const res = await TrxApi.createActivity(activity, groupStore.defaultGroup.groupId);
+    const res = await TrxApi.createActivity(activity, props.post.groupId);
     console.log(res);
     const comment: IComment = {
       content: activity.object?.content || '',
@@ -147,7 +147,7 @@ export default observer((props: IProps) => {
       threadId: '',
       replyId: '',
       userAddress: userStore.address,
-      groupId: groupStore.defaultGroup.groupId,
+      groupId: props.post.groupId,
       trxId: res.trx_id,
       id: activity.object?.id ?? '',
       storage: TrxStorage.cache,

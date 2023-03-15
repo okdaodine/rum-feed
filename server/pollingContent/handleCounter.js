@@ -29,7 +29,6 @@ module.exports = async (item, group) => {
   const { objectId, value, name, timestamp } = counter;
   const from = counter.userAddress;
   const uniqueCounter = {
-    name,
     objectId,
     userAddress: from
   };

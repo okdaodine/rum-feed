@@ -77,12 +77,6 @@ const ModalWrapper = observer((props: IModalProps) => {
               </span>
             </div>
             <div className="mt-4 flex items-center">
-              <span className="w-22">{lang.data}：</span>
-              <span className="dark:text-white dark:text-opacity-80 text-gray-4a opacity-90">
-                <MiddleTruncate string={state.trx.Data} length={15} />
-              </span>
-            </div>
-            <div className="mt-4 flex items-center">
               <span className="w-22">{lang.sign}：</span>
               <span className="dark:text-white dark:text-opacity-80 text-gray-4a opacity-90">
                 <MiddleTruncate string={state.trx.SenderSign} length={15} />

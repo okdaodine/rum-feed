@@ -4,13 +4,49 @@ const rumSDK = require('rum-sdk-nodejs');
 const Group = require('../database/sequelize/group');
 const Seed = require('../database/sequelize/seed');
 const { ensurePermission } = require('../middleware/api');
+const Content = require('../database/sequelize/content');
+const Post = require('../database/sequelize/post');
+const Comment = require('../database/sequelize/comment');
+const Profile = require('../database/sequelize/profile');
+const Orphan = require('../database/sequelize/orphan');
+const Notification = require('../database/sequelize/notification');
+const V1Content = require('../database/sequelize/v1Content');
 
 router.post('/', ensurePermission, create);
+router.post('/migrate', ensurePermission, migrate);
 
 async function create(ctx) {
   const { url } = ctx.request.body;
   assert(url, Errors.ERR_IS_REQUIRED('url'));
   const groupId = await createSeed(url);
+  ctx.body = await Group.findOne({
+    where: {
+      groupId
+    }
+  });
+}
+
+async function migrate(ctx) {
+  const { url, oldGroupId } = ctx.request.body;
+  assert(url, Errors.ERR_IS_REQUIRED('url'));
+  const groupId = await createSeed(url);
+  const oldGroupQuery = { where: { groupId: oldGroupId } };
+  const oldGroup = await Group.findOne(oldGroupQuery);
+
+  await Group.destroy(oldGroupQuery);
+  await Seed.destroy(oldGroupQuery);
+  await Orphan.destroy(oldGroupQuery);
+
+  await Content.update({ groupId, GroupId: groupId }, oldGroupQuery);
+  await Post.update({ groupId }, oldGroupQuery);
+  await Comment.update({ groupId }, oldGroupQuery);
+  await Profile.update({ groupId }, oldGroupQuery);
+  await Notification.update({ groupId }, oldGroupQuery);
+  await V1Content.update({ groupId }, oldGroupQuery);
+
+  await Group.update({ contentCount: oldGroup.contentCount }, { where: { groupId } });
+
+  rumSDK.cache.Group.remove(oldGroupId);
   ctx.body = await Group.findOne({
     where: {
       groupId

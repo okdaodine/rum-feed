@@ -18,7 +18,7 @@ router.get('/', async ctx => {
     });
     if (_posts.length > 0) {
       posts.push(..._posts.map(post => ({
-        trxId: post.trxId,
+        id: post.id,
         userAddress: post.userAddress
       })));
       console.log(`collected ${posts.length} posts`);
@@ -26,7 +26,7 @@ router.get('/', async ctx => {
       stop = true;
     }
   }
-  const postUrls = posts.map(post => `${origin}/posts/${post.trxId}`);
+  const postUrls = posts.map(post => `${origin}/posts/${post.tridxId}`);
   const userUrls = _.uniq(posts.map(post => post.userAddress)).map(address => `${origin}/users/${address}`);
   const urls = [...postUrls, ...userUrls];
   console.log(`Got ${urls.length} urls (${postUrls.length} posts + ${userUrls.length} users)`);

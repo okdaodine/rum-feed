@@ -25,7 +25,7 @@ const PostEditor = observer((props: {
 }) => {
   const { userStore, groupStore } = useStore();
   const matchedGroupId = window.location.pathname.split('/groups/')[1];
-  const groupId = matchedGroupId ? matchedGroupId : groupStore.postGroup.groupId;
+  const groupId = matchedGroupId ? matchedGroupId : groupStore.defaultGroup.groupId;
   const group = groupStore.map[groupId];
 
   const submit = async (activity: IActivity) => {
@@ -42,7 +42,6 @@ const PostEditor = observer((props: {
       groupId,
       trxId: res.trx_id,
       id: activity.object?.id ?? '',
-      latestTrxId: '',
       storage: TrxStorage.cache,
       commentCount: 0,
       likeCount: 0,

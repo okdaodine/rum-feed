@@ -101,7 +101,7 @@ const ImageLib = observer((props: any) => {
             rel="noopener noreferrer"
             className="absolute top-0 right-[20px] w-20 mt-5"
           >
-            <img src="https://i.xue.cn/172e1214.png" alt="pixabay" />
+            <img src="https://i-xue-cn.pek3b.qingstor.com/172e1214.png" alt="pixabay" />
           </a>
         )}
         <div

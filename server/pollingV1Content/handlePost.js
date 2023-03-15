@@ -12,48 +12,6 @@ module.exports = async (item, group) => {
   const { post, extra } = await pack(item);
 
   if (extra.updatedTrxId) {
-    const updatedPost = await Post.get(extra.updatedTrxId);
-    if (!updatedPost) {
-      return;
-    }
-    if (post.userAddress !== updatedPost.userAddress) {
-      return;
-    }
-    await Post.create({
-      ...post,
-      latestTrxId: '',
-      commentCount: updatedPost.commentCount,
-      hotCount: updatedPost.hotCount,
-      likeCount: updatedPost.likeCount,
-      timestamp: updatedPost.timestamp,
-    });
-    await Post.update(updatedPost.trxId, {
-      latestTrxId: post.trxId
-    });
-    await Post.replaceUpdatedTrxId(updatedPost.trxId, post.trxId);
-    await Comment.replaceObjectId(updatedPost.trxId, post.trxId);
-    await UniqueCounter.replaceObjectId(updatedPost.trxId, post.trxId);
-    if (group.loaded) {
-      await notify(post.trxId);
-    }
-    await V1Content.create({
-      data: {
-        type: 'Update',
-        object: {
-          type: 'Note',
-          id: updatedPost.trxId,
-        },
-        result: {
-          type: 'Note',
-          content: post.content,
-        },
-      },
-      trxId: item.TrxId,
-      groupId: item.GroupId,
-      raw: item,
-      userAddress: post.userAddress,
-      status: 'pending'
-    });
     return;
   }
   if (extra.deletedTrxId) {
@@ -118,7 +76,7 @@ module.exports = async (item, group) => {
     status: 'pending'
   });
   if (group.loaded) {
-    await notify(post.trxId);
+    await notify(post.id);
   }
 }
 
@@ -136,7 +94,6 @@ const pack = async item => {
     groupId: item.GroupId,
     trxId: item.TrxId,
     id: item.TrxId,
-    latestTrxId: '',
     storage: 'chain',
     commentCount: 0,
     likeCount: 0,
@@ -160,8 +117,8 @@ const pack = async item => {
   };
 }
 
-const notify = async (trxId) => {
-  const post = await Post.get(trxId, {
+const notify = async (id) => {
+  const post = await Post.get(id, {
     withReplacedImage: true,
     withExtra: true
   });
@@ -172,7 +129,7 @@ const notify = async (trxId) => {
       iconUrl: post.extra.userProfile.avatar,
       title: (post.content || '').slice(0, 30) || '图片',
       description: `${truncateByBytes(name, 14)} 发布内容`,
-      url: `${config.origin}/posts/${post.trxId}`
+      url: `${config.origin}/posts/${post.id}`
     });
   }
 }
