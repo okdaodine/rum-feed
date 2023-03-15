@@ -15,7 +15,12 @@ async function sendTrx(ctx) {
     ctx.body = res;
   } catch (err) {
     console.log(err);
-    throws(Errors.ERR_IS_REQUEST_FAILED());
+    const { status } = err.response || {};
+    if (status > 200 && status < 500) {
+      throws(Errors.ERR_NO_PERMISSION('request'));
+    } else {
+      throws(Errors.ERR_IS_REQUEST_FAILED());
+    }
   }
 }
 
@@ -24,7 +29,12 @@ async function get(ctx) {
     ctx.body = await rumSDK.chain.Trx.get(ctx.params.groupId, ctx.params.trxId);
   } catch (err) {
     console.log(err);
-    throws(Errors.ERR_IS_REQUEST_FAILED());
+    const { status } = err.response || {};
+    if (status > 200 && status < 500) {
+      throws(Errors.ERR_NO_PERMISSION('request'));
+    } else {
+      throws(Errors.ERR_IS_REQUEST_FAILED());
+    }
   }
 }
 

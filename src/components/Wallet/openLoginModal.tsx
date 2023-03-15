@@ -6,20 +6,21 @@ import { ThemeRoot } from 'utils/theme';
 import Modal from 'components/Modal';
 import { useStore } from 'store';
 import { ethers } from 'ethers';
-import { encrypt } from '@metamask/eth-sig-util';
 import Button from 'components/Button';
 import sleep from 'utils/sleep';
 import { lang } from 'utils/lang';
 import openWalletModal from './openWalletModal';
 import ImportModal from './ImportModal';
-import { TrxApi, WalletApi } from 'apis';
+import * as Vault from 'utils/vault';
+import { VaultApi } from 'apis';
 import rumSDK from 'rum-sdk-browser';
 
 const Main = observer(() => {
-  const { userStore ,snackbarStore, confirmDialogStore, groupStore } = useStore();
+  const { userStore, confirmDialogStore, snackbarStore } = useStore();
   const state = useLocalObservable(() => ({
     loadingMetaMask: false,
     creatingWallet: false,
+    loadingMixin: false,
     openImportModal: false
   }));
 
@@ -33,6 +34,27 @@ const Main = observer(() => {
       <div className="text-17 font-bold dark:text-white dark:text-opacity-80 text-neutral-700 text-center opacity-90">
         {lang.connectWallet}
       </div>
+      <div className="justify-center mt-6 md:mt-4 w-full">
+        <Button
+          className="tracking-widest"
+          fullWidth
+          onClick={async () => {
+            state.loadingMixin = true;
+            const {
+              aesKey,
+              keyInHex
+            } = await Vault.createKey();
+            await Vault.saveCryptoKeyToLocalStorage(aesKey);
+            window.location.href = Vault.getMixinOauthUrl({
+              state: keyInHex,
+              return_to: encodeURIComponent(window.location.href),
+              scope: 'PROFILE:READ+COLLECTIBLES:READ'
+            });
+          }}
+        >
+          Mixin 登录{state.loadingMixin && '...'}
+        </Button>
+      </div>
       <div className="justify-center mt-6 md:mt-4 w-full hidden md:flex">
         <Button
           className="tracking-widest"
@@ -40,11 +62,11 @@ const Main = observer(() => {
           onClick={async () => {
             if (!(window as any).ethereum) {
               confirmDialogStore.show({
-                content: lang.installMetaMaskFirst,
-                cancelText: lang.gotIt,
-                okText: lang.install,
+                content: '请先安装 MetaMask 插件',
+                cancelText: '我知道了',
+                okText: '去安装',
                 ok: () => {
-                  confirmDialogStore.okText = lang.redirecting;
+                  confirmDialogStore.okText = '跳转中';
                   confirmDialogStore.setLoading(true);
                   window.location.href = 'https://metamask.io';
                 },
@@ -53,40 +75,17 @@ const Main = observer(() => {
             }
             state.loadingMetaMask = true;
             try {
+              const { typeTransform } = rumSDK.utils;
+              const PREFIX = '\x19Ethereum Signed Message:\n';
+              const message = `Rum 身份认证 | ${Math.round(Date.now() / 1000)}`;
               const provider = new ethers.providers.Web3Provider((window as any).ethereum);
               const accounts = await provider.send("eth_requestAccounts", []);
               const address = accounts[0];
-              let existWallet = null;
-
-              try {
-                existWallet = await WalletApi.getByProviderAddress(address);
-              } catch (_) {}
-
-              if (existWallet) {
-                try {
-                  const message = await provider.send('eth_decrypt', [existWallet.encryptedPrivateKey, address]);
-                  const privateKey = message.split(': ')[1];
-                  connectWallet(existWallet.address, privateKey);
-                  window.location.reload();
-                  return;
-                } catch (_) {
-                  snackbarStore.show({
-                    message: lang.somethingWrong,
-                    type: 'error',
-                  });
-                  return;
-                }
-              }
-
-              const wallet = ethers.Wallet.createRandom();
-
-              const { typeTransform } = rumSDK.utils;
-              const PREFIX = '\x19Ethereum Signed Message:\n';
-              const message = `${window.location.origin} generated a new wallet for your account. The private key of this wallet will be encrypted by your public key so that only you can decrypt and use it.\n\nThis new wallet address: ${wallet.address}`;
               const messageBytes = ethers.utils.toUtf8Bytes(message);
               const msg = `0x${typeTransform.uint8ArrayToHex(messageBytes)}`;
               const signatureFromProvider = await provider.send("personal_sign", [msg, address]);
               const signature = ethers.utils.joinSignature(signatureFromProvider);
+              console.log(`[MetaMask]:`, { address, message, signature });
               const _messageBytes = ethers.utils.toUtf8Bytes(message);
               const prefixBytes = ethers.utils.toUtf8Bytes(`${PREFIX}${messageBytes.length}`);
               const bytes = ethers.utils.concat([prefixBytes, _messageBytes]);
@@ -98,31 +97,16 @@ const Main = observer(() => {
               if (recoveredAddress.toLowerCase() !== address.toLowerCase()) {
                 throw new Error('invalid address');
               }
-              const encryptionPublicKey = await provider.send("eth_getEncryptionPublicKey", [address]);
-              const ethEncryptedData = encrypt({
-                publicKey: encryptionPublicKey,
-                data: `Private key of the wallet that was encrypted by your public key so that only you can decrypt and use it: ${wallet.privateKey}`,
-                version: 'x25519-xsalsa20-poly1305'
+              const { token }: any = await VaultApi.createUserBySignature({
+                address: recoveredAddress,
+                data: rawMsg,
+                signature: signature.replace('0x', '')
               });
-              const encryptedHex = ethers.utils.hexlify(new TextEncoder().encode(JSON.stringify(ethEncryptedData)));
-              const res = await TrxApi.createActivity({
-                summary: `${address} announced a wallet`,
-                type: 'Announce',
-                object: {
-                  type: 'Note',
-                  name: `The private key encrypted by ${address}`,
-                  content: encryptedHex,
-                  summary: JSON.stringify({ message: rawMsg, signature })
-                },
-              }, groupStore.defaultGroup.groupId, wallet.privateKey);
-              console.log(res);
-              connectWallet(wallet.address, wallet.privateKey);
-              window.location.href += '?action=openProfileEditor';
+              window.location.href = `/?token=${token}`;
             } catch (err: any) {
-              console.log(err);
               if (err.message === 'invalid address') {
                 snackbarStore.show({
-                  message: lang.invalid('address'),
+                  message: '加解密的 address 不匹配',
                   type: 'error'
                 });
               } else {
@@ -135,7 +119,7 @@ const Main = observer(() => {
             }
           }}
         >
-          MetaMask{state.loadingMetaMask && '...'}
+          MetaMask 登录{state.loadingMetaMask && '...'}
         </Button>
       </div>
       <div className="justify-center mt-6 md:mt-4 w-full flex">

@@ -19,7 +19,6 @@ import BFSReplace from 'utils/BFSReplace';
 import Query from 'utils/query';
 import escapeStringRegexp from 'escape-string-regexp';
 import UserName from 'components/UserName';
-import { useStore } from 'store';
 
 import './index.css';
 
@@ -136,7 +135,6 @@ const Images = observer((props: { images: string[] }) => {
 });
 
 export default observer((props: IProps) => {
-  const { groupStore } = useStore();
   const { post } = props;
   const inPostDetail = props.where.startsWith('postDetail');
   const state = useLocalObservable(() => ({
@@ -150,6 +148,7 @@ export default observer((props: IProps) => {
   const fromTwitter = (post.title || '').startsWith('https://twitter.com');
   const fromWeibo = (post.title || '').startsWith('https://weibo.com');
   const isTweet = fromTwitter || fromWeibo;
+  const isIndexedBy = (post.title || '').includes('indexed by');
 
   React.useEffect(() => {
     if (inPostDetail || !post.content) {
@@ -227,15 +226,15 @@ export default observer((props: IProps) => {
               </UserCard>
               <div
                 className={classNames({
-                  'mt-[-2px]': isTweet
+                  'mt-[-2px]': isTweet && !isIndexedBy
                 }, "flex items-center text-gray-88 opacity-70 dark:text-white dark:opacity-40 text-12 tracking-wide cursor-pointer")}
                 onClick={() => {
                   if (isMobile || !inPostDetail) {
-                    history.push(`/posts/${post.id}`);
+                    history.push(`/posts/${post.trxId}`);
                   }
                 }}
               >
-                {(isPc || !isTweet) && (
+                {(isPc || !isTweet || isIndexedBy) && (
                   <span className="mx-[6px] transform scale-150 opacity-50">·</span>
                 )}
                 {ago(post.timestamp, {
@@ -260,7 +259,7 @@ export default observer((props: IProps) => {
                   dangerouslySetInnerHTML={{
                     __html: replaceContent(`${post.content}`, {
                       disabled: isMobile && !inPostDetail
-                    }) +`${isTweet ? ` <a class="text-sky-500 text-12" href="${post.title || ''}" ${isMobile && !inPostDetail ? 'disabled' : ''}>查看原文</a>` : ''}`,
+                    }) +`${isTweet ? ` <a class="text-sky-400 text-12" href="${(post.title || '').split(' ')[0]}" ${isMobile && !inPostDetail ? 'disabled' : ''}>${post.title?.includes('indexed by') ? '来自推特' : '查看原文'}</a>` : ''}`,
                   }}
                   onClick={() => {
                     if (isMobile) {
@@ -311,16 +310,6 @@ export default observer((props: IProps) => {
             {(post.images || []).length > 0 && <div className="pb-2">
               <Images images={post.images || []} />
             </div>}
-            {groupStore.multiple && (
-              <div className="flex pt-2 pb-2 tracking-wider">
-                <div className="bg-[#EFF3F4] bg-opacity-100 dark:bg-opacity-10 text-12 py-[2px] px-2 flex items-center rounded-full cursor-pointer" onClick={() => {
-                  history.push(`/groups/${post.groupId}`)
-                }}>
-                  <div className="w-[10px] h-[10px] bg-[#37434D] rounded-full mr-[6px] opacity-30 dark:bg-white dark:opacity-30" />
-                  <span className="text-[#37434D] opacity-[0.55] font-bold dark:text-white dark:opacity-50">{post.extra.groupName}</span>
-                </div>
-              </div>
-            )}
           </div>
         </div>
 

@@ -10,7 +10,6 @@ const UniqueCounter = sequelize.define('uniqueCounters', {
   },
   name: {
     type: Sequelize.STRING,
-    allowNull: false
   },
   objectId: {
     type: Sequelize.STRING,
@@ -25,7 +24,9 @@ const UniqueCounter = sequelize.define('uniqueCounters', {
   timestamps: false,
   indexes: [{
     unique: true,
-    fields: ['name', 'objectId', 'userAddress']
+    fields: ['objectId', 'userAddress']
+  }, {
+    fields: ['objectId']
   }]
 });
 

@@ -39,7 +39,7 @@ interface IProps {
 }
 
 export default observer((props: IProps) => {
-  const { modalStore, userStore, commentStore, snackbarStore } = useStore();
+  const { modalStore, userStore, commentStore, snackbarStore, groupStore } = useStore();
   const commentRef = React.useRef<any>();
   const { comment, isTopComment } = props;
   const isSubComment = !isTopComment;
@@ -113,8 +113,8 @@ export default observer((props: IProps) => {
         },
       }
       const res = comment.extra.liked ?
-        await TrxApi.createActivity({ type: 'Undo', object: like }, comment.groupId) :
-        await TrxApi.createActivity(like, comment.groupId);
+        await TrxApi.createActivity({ type: 'Undo', object: like }, groupStore.defaultGroup.groupId) :
+        await TrxApi.createActivity(like, groupStore.defaultGroup.groupId);
       console.log(res);
       commentStore.updateComment({
         ...comment,

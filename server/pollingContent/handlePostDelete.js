@@ -1,7 +1,8 @@
 const Post = require('../database/post');
 const rumSDK = require('rum-sdk-nodejs');
+const Orphan = require('../database/sequelize/orphan');
 
-module.exports = async (item, group) => {
+module.exports = async (item) => {
   const {
     Data: {
       object: {
@@ -14,7 +15,12 @@ module.exports = async (item, group) => {
   const userAddress = rumSDK.utils.pubkeyToAddress(SenderPubkey);
   const deletedPost = await Post.get(id);
   if (!deletedPost) {
-    return;
+    await Orphan.create({
+      content: item,
+      groupId: item.GroupId,
+      parentId: `${id}`,
+    });
+    throw new Error('Orphan');
   }
   if (userAddress !== deletedPost.userAddress) {
     return;

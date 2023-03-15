@@ -86,7 +86,6 @@ const bulkAppendExtra = async (items, options = {}) => {
 
   if (options.viewer) {
     const likedMap = await getCounterMap({
-      counterName: 'commentLike',
       userAddress: options.viewer,
       items
     });
@@ -112,7 +111,6 @@ const bulkAppendExtra = async (items, options = {}) => {
 
 const getCounterMap = async (p) => {
   const counters = await UniqueCounter.bulkGet(p.items.map((item) => ({
-    name: p.counterName,
     objectId: item.id,
     userAddress: p.userAddress
   })));

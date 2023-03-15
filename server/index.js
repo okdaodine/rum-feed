@@ -11,6 +11,7 @@ const views = require('koa-views');
 const Socket = require('./socket');
 
 const pollingContent = require('./pollingContent');
+const pollingV1Content = require('./pollingV1Content');
 require('./mixin');
 
 const ping = require('./routes/ping');
@@ -27,8 +28,9 @@ const image = require('./routes/image');
 const relation = require('./routes/relation');
 const config = require('./routes/config');
 const sitemap = require('./routes/sitemap');
-const wallet = require('./routes/wallet');
 const view = require('./routes/view');
+const permission = require('./routes/permission');
+const v1Content = require('./routes/v1Content');
 
 const {
   errorHandler,
@@ -67,9 +69,10 @@ router.use('/api/users', user.routes(), user.allowedMethods());
 router.use('/api/images', image.routes(), image.allowedMethods());
 router.use('/api/relations', relation.routes(), relation.allowedMethods());
 router.use('/api/:groupId/trx', trx.routes(), trx.allowedMethods());
+router.use('/api/:groupId/permission', permission.routes(), permission.allowedMethods());
 router.use('/api/config', config.routes(), config.allowedMethods());
+router.use('/api/v1/contents', v1Content.routes(), v1Content.allowedMethods());
 router.use('/api/sitemap.txt', sitemap.routes(), sitemap.allowedMethods());
-router.use('/api/wallets', wallet.routes(), wallet.allowedMethods());
 
 router.use('(.*)', view.routes(), view.allowedMethods());
 
@@ -85,7 +88,8 @@ server.listen(port, () => {
   console.log(`Node.js v${process.versions.node}`);
   console.log(`Server run at ${port}`);
   setTimeout(() => {
-    pollingContent(config.polling?.duration || 1000);
+    pollingContent();
+    pollingV1Content();
   }, 2000);
 });
 

@@ -6,6 +6,7 @@ export * from './profile';
 export * from './notification';
 export * from './common';
 export * from './user';
+export * from './vault';
 export * from './relation';
 export * from './config';
-export * from './wallet';
+export * from './v1Content';

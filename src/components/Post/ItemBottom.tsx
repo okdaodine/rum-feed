@@ -34,6 +34,7 @@ export default observer((props: IProps) => {
     postStore,
     modalStore,
     userStore,
+    groupStore,
   } = useStore();
   const { post } = props;
   const inPostDetail = props.where.startsWith('postDetail');
@@ -65,8 +66,8 @@ export default observer((props: IProps) => {
         }
       };
       const res = liked ?
-        await TrxApi.createActivity({ type: 'Undo', object: like }, post.groupId) :
-        await TrxApi.createActivity(like, post.groupId);
+        await TrxApi.createActivity({ type: 'Undo', object: like }, groupStore.defaultGroup.groupId) :
+        await TrxApi.createActivity(like, groupStore.defaultGroup.groupId);
       console.log(res);
       postStore.updatePost({
         ...post,
@@ -100,7 +101,7 @@ export default observer((props: IProps) => {
           type: 'Note',
           id: postId,
         },
-      }, post.groupId);
+      }, groupStore.postGroup.groupId);
       console.log(res);
     } catch (err) {
       console.log(err);
@@ -130,7 +131,7 @@ export default observer((props: IProps) => {
               {
                 'dark:text-white dark:text-opacity-80 text-black text-opacity-60 font-bold': liked,
               },
-              'flex items-center pl-0 md:pl-2 mr-3 cursor-pointer tracking-wide',
+              'flex items-center pl-0 mr-3 cursor-pointer tracking-wide',
             )}
             onClick={() => {
               updateCounter(post.id);

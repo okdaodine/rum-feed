@@ -7,7 +7,7 @@ const allLang = ['en', 'cn'] as const;
 export type AllLanguages = typeof allLang[number];
 type LangData<T> = Record<AllLanguages, { content: T }>;
 
-const defaultLang = (process.env.REACT_APP_DEFAULT_LANG || 'en') as AllLanguages;
+const defaultLang = (process.env.REACT_APP_DEFAULT_LANG || 'cn') as AllLanguages;
 
 const state = observable({
   lang: defaultLang,

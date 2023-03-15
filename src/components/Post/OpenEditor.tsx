@@ -25,27 +25,28 @@ const PostEditor = observer((props: {
 }) => {
   const { userStore, groupStore } = useStore();
   const matchedGroupId = window.location.pathname.split('/groups/')[1];
-  const groupId = matchedGroupId ? matchedGroupId : groupStore.defaultGroup.groupId;
+  const groupId = matchedGroupId ? matchedGroupId : groupStore.postGroup.groupId;
   const group = groupStore.map[groupId];
+
   const submit = async (activity: IActivity) => {
     if (!userStore.isLogin) {
       openLoginModal();
       return;
     }
-    const res = await TrxApi.createActivity(activity, group.groupId);
+    const res = await TrxApi.createActivity(activity, groupId);
     console.log(res);
     const post: IPost = {
       content: activity.object?.content || '',
       images: ((activity.object?.image as []) || []).map(image => Base64.getUrl(image as any as IImage)),
       userAddress: userStore.address,
-      groupId: group.groupId,
+      groupId,
       trxId: res.trx_id,
       id: activity.object?.id ?? '',
       latestTrxId: '',
       storage: TrxStorage.cache,
       commentCount: 0,
       likeCount: 0,
-      imageCount: ((activity.object?.image as []) || []).length,
+      imageCount: ((activity.image as []) || []).length,
       timestamp: Date.now(),
       extra: {
         userProfile: toJS(userStore.profile),

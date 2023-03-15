@@ -1,11 +1,6 @@
 const { Op } = require("sequelize");
 const UniqueCounter = require('./sequelize/uniqueCounter');
 
-exports.CounterName = {
-  postLike: 'postLike',
-  commentLike: 'commentLike',
-}
-
 exports.upsert = async (item) => {
   await UniqueCounter.upsert(item);
 };

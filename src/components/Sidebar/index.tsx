@@ -36,7 +36,9 @@ import Tabs from './Tabs';
 import { scrollToTop } from 'components/TopPlaceHolder';
 import copy from 'copy-to-clipboard';
 import { lang } from 'utils/lang';
-import openLanguageModal from 'components/openLanguageModal';
+import { RiTwitterLine } from 'react-icons/ri';
+import openTweetModal from './openTweetModal';
+import store from 'store2';
 
 export default observer(() => {
   const {
@@ -136,7 +138,7 @@ export default observer(() => {
       ok: async () => {
         confirmDialogStore.hide();
         await sleep(400);
-        userStore.clear();
+        store.clear();
         modalStore.pageLoading.show();
         window.location.href = `/`;
       },
@@ -178,6 +180,13 @@ export default observer(() => {
           )}
           {userStore.isLogin && (
             <div className="flex items-center">
+              {userStore.vaultAppUser.status === 'allow' && (isPc || isMyUserPage) && (
+                <div
+                  className="px-3 md:p-1 cursor-pointer mr-4"
+                  onClick={openTweetModal}>
+                  <RiTwitterLine className="text-22 dark:text-white text-neutral-500 opacity-70 dark:opacity-60 dark:md:opacity-90 dark:dark:text-white" />
+                </div>
+              )}
               {(isPc || isMyUserPage) && (
                 <div
                   className="p-1 cursor-pointer mr-1 md:mr-4"
@@ -262,14 +271,6 @@ export default observer(() => {
                       }}>
                       <div className="py-1 px-3 flex items-center">
                         {lang.me}
-                      </div>
-                    </MenuItem>
-                    <MenuItem onClick={() => {
-                      openLanguageModal();
-                      state.anchorEl = null;
-                    }}>
-                      <div className="py-1 px-3 flex items-center">
-                        {lang.language}
                       </div>
                     </MenuItem>
                     <MenuItem onClick={() => {
