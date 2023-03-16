@@ -55,13 +55,13 @@ module.exports = (duration = config.polling?.duration || 1000) => {
 
 const startJob = async (groupId, duration) => {
   while (true) {
-    const groupCount = await Group.count({ where: { groupId } })
-    if (groupCount === 0) {
+    const group = await Group.findOne({ where: { groupId } });
+    if (!group) {
       delete jobShareData.jobMap[groupId];
       break;
     }
-    const group = jobShareData.activeGroupMap[groupId];
-    if (group) {
+    const isActive = !!jobShareData.activeGroupMap[groupId];
+    if (isActive) {
       const isLazyGroup = (config.polling?.lazyGroupIds || []).includes(group.groupId);
       if (isLazyGroup) {
         await sleep(5 * 60 * 1000);
