@@ -29,11 +29,20 @@ async function create(ctx) {
 async function migrate(ctx) {
   const { url, oldGroupId } = ctx.request.body;
   assert(url, Errors.ERR_IS_REQUIRED('url'));
-  const groupId = await createSeed(url);
   const oldGroupQuery = { where: { groupId: oldGroupId } };
+
   const oldGroup = await Group.findOne(oldGroupQuery);
 
-  await Group.destroy(oldGroupQuery);
+  if (url === oldGroupId) {
+    await Group.destroy(oldGroupQuery);
+  }
+
+  const groupId = await createSeed(url);
+
+  if (url !== oldGroupId) {
+    await Group.destroy(oldGroupQuery);
+  }
+
   await Seed.destroy(oldGroupQuery);
   await Orphan.destroy(oldGroupQuery);
 
