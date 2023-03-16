@@ -77,7 +77,7 @@ module.exports = async (item, group) => {
     if (value > 0 && from !== post.userAddress) {
       const notification = {
         groupId: '',
-        status: group.loaded ? 'unread' : 'read',
+        status: 'read',
         type: 'like',
         toObjectId: post.trxId,
         toObjectType: 'post',
@@ -85,7 +85,7 @@ module.exports = async (item, group) => {
         from,
         fromObjectId: '',
         fromObjectType: '',
-        timestamp: Date.now()
+        timestamp: parseInt(String(item.TimeStamp / 1000000), 10)
       };
       await Notification.create(notification);
       if (group.loaded) {
@@ -108,7 +108,7 @@ module.exports = async (item, group) => {
     if (value > 0 && from !== comment.userAddress) {
       const notification = {
         groupId: '',
-        status: group.loaded ? 'unread' : 'read',
+        status: 'read',
         type: 'like',
         toObjectId: comment.trxId,
         toObjectType: 'comment',
@@ -116,7 +116,7 @@ module.exports = async (item, group) => {
         from,
         fromObjectId: '',
         fromObjectType: '',
-        timestamp: Date.now()
+        timestamp: parseInt(String(item.TimeStamp / 1000000), 10)
       };
       await Notification.create(notification);
       if (group.loaded) {

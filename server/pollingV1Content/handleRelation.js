@@ -38,7 +38,7 @@ module.exports = async (item) => {
     if (group) {
       const notification = {
         groupId: '',
-        status: group.loaded ? 'unread' : 'read',
+        status: 'read',
         type: 'follow',
         toObjectId: '',
         toObjectType: '',
@@ -46,7 +46,7 @@ module.exports = async (item) => {
         from: relation.from,
         fromObjectId: '',
         fromObjectType: '',
-        timestamp: Date.now()
+        timestamp: parseInt(String(item.TimeStamp / 1000000), 10)
       };
       await Notification.create(notification);
       if (group.loaded) {
