@@ -43,7 +43,6 @@ export default observer((props: IProps) => {
     snackbarStore,
     userStore,
     modalStore,
-    groupStore,
     confirmDialogStore
   } = useStore();
   const hasComments = props.post.commentCount > 0;
