@@ -17,7 +17,7 @@ export function createGroupStore() {
     },
 
     get relationGroup() {
-      return Object.values(this.map).find(group => group.extra.rawGroup.appKey.includes('relations')) || this.defaultGroup;
+      return Object.values(this.map).find(group => group.groupName.toLowerCase().includes('relations') || group.extra.rawGroup.appKey.includes('relations')) || this.defaultGroup;
     },
 
     get total() {

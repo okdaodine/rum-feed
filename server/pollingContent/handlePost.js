@@ -66,8 +66,8 @@ const notify = async (id) => {
       const name = post.extra.userProfile.name.split('\n')[0];
       Mixin.notifyByBot({
         iconUrl: post.extra.userProfile.avatar,
-        title: (post.content || '').slice(0, 30) || 'Image',
-        description: truncateByBytes(name, 14),
+        title: (post.content || '').slice(0, 30) || '图片',
+        description: `${truncateByBytes(name, 14)} 发布内容`,
         url: `${config.origin}/posts/${post.id}`
       });
     }
