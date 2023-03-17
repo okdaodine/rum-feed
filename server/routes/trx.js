@@ -30,7 +30,6 @@ async function get(ctx) {
     attributes: { exclude: ['id', 'log', 'groupId', 'Data'] },
     where: { GroupId: ctx.params.groupId, TrxId: ctx.params.trxId }
   });
-  console.log(content);
   assert(content, Errors.ERR_NOT_FOUND('trx'));
   ctx.body = content;
 }
