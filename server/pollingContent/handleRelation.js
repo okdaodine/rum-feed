@@ -31,7 +31,7 @@ module.exports = async (item, group) => {
       from: from,
       fromObjectId: '',
       fromObjectType: '',
-      timestamp: Date.now()
+      timestamp: parseInt(String(item.TimeStamp / 1000000), 10)
     };
     await Notification.create(notification);
     if (group.loaded) {

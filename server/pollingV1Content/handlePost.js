@@ -2,10 +2,6 @@ const Post = require('../database/post');
 const Comment = require('../database/comment');
 const UniqueCounter = require('../database/uniqueCounter');
 const rumSDK = require('rum-sdk-nodejs');
-const { getSocketIo } = require('../socket');
-const config = require('../config');
-const Mixin = require('../mixin');
-const truncateByBytes = require('../utils/truncateByBytes');
 const V1Content = require('../database/v1Content');
 
 module.exports = async (item, group) => {
@@ -75,9 +71,6 @@ module.exports = async (item, group) => {
     userAddress: post.userAddress,
     status: 'pending'
   });
-  if (group.loaded) {
-    await notify(post.id);
-  }
 }
 
 const pack = async item => {
@@ -116,21 +109,3 @@ const pack = async item => {
     extra
   };
 }
-
-const notify = async (id) => {
-  const post = await Post.get(id, {
-    withReplacedImage: true,
-    withExtra: true
-  });
-  if (post) {
-    getSocketIo().emit('post', post);
-    const name = post.extra.userProfile.name.split('\n')[0];
-    Mixin.notifyByBot({
-      iconUrl: post.extra.userProfile.avatar,
-      title: (post.content || '').slice(0, 30) || '图片',
-      description: `${truncateByBytes(name, 14)} 发布内容`,
-      url: `${config.origin}/posts/${post.id}`
-    });
-  }
-}
-

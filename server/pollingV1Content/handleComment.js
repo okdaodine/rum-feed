@@ -3,10 +3,6 @@ const Comment = require('../database/comment');
 const Notification = require('../database/notification');
 const rumSDK = require('rum-sdk-nodejs');
 const { trySendSocket } = require('../socket');
-const { getSocketIo } = require('../socket');
-const config = require('../config');
-const Mixin = require('../mixin');
-const truncateByBytes = require('../utils/truncateByBytes');
 const UniqueCounter = require('../database/uniqueCounter');
 const V1Content = require('../database/v1Content');
 
@@ -52,10 +48,6 @@ module.exports = async (item, group) => {
     userAddress: comment.userAddress,
     status: 'pending'
   });
-
-  if (group.loaded) {
-    await notify(comment.trxId);
-  }
 
   const { objectId, threadId, replyId } = comment;
   const from = comment.userAddress;
@@ -185,21 +177,4 @@ const pack = async item => {
     }
   }
   return comment;
-}
-
-const notify = async (trxId) => {
-  const comment = await Comment.get(trxId, {
-    withReplacedImage: true,
-    withExtra: true
-  });
-  if (comment) {
-    getSocketIo().emit('comment', comment);
-    const name = comment.extra.userProfile.name.split('\n')[0];
-    Mixin.notifyByBot({
-      iconUrl: comment.extra.userProfile.avatar,
-      title: (comment.content || '').slice(0, 30) || '图片',
-      description: `${truncateByBytes(name, 14)} 发布评论`,
-      url: `${config.origin}/posts/${comment.objectId}?commentId=${comment.trxId}`
-    });
-  }
 }
