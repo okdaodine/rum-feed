@@ -455,9 +455,7 @@ const Editor = observer((props: IProps) => {
               }
               if (newPreviews.length > 0) {
                 const images = await Promise.all(newPreviews.map(async (preview: PreviewItem) => {
-                  const imageData = (await Base64.getFromBlobUrl(preview.url, {
-                    count: newPreviews.length + imageIdSet.size,
-                  })) as { url: string, kbSize: number };
+                  const imageData = (await Base64.getFromBlobUrl(preview.url)) as { url: string, kbSize: number };
                   return {
                     ...preview,
                     name: `${uuid()}_${preview.name}`,
@@ -471,7 +469,8 @@ const Editor = observer((props: IProps) => {
                 images.forEach((image) => {
                   state.cacheImageIdSet.add(image.id);
                 });
-                if (totalKbSize > 200) {
+                console.log({ totalKbSize });
+                if (totalKbSize > 800) {
                   snackbarStore.show({
                     message: lang.maxByteLength,
                     type: 'error',

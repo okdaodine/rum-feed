@@ -41,9 +41,7 @@ export default {
     return bytesToKb(contentLength);
   },
 
-  getFromBlobUrl(blobUrl: string, options?: {
-    count: number
-  }) {
+  getFromBlobUrl(blobUrl: string) {
     return new Promise((resolve) => {
       const img = new Image();
       if (blobUrl.startsWith('http') && !blobUrl.startsWith(window.location.origin)) {
@@ -51,13 +49,12 @@ export default {
       }
       img.src = blobUrl;
       img.onload = async () => {
-        const count = options ? options.count || 1 : 1;
         const MAX_KB = 200;
         const blobKbSize = await this.getImageKbSize(blobUrl);
 
         const { width, height } = img;
 
-        if (count === 1 && blobKbSize < MAX_KB) {
+        if (blobKbSize < MAX_KB) {
           const url = getDataUrl(img, width, height);
           const kbSize = await this.getImageKbSize(url);
           resolve({
@@ -80,17 +77,18 @@ export default {
           _width = Math.round((_height * width) / height);
         }
 
-        const qualities = [0.8, 0.7, 0.6, 0.5, 0.4, 0.3];
+        let quality = 0.8;
         let url = getDataUrl(img, _width, _height);
         let kbSize = 0;
         let stop = false;
         while (!stop) {
           kbSize = await this.getImageKbSize(url);
-          if (kbSize < (count === 1 ? MAX_KB : MAX_KB / count) || qualities.length === 0) {
+          console.log({ kbSize, quality });
+          if (kbSize < MAX_KB || quality === 0) {
             stop = true;
           } else {
-            const quality = qualities.shift();
             url = getDataUrl(img, _width, _height, quality);
+            quality -= 0.05;
           }
         }
 

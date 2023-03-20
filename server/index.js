@@ -2,7 +2,7 @@ const Koa = require('koa');
 const http = require('http');
 const convert = require('koa-convert');
 const json = require('koa-json');
-const bodyparser = require('koa-bodyparser')();
+const bodyparser = require('koa-bodyparser');
 const logger = require('koa-logger');
 const cors = require('@koa/cors');
 const router = require('koa-router')();
@@ -39,7 +39,7 @@ const {
 const app = new Koa();
 const port = 9000;
  
-app.use(convert(bodyparser));
+app.use(convert(bodyparser({ formLimit:"5mb", jsonLimit:"5mb" })));
 app.use(convert(json()));
 app.use(convert(logger()));
 app.use(cors({
