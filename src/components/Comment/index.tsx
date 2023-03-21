@@ -93,7 +93,7 @@ export default observer((props: IProps) => {
       threadId: '',
       replyId: '',
       userAddress: userStore.address,
-      groupId: groupStore.defaultGroup.groupId,
+      groupId: props.post.groupId,
       trxId: res.trx_id,
       id: activity.object?.id ?? '',
       storage: TrxStorage.cache,
