@@ -49,7 +49,7 @@ export default {
       }
       img.src = blobUrl;
       img.onload = async () => {
-        const MAX_KB = 200;
+        const MAX_KB = 75;
         const blobKbSize = await this.getImageKbSize(blobUrl);
 
         const { width, height } = img;
