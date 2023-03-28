@@ -13,6 +13,7 @@ const Socket = require('./socket');
 const pollingContent = require('./pollingContent');
 const pollingV1Content = require('./pollingV1Content');
 require('./mixin');
+require('./preset');
 
 const ping = require('./routes/ping');
 const group = require('./routes/group');
