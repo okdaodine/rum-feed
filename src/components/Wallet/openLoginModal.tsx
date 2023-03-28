@@ -49,7 +49,7 @@ const Main = observer(() => {
             window.location.href = Vault.getMixinOauthUrl({
               state: keyInHex,
               return_to: encodeURIComponent(window.location.href),
-              scope: 'PROFILE:READ+COLLECTIBLES:READ'
+              scope: 'PROFILE:READ'
             });
           }}
         >
