@@ -1,5 +1,6 @@
 const router = require('koa-router')();
 const V1Content = require('../database/sequelize/v1Content');
+const config = require('../config');
 
 router.get('/', list);
 router.post('/:trxId', done);
@@ -7,6 +8,11 @@ router.get('/summary', summary);
 router.get('/:trxId', get);
 
 async function list(ctx) {
+  if (!config.enabledV1Migration) {
+    ctx.body = [];
+    return;
+  }
+
   const { status, userAddress, raw } = ctx.query;
   const query = {
     where: {},
