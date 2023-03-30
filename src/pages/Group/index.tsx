@@ -159,7 +159,6 @@ export default observer((props: RouteChildrenProps) => {
       return;
     }
     const res = await TrxApi.createActivity(activity, groupId);
-    console.log(res);
     const post: IPost = {
       content: activity.object?.content || '',
       images: (activity.object?.image as [] || []).map(image => base64.getUrl(image as any)) ?? [],

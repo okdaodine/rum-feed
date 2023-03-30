@@ -112,7 +112,7 @@ const Preload = observer(() => {
       const profileExist = await ProfileApi.exist(userStore.address);
       if (!profileExist && !isJWT(token)) {
         const avatar: any = await Base64.getFromBlobUrl(vaultUser.avatar_url || 'https://static-assets.pek3b.qingstor.com/rum-avatars/default.png');
-        const res = await TrxApi.createActivity({
+        await TrxApi.createActivity({
           type: "Create",
           object: {
             type: 'Profile',
@@ -128,7 +128,6 @@ const Preload = observer(() => {
             },
           }
         }, groupStore.defaultGroup.groupId);
-        console.log(res);
         userStore.setProfile({
           name: vaultUser.display_name,
           avatar: avatar.url,

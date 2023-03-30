@@ -34,7 +34,6 @@ const PostEditor = observer((props: {
       return;
     }
     const res = await TrxApi.createActivity(activity, groupId);
-    console.log(res);
     const post: IPost = {
       content: activity.object?.content || '',
       images: ((activity.object?.image as []) || []).map(image => Base64.getUrl(image as any as IImage)),

@@ -200,10 +200,9 @@ export default observer((props: RouteChildrenProps) => {
             id: userAddress,
           },
         };
-        const res = type === 'follow' ?
+        type === 'follow' ?
           await TrxApi.createActivity(follow, groupStore.relationGroup.groupId) : 
           await TrxApi.createActivity({ type: 'Undo', object: follow }, groupStore.relationGroup.groupId);
-        console.log(res);
       }
       if (['mute', 'unmute'].includes(type)) {
         const block = {
@@ -213,10 +212,9 @@ export default observer((props: RouteChildrenProps) => {
             id: userAddress,
           },
         }
-        const res = type === 'mute' ?
+        type === 'mute' ?
           await TrxApi.createActivity(block, groupStore.relationGroup.groupId) :
           await TrxApi.createActivity({ type: 'Undo', object: block }, groupStore.relationGroup.groupId);
-        console.log(res);
       }
       if (type.includes('follow')) {
         userStore.updateUser(userAddress, {

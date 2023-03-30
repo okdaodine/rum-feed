@@ -74,25 +74,23 @@ const UserList = observer((props: IProps) => {
     try {
 
       if (type === 'unfollow') {
-        const res = await TrxApi.createActivity({
+        await TrxApi.createActivity({
           type: 'Ignore',
           object: {
             type: 'Person',
             id: relation.to,
           },
         }, groupStore.relationGroup.groupId);
-        console.log(res);
       }
 
       if (type === 'unmute') {
-        const res = await TrxApi.createActivity({
+        await TrxApi.createActivity({
           type: 'Unblock',
           object: {
             type: 'Person',
             id: relation.to,
           },
         }, groupStore.relationGroup.groupId);
-        console.log(res);
       }
       
       state.relations = state.relations.filter(r => r.to !== relation.to);
