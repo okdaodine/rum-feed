@@ -50,6 +50,8 @@ const Notification = require('../database/sequelize/notification');
     return;
   }
 
+  await V1Content.update({ status: 'pending' }, { where: { status: 'done' } });
+
   const v1ContentTrxIdSet = new Set(v1ContentTrxIds);
   for (const [index, contentTrxId] of Object.entries(contentTrxIds)) {
     if (!v1ContentTrxIdSet.has(contentTrxId)) {
