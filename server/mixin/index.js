@@ -95,6 +95,7 @@ exports.notifyByBot = async (data) => {
           shareable: true
         });
       } catch (err) {
+        await sleep(2000);
         console.log(err);
       }
     }

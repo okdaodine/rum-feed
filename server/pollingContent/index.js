@@ -116,6 +116,9 @@ const handleContents = async (groupId, contents) => {
   const group = await Group.findOne({ where: { groupId } });
   try {
     for (const content of contents) {
+      if (process.env.NODE_ENV !== 'production') {
+        console.log(content);
+      }
       let success = false;
       let log = '';
       try {
