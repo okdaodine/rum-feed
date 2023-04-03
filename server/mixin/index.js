@@ -72,7 +72,17 @@ exports.notifyByBot = async (data) => {
 
     isBusy = true;
 
-    const botSubs = await BotSubscription.findAll({ where: { status: 'open' } });
+    const botSubs = [];
+    const limit = 50;
+    let fetchedAll = false;
+    while (!fetchedAll) {
+      const items = await BotSubscription.findAll({ where: { status: 'open' }, limit });
+      if (items.length < limit) {
+        fetchedAll = true;
+      }
+      botSubs.push(...items);
+      await sleep(500);
+    }
     const client = MixinApi({
       keystore: {
         ...config.mixinBotKeystore,
