@@ -12,7 +12,7 @@ router.get('/', async ctx => {
   while (!stop) {
     const _posts = await Post.findAll({
       raw: true,
-      attributes: ['trxId', 'userAddress'],
+      attributes: ['id', 'userAddress'],
       limit: 500,
       offset: Math.max(0, posts.length)
     });
@@ -26,7 +26,7 @@ router.get('/', async ctx => {
       stop = true;
     }
   }
-  const postUrls = posts.map(post => `${origin}/posts/${post.tridxId}`);
+  const postUrls = posts.map(post => `${origin}/posts/${post.id}`);
   const userUrls = _.uniq(posts.map(post => post.userAddress)).map(address => `${origin}/users/${address}`);
   const urls = [...postUrls, ...userUrls];
   console.log(`Got ${urls.length} urls (${postUrls.length} posts + ${userUrls.length} users)`);
