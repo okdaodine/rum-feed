@@ -76,7 +76,7 @@ exports.notifyByBot = async (data) => {
     const limit = 50;
     let fetchedAll = false;
     while (!fetchedAll) {
-      const items = await BotSubscription.findAll({ where: { status: 'open' }, limit });
+      const items = await BotSubscription.findAll({ where: { status: 'open' }, offset: botSubs.length, limit });
       if (items.length < limit) {
         fetchedAll = true;
       }
