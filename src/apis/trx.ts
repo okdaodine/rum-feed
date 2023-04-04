@@ -11,6 +11,8 @@ export default {
     const { groupStore, userStore } = (window as any).store as Store;
     const group = groupStore.map[groupId];
 
+    activity.published = new Date().toISOString();
+
     console.log(activity, { group: group.groupName });
 
     const payload = await utils.signTrx({

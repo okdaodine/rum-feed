@@ -30,7 +30,8 @@ const pack = async item => {
         name,
         content,
         image,
-      }
+      },
+      published,
     },
     SenderPubkey,
     TimeStamp,
@@ -45,7 +46,7 @@ const pack = async item => {
     storage: 'chain',
     commentCount: 0,
     likeCount: 0,
-    timestamp: parseInt(String(TimeStamp / 1000000), 10)
+    timestamp: published ? new Date(published).getTime() : parseInt(TimeStamp.slice(0, 13)),
   }
   if (image) {
     const images = Array.isArray(image) ? image : [image];

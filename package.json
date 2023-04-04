@@ -36,7 +36,7 @@
     "react-router-dom": "^5.0.1",
     "react-scripts": "5.0.1",
     "react-textarea-autosize": "^8.3.4",
-    "rum-sdk-browser": "^2.0.0",
+    "rum-sdk-browser": "^2.0.1",
     "scroll-into-view-if-needed": "^2.2.29",
     "socket.io-client": "^4.5.1",
     "store2": "^2.14.2",

@@ -3445,10 +3445,10 @@ rlp@^2.2.4:
   dependencies:
     bn.js "^5.2.0"
 
-rum-sdk-nodejs@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.npmjs.org/rum-sdk-nodejs/-/rum-sdk-nodejs-2.0.0.tgz#d9057dc8c3581eba69bda9965ee8185d535c61d4"
-  integrity sha512-ssLdOXDoIFz3pSXqJfLwS00lYnllGkK789q4jtNc/QgZvetHT49tefQzFUq4YUgdDKJwodVH2JlsZ230aPBHpQ==
+rum-sdk-nodejs@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.npmjs.org/rum-sdk-nodejs/-/rum-sdk-nodejs-2.0.1.tgz#4d0d484e6bc3fc814161e67f9b6d4194c850b1a3"
+  integrity sha512-jB7bM8S5+SZfGtrdxong78N3uV97g8shzjlWPOed1att83g9VtlFsNpCnLYK0tgyf6uUBmKI6kLyLNH3+Noylw==
   dependencies:
     "@types/crypto-js" "^4.1.1"
     "@types/node-localstorage" "^1.3.0"

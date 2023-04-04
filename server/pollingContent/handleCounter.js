@@ -106,7 +106,8 @@ const pack = async (item) => {
     TrxId,
     Data: {
       type,
-      object
+      object,
+      published,
     },
     SenderPubkey,
     GroupId,
@@ -120,7 +121,7 @@ const pack = async (item) => {
     userAddress: rumSDK.utils.pubkeyToAddress(SenderPubkey),
     groupId: GroupId,
     trxId: TrxId,
-    timestamp: parseInt(String(TimeStamp / 1000000), 10)
+    timestamp: published ? new Date(published).getTime() : parseInt(TimeStamp.slice(0, 13)),
   }
   const post = await Post.get(id);
   const comment = await Comment.get(id);
