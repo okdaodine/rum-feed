@@ -44,7 +44,7 @@ const PostEditor = observer((props: {
       storage: TrxStorage.cache,
       commentCount: 0,
       likeCount: 0,
-      imageCount: ((activity.image as []) || []).length,
+      imageCount: ((activity.object?.image as []) || []).length,
       timestamp: Date.now(),
       extra: {
         userProfile: toJS(userStore.profile),
