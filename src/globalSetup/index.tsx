@@ -166,10 +166,12 @@ export default observer(() => {
                 const v1Content = await V1ContentApi.get(trxId);
                 if (v1Content && v1Content.status !== 'done') {
                   const group = groupStore.map[v1Content.groupId];
-                  if (!group.extra.rawGroup.appKey.includes('v1')){
-                    await TrxApi.createActivity(v1Content.data, v1Content.groupId, '', {
+                  if (!group.extra.rawGroup.appKey.includes('v1')) {
+                    await TrxApi.createActivity({
+                      ...v1Content.data,
+                      published: new Date(Number(v1Content.raw.TimeStamp.slice(0, 13))).toISOString()
+                    }, v1Content.groupId, '', {
                       trxId: v1Content.trxId,
-                      timestamp: Number(v1Content.raw.TimeStamp.slice(0, -6)),
                     });
                     await V1ContentApi.done(v1Content.trxId);
                   }

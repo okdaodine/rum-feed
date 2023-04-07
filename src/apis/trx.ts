@@ -6,12 +6,11 @@ import { Store } from 'store';
 export default {
   async createActivity(activity: IActivity, groupId: string, privateKey?: string, options?: {
     trxId?: string;
-    timestamp?: number;
   }) {
     const { groupStore, userStore } = (window as any).store as Store;
     const group = groupStore.map[groupId];
 
-    activity.published = new Date().toISOString();
+    activity.published = activity.published || new Date().toISOString();
 
     console.log(activity, { group: group.groupName });
 
