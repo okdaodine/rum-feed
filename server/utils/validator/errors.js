@@ -29,10 +29,10 @@ const errors = {
       message: `no permission of ${field}`
     };
   },
-  ERR_IS_REQUEST_FAILED() {
+  ERR_IS_REQUEST_FAILED(message) {
     return {
       code: 'ERR_NOT_REQUEST_FAILED',
-      message: `FAIL TO REQUEST`
+      message: message || `FAIL TO REQUEST`
     };
   },
 }

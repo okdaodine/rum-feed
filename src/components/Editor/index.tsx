@@ -442,7 +442,8 @@ const Editor = observer((props: IProps) => {
                 }
                 return !state.cacheImageIdSet.has(preview.id) && (extensions.includes(ext));
               });
-              if (newPreviews.length + imageIdSet.size > imageLImit) {
+              const total = newPreviews.length + imageIdSet.size;
+              if (total > imageLImit) {
                 for (const preview of newPreviews) {
                   preview.id = uuid();
                   state.cacheImageIdSet.add(preview.id);
@@ -455,7 +456,7 @@ const Editor = observer((props: IProps) => {
               }
               if (newPreviews.length > 0) {
                 const images = await Promise.all(newPreviews.map(async (preview: PreviewItem) => {
-                  const imageData = (await Base64.getFromBlobUrl(preview.url)) as { url: string, kbSize: number };
+                  const imageData = (await Base64.getFromBlobUrl(preview.url, 45 + 10 * (imageLImit - total))) as { url: string, kbSize: number };
                   return {
                     ...preview,
                     name: `${uuid()}_${preview.name}`,

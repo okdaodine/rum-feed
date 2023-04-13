@@ -17,10 +17,10 @@ async function sendTrx(ctx) {
   } catch (err) {
     console.log(err);
     const { status } = err.response || {};
-    if (status > 200 && status < 500) {
+    if (status > 400 && status < 500) {
       throws(Errors.ERR_NO_PERMISSION('request'));
     } else {
-      throws(Errors.ERR_IS_REQUEST_FAILED());
+      throws(Errors.ERR_IS_REQUEST_FAILED(err.response?.data?.message || err.message));
     }
   }
 }

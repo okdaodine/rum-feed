@@ -41,7 +41,7 @@ export default {
     return bytesToKb(contentLength);
   },
 
-  getFromBlobUrl(blobUrl: string) {
+  getFromBlobUrl(blobUrl: string, maxKB?: number) {
     return new Promise((resolve) => {
       const img = new Image();
       if (blobUrl.startsWith('http') && !blobUrl.startsWith(window.location.origin)) {
@@ -49,7 +49,10 @@ export default {
       }
       img.src = blobUrl;
       img.onload = async () => {
-        const MAX_KB = 75;
+        const MAX_KB = maxKB || 50;
+        
+        console.log({ MAX_KB });
+
         const blobKbSize = await this.getImageKbSize(blobUrl);
 
         const { width, height } = img;
