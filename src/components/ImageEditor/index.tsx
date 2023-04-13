@@ -428,5 +428,6 @@ export const getCroppedImg = (
     state.dHeight,
   );
 
-  return canvas.toDataURL(mimeType || 'image/png', 0.65);
+  console.log({ mimeType });
+  return canvas.toDataURL('image/jpeg', 0.9);
 };
