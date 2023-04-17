@@ -56,6 +56,7 @@ export default observer((props: RouteChildrenProps) => {
     submitting: false,
     userListType: 'following' as ('following' | 'followers' | 'muted'),
     userAddressChanged: false,
+    exporting: false,
   }));
   const { userAddress } = props.match?.params as any;
   const { profile } = state;
@@ -252,7 +253,9 @@ export default observer((props: RouteChildrenProps) => {
         });
         return; 
       }
+      state.exporting = true;
       const exportedContents = await ContentApi.export(userStore.pubKey);
+      await sleep(400);
       confirmDialogStore.show({
         content: `<a id="download-export-data" href='data:plain/text,${JSON.stringify(exportedContents)}' download='${userStore.profile.name}_${userStore.pubKey}.json'>${lang.youAreSureTo(lang.exportData)}</a>`,
         ok: () => {
@@ -267,6 +270,7 @@ export default observer((props: RouteChildrenProps) => {
         type: 'error',
       });
     }
+    state.exporting = false;
   }
 
   if (!state.fetched || !user) {
@@ -423,6 +427,7 @@ export default observer((props: RouteChildrenProps) => {
                         }}>  
                           <div className="py-1 pl-1 pr-3 flex items-center dark:text-white dark:text-opacity-80 text-neutral-700">
                             <BiExport className="mr-2 text-16" /> {lang.exportData}
+                            {state.exporting && <div className="ml-2"><Loading size={12} /></div>}
                           </div>
                         </MenuItem>
                       )}
