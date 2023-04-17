@@ -4,7 +4,7 @@ import { isMobile } from 'utils/env';
 import Button from 'components/Button';
 import { BiEditAlt } from 'react-icons/bi';
 import { useStore } from 'store';
-import { ProfileApi, UserApi, PostApi } from 'apis';
+import { ProfileApi, UserApi, PostApi, ContentApi } from 'apis';
 import { IProfile } from 'apis/types';
 import openProfileEditor from 'components/openProfileEditor';
 import PostItem from 'components/Post/Item';
@@ -18,7 +18,7 @@ import { RiMoreFill } from 'react-icons/ri';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import { BsFillMicMuteFill } from 'react-icons/bs';
-import { BiLogOutCircle } from 'react-icons/bi';
+import { BiLogOutCircle, BiExport } from 'react-icons/bi';
 import UserListModal from './UserListModal';
 import openLoginModal from 'components/Wallet/openLoginModal';
 import { TrxApi } from 'apis';
@@ -241,6 +241,34 @@ export default observer((props: RouteChildrenProps) => {
     state.submitting = false;
   }
 
+  const exportData = async () => {
+    try {
+      if (isMobile) {
+        confirmDialogStore.show({
+          content: lang.pleaseExportDataOnDesktop,
+          ok: () => {
+            confirmDialogStore.hide();
+          },
+        });
+        return; 
+      }
+      const exportedContents = await ContentApi.export(userStore.pubKey);
+      confirmDialogStore.show({
+        content: `<a id="download-export-data" href='data:plain/text,${JSON.stringify(exportedContents)}' download='${userStore.profile.name}_${userStore.pubKey}.json'>${lang.youAreSureTo(lang.exportData)}</a>`,
+        ok: () => {
+          (document.querySelector('#download-export-data') as any).click();
+          confirmDialogStore.hide();
+        },
+      });
+    } catch (err) {
+      console.log(err);
+      snackbarStore.show({
+        message: lang.somethingWrong,
+        type: 'error',
+      });
+    }
+  }
+
   if (!state.fetched || !user) {
     return (
       <div className="pt-[30vh] flex justify-center">
@@ -385,6 +413,16 @@ export default observer((props: RouteChildrenProps) => {
                         }}>  
                           <div className="py-1 pl-1 pr-3 flex items-center dark:text-white dark:text-opacity-80 text-neutral-700">
                             <RiKey2Fill className="mr-2 text-16" /> {lang.wallet}
+                          </div>
+                        </MenuItem>
+                      )}
+                      {isMyself && (
+                        <MenuItem onClick={() => {
+                          state.anchorEl = null;
+                          exportData();
+                        }}>  
+                          <div className="py-1 pl-1 pr-3 flex items-center dark:text-white dark:text-opacity-80 text-neutral-700">
+                            <BiExport className="mr-2 text-16" /> {lang.exportData}
                           </div>
                         </MenuItem>
                       )}

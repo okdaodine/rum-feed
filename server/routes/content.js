@@ -2,6 +2,7 @@ const router = require('koa-router')();
 const Content = require('../database/sequelize/content');
 const { assert, Errors } = require('../utils/validator');
 
+router.get('/:userPubKey/export', exportContents);
 router.get('/:groupId', list);
 router.get('/:groupId/:trxId', get);
 
@@ -34,5 +35,17 @@ async function get(ctx) {
   assert(content, Errors.ERR_NOT_FOUND('content'));
   ctx.body = content;
 } 
+
+async function exportContents(ctx) {
+  const contents = await Content.findAll({
+    where: {
+      SenderPubkey: ctx.params.userPubKey
+    },
+    attributes: {
+      exclude: ['id', 'log', 'groupId', 'Expired']
+    }
+  });
+  ctx.body = contents;
+}
 
 module.exports = router;

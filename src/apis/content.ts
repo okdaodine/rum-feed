@@ -17,4 +17,9 @@ export default {
     const item: IContent = await request(`${API_BASE_URL}/contents/${groupId}/${trxId}`);
     return item;
   },
+
+  async export(pubKey: string) {
+    const items: IContent[] = await request(`${API_BASE_URL}/contents/${pubKey}/export`);
+    return items;
+  },
 }

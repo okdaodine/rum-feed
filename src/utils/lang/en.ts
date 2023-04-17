@@ -137,5 +137,7 @@ export const content = {
   connected: 'Linked',
   nodes: 'nodes',
   synced: 'Got',
-  contents: 'contents'
+  contents: 'contents',
+  exportData: 'Export',
+  pleaseExportDataOnDesktop: 'Please export data on desktop',
 };

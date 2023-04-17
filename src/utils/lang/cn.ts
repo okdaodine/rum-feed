@@ -139,6 +139,9 @@ export const content = {
   connected: '连接',
   nodes: '个节点',
   synced: '同步',
-  contents: '条内容'};
+  contents: '条内容',
+  exportData: '导出数据',
+  pleaseExportDataOnDesktop: '请使用电脑来导出数据哦',
+};
 
 export type Content = typeof content;

@@ -88,6 +88,9 @@ export default observer(() => {
           return;
         }
         if (e.target && e.target.tagName === 'A') {
+          if (e.target.getAttribute('download')) {
+            return;
+          }
           e.preventDefault();
           e.stopPropagation();
           const href = e.target.getAttribute('href');
