@@ -43,7 +43,9 @@ async function exportContents(ctx) {
     },
     attributes: {
       exclude: ['id', 'log', 'groupId', 'Expired']
-    }
+    },
+    limit: Math.min(~~ctx.query.limit || 10, 100),
+    offset: ctx.query.offset || 0,
   });
   ctx.body = contents;
 }

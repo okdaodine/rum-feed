@@ -18,8 +18,11 @@ export default {
     return item;
   },
 
-  async export(pubKey: string) {
-    const items: IContent[] = await request(`${API_BASE_URL}/contents/${pubKey}/export`);
+  async export(pubKey: string, options: {
+    offset: number
+    limit: number
+  }) {
+    const items: IContent[] = await request(`${API_BASE_URL}/contents/${pubKey}/export?${qs.stringify(options)}`);
     return items;
   },
 }
