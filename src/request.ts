@@ -1,5 +1,6 @@
 import sleep from 'utils/sleep';
 import { API_BASE_URL } from 'apis/common';
+import store from 'store2';
 
 const BASE = '';
 export default async (url: any, options: any = {}) => {
@@ -41,7 +42,9 @@ export default async (url: any, options: any = {}) => {
     return resData;
   } else {
     if (hasEffectMethod && res.status === 401) {
-      (window as any).store.modalStore.openLogin()
+      store.clear();
+      window.location.href = `${window.location.pathname}?action=openLoginModal`;
+      await sleep(5000);
     }
     throw Object.assign(new Error(), {
       code: resData.code,

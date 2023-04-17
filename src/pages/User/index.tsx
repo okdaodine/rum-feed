@@ -378,7 +378,7 @@ export default observer((props: RouteChildrenProps) => {
                           </div>
                         </MenuItem>
                       )}
-                      {isMyself && !['web3', 'mixin'].includes(userStore.vaultAppUser.provider) && (
+                      {isMyself && userStore.privateKey && (
                         <MenuItem onClick={() => {
                           state.anchorEl = null;
                           openWalletModal(userStore.privateKey);
@@ -388,7 +388,7 @@ export default observer((props: RouteChildrenProps) => {
                           </div>
                         </MenuItem>
                       )}
-                      {isMyself && (
+                      {isMyself && isMobile && (
                         <MenuItem onClick={() => {
                           state.anchorEl = null;
                           confirmDialogStore.show({
