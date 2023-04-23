@@ -89,13 +89,9 @@ exports.notifyByBot = async (data) => {
         user_id: config.mixinBotKeystore.user_id || config.mixinBotKeystore.client_id
       },
     });
-    for (const [index, botSub] of botSubs.entries()) {
+    for (const botSub of botSubs) {
       try {
-        if ((index + 1) % 50 === 0) {
-          await sleep(2000);
-        } else {
-          await sleep(100);
-        }
+        await sleep(100);
         client.message.sendAppCard(botSub.userId, {
           icon_url: iconUrl,
           title,
