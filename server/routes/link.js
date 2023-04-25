@@ -10,7 +10,7 @@ router.get('/:url', get);
 
 async function get(ctx) {
   const url = decodeURIComponent(ctx.params.url);
-  assert(/^https?:\/\/[\w-]+(\.[\w-]+)+[/#?]?.*$/.test(url), Errors.ERR_IS_INVALID('url'));
+  assert(/(https?:\/\/)([\w&@.:/?=-]+)/g.test(url), Errors.ERR_IS_INVALID('url'));
   if (config.excludedLinks) {
     for (const excludedLink of config.excludedLinks || []) {
       assert(!url.includes(excludedLink), Errors.ERR_IS_INVALID('url'));

@@ -12,7 +12,6 @@ module.exports = async (url, options) => {
                       fit: sharp.fit.inside,
                       withoutEnlargement: true
                     })
-                    .jpeg({ quality })
                     .toBuffer();
     const length = buffer.length;
     const kbSize = length / 1024;

@@ -26,18 +26,19 @@ router.get('/', async ctx => {
       }
     }
     let html = await fs.promises.readFile('./build/index.html', 'utf-8');
+    html = html.replace(/(?<=<\/title>)(([\w\W])*(?=<script defer="defer"))/, () => '');
     html = html.replace(/(?<="root">)(.*(?=<\/div\>))/, () => `<article class="invisible"><div>${content}</div></article>`);
     html = html.replace(/(?<=<title>)(.*(?=<\/title>))/, () => title);
     html = html.replace(/<\/title>/, () => [
       '</title>',
-      `<meta property="og:site_name" content="${siteName}" />`,
-      `<meta property="og:title" content="${userName}">`,
-      `<meta property="og:description" content="${content}">`,
-      `<meta property="og:image" content="${image}">`,
-      `<meta property="twitter:site" content="@Twitter" />`,
-      `<meta property="twitter:card" content="summary" />`,
-      `<meta property="twitter:image" content="${image}" />`,
-      `<meta property="twitter:title" content="${title}" />`,
+      `<meta property="og:site_name" content="${siteName}" />\n`,
+      `<meta property="og:title" content="${userName}" />\n`,
+      `<meta property="og:description" content="${content}" />\n`,
+      `<meta property="og:image" content="${image}" />\n`,
+      `<meta property="twitter:site" content="@Twitter" />\n`,
+      `<meta property="twitter:card" content="summary" />\n`,
+      `<meta property="twitter:image" content="${image}" />\n`,
+      `<meta property="twitter:title" content="${title}" />\n`,
     ].join(''));
     ctx.type = 'text/html';
     ctx.body = html;
@@ -65,17 +66,18 @@ router.get('/', async ctx => {
       title = `${userName} - ${siteName}`;
     }
     let html = await fs.promises.readFile('./build/index.html', 'utf-8');
+    html = html.replace(/(?<=<\/title>)(([\w\W])*(?=<script defer="defer"))/, () => '');
     html = html.replace(/(?<="root">)(.*(?=<\/div\>))/, () => `<article class="invisible"><div>${content}</div></article>`)
     html = html.replace(/(?<=<title>)(.*(?=<\/title>))/, () => title);
     html = html.replace(/<\/title>/, () => [
       '</title>',
-      `<meta property="og:site_name" content="${siteName}" />`,
-      `<meta property="og:title" content="${title}">`,
-      `<meta property="og:image" content="${image}">`,
-      `<meta property="twitter:site" content="@Twitter" />`,
-      `<meta property="twitter:card" content="summary" />`,
-      `<meta property="twitter:image" content="${image}" />`,
-      `<meta property="twitter:title" content="${title}" />`,
+      `<meta property="og:site_name" content="${siteName}" />\n`,
+      `<meta property="og:title" content="${title}" />\n`,
+      `<meta property="og:image" content="${image}" />\n`,
+      `<meta property="twitter:site" content="@Twitter" />\n`,
+      `<meta property="twitter:card" content="summary" />\n`,
+      `<meta property="twitter:image" content="${image}" />\n`,
+      `<meta property="twitter:title" content="${title}" />\n`,
     ].join(''));
     ctx.type = 'text/html';
     ctx.body = html;
