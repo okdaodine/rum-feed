@@ -9,7 +9,7 @@ const Link = sequelize.define('links', {
     autoIncrement: true
   },
   url: {
-    type: Sequelize.STRING,
+    type: Sequelize.TEXT,
     allowNull: false
   },
   data: {
@@ -25,6 +25,6 @@ const Link = sequelize.define('links', {
   }]
 });
 
-Link.sync();
+Link.sync({ force: true });
 
 module.exports = Link;
