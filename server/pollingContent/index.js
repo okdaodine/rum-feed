@@ -77,7 +77,7 @@ const startJob = async (groupId, duration) => {
         if (group.startTrx) {
           listOptions.startTrx = group.startTrx;
         }
-        if (pendingTrxHelper.isTimeOut(group.groupId)) {
+        if (pendingTrxHelper.isTimeOut(group.groupId) && group.status === 'connected') {
           const chainAPIs = await shuffleChainApi(group.groupId);
           if (chainAPIs.length > 1) {
             console.log(`[shuffleChainApi]:`, { groupId, chainAPIs });
