@@ -9,7 +9,7 @@ import { useStore } from 'store';
 import { IComment, IPost } from 'apis/types';
 import ago from 'utils/ago';
 import Fade from '@material-ui/core/Fade';
-import { TiArrowForwardOutline } from 'react-icons/ti';
+import { AiOutlineLink } from 'react-icons/ai';
 import copy from 'copy-to-clipboard';
 import { lang } from 'utils/lang';
 import openLoginModal from 'components/Wallet/openLoginModal';
@@ -321,7 +321,7 @@ export default observer((props: IProps) => {
                   }}
                 >
                   <span className="flex items-center text-20 pr-1 opacity-80">
-                    <TiArrowForwardOutline />
+                    <AiOutlineLink />
                   </span>
                 </div>
               </div>

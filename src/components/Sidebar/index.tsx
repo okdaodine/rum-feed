@@ -6,7 +6,6 @@ import Fade from '@material-ui/core/Fade';
 import { BsPencil } from 'react-icons/bs';
 import openEditor from 'components/Post/OpenEditor';
 import { MdNotificationsNone } from 'react-icons/md';
-import { TiArrowForwardOutline } from 'react-icons/ti';
 import { BsInfo } from 'react-icons/bs';
 import openGroupInfo from 'components/openGroupInfo';
 import Avatar from 'components/Avatar';
@@ -17,7 +16,8 @@ import { useLocation } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
 import { isPc, isMobile } from 'utils/env';
 import { RiSearchLine, RiSearchFill } from 'react-icons/ri';
-import { AiOutlineHome, AiFillHome, AiOutlineSearch, AiOutlineGithub } from 'react-icons/ai';
+import { AiOutlineHome, AiFillHome, AiOutlineSearch, AiOutlineGithub, AiOutlineLink } from 'react-icons/ai';
+import { TiArrowForwardOutline } from 'react-icons/ti';
 import Badge from '@material-ui/core/Badge';
 import classNames from 'classnames';
 import openLoginModal from 'components/Wallet/openLoginModal';
@@ -106,9 +106,22 @@ export default observer(() => {
       openLoginModal();
       return;
     }
-    const post = await openEditor();
+    let retweet;
+    if (isPostPage) {
+      const postId = location.pathname.split('/')[2];
+      if (postId) {
+        retweet = postStore.map[postId];
+      }
+    }
+    const post = await openEditor({
+      retweet
+    });
     if (post) {
       await sleep(200);
+      if (isPostPage) {
+        history.push('/');
+        await sleep(200);
+      }
       scrollToTop();
       await sleep(200);
       if (isMyUserPage) {
@@ -205,16 +218,23 @@ export default observer(() => {
                 </div>
               )}
               {isMobile && isPostPage && (
-                <div
-                  className="p-1 cursor-pointer mr-1"
-                  onClick={() => { 
-                    copy(window.location.href);
-                    snackbarStore.show({
-                      message: lang.copied,
-                    });
-                  }}>
-                  <TiArrowForwardOutline className="text-22 dark:text-white dark:text-opacity-80 text-neutral-400 opacity-80" />
-                </div>
+                <>
+                  <div
+                    className="p-1 cursor-pointer mr-[28px]"
+                    onClick={onOpenEditor}>
+                    <TiArrowForwardOutline className="text-22 dark:text-white dark:text-opacity-80 text-neutral-400 opacity-80" />
+                  </div>
+                  <div
+                    className="p-1 cursor-pointer mr-1"
+                    onClick={() => { 
+                      copy(window.location.href);
+                      snackbarStore.show({
+                        message: lang.copied,
+                      });
+                    }}>
+                    <AiOutlineLink className="text-22 dark:text-white dark:text-opacity-80 text-neutral-400 opacity-80" />
+                  </div>
+                </>
               )}
               <div
                 className="px-6 md:mr-5 md:px-1 py-2 cursor-pointer"

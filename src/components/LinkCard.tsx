@@ -57,7 +57,7 @@ export default observer((props: { url: string }) => {
               </div>
             )}
           </div>
-          <a href={props.url} className="absolute inset-0 z-10"> </a>
+          <a href={props.url} className="absolute inset-0 z-1"> </a>
         </div>
       </div>
     </Fade>

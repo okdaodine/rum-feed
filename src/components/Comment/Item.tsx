@@ -16,7 +16,7 @@ import openPhotoSwipe from 'components/openPhotoSwipe';
 import Images from 'components/Images';
 import { isMobile, isPc } from 'utils/env';
 import Fade from '@material-ui/core/Fade';
-import { TiArrowForwardOutline } from 'react-icons/ti';
+import { AiOutlineLink } from 'react-icons/ai';
 import copy from 'copy-to-clipboard';
 import Tooltip from '@material-ui/core/Tooltip';
 import openLoginModal from 'components/Wallet/openLoginModal';
@@ -361,7 +361,7 @@ export default observer((props: IProps) => {
                     arrow
                     >
                     <div className="flex items-center text-18">
-                      <TiArrowForwardOutline />
+                      <AiOutlineLink />
                     </div>
                   </Tooltip>
                 </div>
