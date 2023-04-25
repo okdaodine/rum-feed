@@ -10,3 +10,4 @@ export * from './vault';
 export * from './relation';
 export * from './config';
 export * from './v1Content';
+export * from './link';

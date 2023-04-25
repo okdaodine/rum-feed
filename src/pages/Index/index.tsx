@@ -90,7 +90,7 @@ export default observer(() => {
     },
   });
 
-  const submitPost = async (activity: IActivity) => {
+  const submitPost = async (activity: IActivity, retweet?: IPost) => {
     if (!userStore.isLogin) {
       openLoginModal();
     return;
@@ -110,9 +110,12 @@ export default observer(() => {
       timestamp: Date.now(),
       extra: {
         userProfile: userStore.profile,
-        groupName: groupStore.defaultGroup.groupName
+        groupName: groupStore.defaultGroup.groupName,
       }
     };
+    if (retweet) {
+      post.extra.retweet = retweet;
+    }
     postStore.addPost(post);
     userStore.updateUser(userStore.address, {
       postCount: userStore.user.postCount + 1
@@ -148,7 +151,7 @@ export default observer(() => {
                     } : {}
                   }
                 };
-                return submitPost(payload);
+                return submitPost(payload, data.retweet);
               }}
               enabledImage
             />

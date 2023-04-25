@@ -295,7 +295,7 @@ export default observer(() => {
             <Fade in={true} timeout={350}>
               <div
                 className='mt-10 w-10 h-10 mx-auto rounded-full flex items-center justify-center cursor-pointer border dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] border-gray-c4'
-                onClick={scrollToTop}
+                onClick={() => scrollToTop()}
               >
                 <MdArrowUpward className="text-20 dark:text-white dark:text-opacity-80 text-gray-af" />
               </div>

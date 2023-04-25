@@ -5,6 +5,9 @@ const UniqueCounter = require('./uniqueCounter');
 const getDefaultProfile = require('../utils/getDefaultProfile');
 const config = require('../config');
 const rumSDK = require('rum-sdk-nodejs');
+const extractUrls = require('../utils/extractUrls');
+const isRetweetUrl = require('../utils/isRetweetUrl');
+const { Op } = require("sequelize");
 
 exports.create = async (item) => {
   return await Post.create(item);
@@ -91,6 +94,40 @@ const bulkAppendExtra = async (items, options = {}) => {
     item.extra.userProfile = profileMap[item.userAddress] || getDefaultProfile(item.userAddress)
     return item;
   });
+
+  if (!options.skipRetweet) {
+    const retweetMap = {};
+    for (const item of items) {
+      const urls = extractUrls(item.content || '').reverse();
+      const retweetUrl = urls.find(url => isRetweetUrl(url));
+      const retweetId = retweetUrl ? new URL(retweetUrl).pathname.split('/')[2] : null;
+      if (retweetId) {
+        retweetMap[retweetId] = [...retweetMap[retweetId] || [], item];
+        item.extra.retweet = null;
+      }
+    }
+    const retweetIds = Object.keys(retweetMap);
+    if (retweetIds.length > 0) {
+      let retweetItems = await Post.findAll({
+        attributes: { exclude: ['images'] },
+        where: {
+          [Op.or]: retweetIds.map(retweetId => ({
+            id: retweetId
+          }))
+        }
+      });
+      retweetItems = retweetItems.map(item => replaceImages(item.toJSON()));
+      retweetItems = await bulkAppendExtra(retweetItems, {
+        viewer: options.viewer,
+        skipRetweet: true,
+      });
+      for (const retweetItem of retweetItems) {
+        for (const item of retweetMap[retweetItem.id] || []) {
+          item.extra.retweet = retweetItem;
+        }
+      }
+    }
+  }
 
 
   return items;

@@ -14,10 +14,13 @@ import sleep from 'utils/sleep';
 import openLoginModal from 'components/Wallet/openLoginModal';
 import { isMobile, isPc } from 'utils/env';
 import { TiArrowForwardOutline } from 'react-icons/ti';
+import { AiOutlineLink } from 'react-icons/ai';
 import { lang } from 'utils/lang';
 import copy from 'copy-to-clipboard';
 import Tooltip from '@material-ui/core/Tooltip';
 import { TrxApi, PostApi } from 'apis';
+import openEditor from 'components/Post/OpenEditor';
+import { scrollToTop } from 'components/TopPlaceHolder';
 
 interface IProps {
   post: IPost
@@ -42,7 +45,10 @@ export default observer((props: IProps) => {
   }));
   const liked = post.extra?.liked;
   const likeCount = post.likeCount;
-  const history = useHistory()
+  const history = useHistory();
+  const fromTwitter = (post.title || '').startsWith('https://twitter.com');
+  const fromWeibo = (post.title || '').startsWith('https://weibo.com');
+  const isTweet = fromTwitter || fromWeibo;
 
   const updateCounter = async (id: string) => {
     if (!userStore.isLogin) {
@@ -117,6 +123,43 @@ export default observer((props: IProps) => {
     state.submitting = false;
   }
 
+  const onOpenEditor = async () => {
+    if (!userStore.isLogin) {
+      openLoginModal();
+      return;
+    }
+    const post = await openEditor({
+      retweet: props.post
+    });
+    if (post) {
+      await sleep(200);
+      if (props.where !== 'postList') {
+        history.push('/');
+        await sleep(200);
+      }
+      scrollToTop();
+      await sleep(200);
+      const isMyUserPage = window.location.pathname === `/users/${userStore.address}`;
+      const isGroupPage = window.location.pathname.startsWith(`/groups/`);
+      if (isMyUserPage) {
+        postStore.addUserPost(post);
+        if (postStore.feedType === 'latest') {
+          postStore.addPost(post);
+        }
+      } else if (isGroupPage) {
+        postStore.addGroupPost(post);
+        if (postStore.feedType === 'latest') {
+          postStore.addPost(post);
+        }
+      } else {
+        postStore.addPost(post);
+      }
+      userStore.updateUser(userStore.address, {
+        postCount: userStore.user.postCount + 1
+      });
+    }
+  };
+   
   return (
     <div>
       {!props.hideBottom && (
@@ -190,6 +233,15 @@ export default observer((props: IProps) => {
               )}
           </div>
           <div
+            className='flex items-center p-2 py-1 ml-[2px] md:ml-0 mr-3 cursor-pointer tracking-wide opacity-9'
+            onClick={onOpenEditor}
+          >
+            <div className="text-20 mr-[4px] opacity-80">
+              <TiArrowForwardOutline />
+            </div>
+            <span className="hidden md:block mr-2">转发</span>
+          </div>
+          <div
             className='flex items-center p-2 py-1 mr-5 cursor-pointer tracking-wide dark:text-white dark:text-opacity-50 opacity-80'
             onClick={() => {
               copy(`${window.origin}/posts/${post.id}`);
@@ -205,11 +257,19 @@ export default observer((props: IProps) => {
               title={lang.copy}
               arrow
               >
-              <div className="text-20 mr-[6px]">
-                <TiArrowForwardOutline />
+              <div className="text-18 mr-[6px]">
+                <AiOutlineLink />
               </div>
             </Tooltip>
           </div>
+          {isTweet && (
+            <div className={classNames({
+              'mr-6': post.userAddress !== userStore.address,
+              '-ml-1 mr-4': post.userAddress === userStore.address,
+            }, "md:mr-8")}>
+              <div dangerouslySetInnerHTML={{ __html: ` <a class="text-sky-400/80 text-12 mt-[3px]" href="${(post.title || '').split(' ')[0]}"}>查看原文</a>` }} />
+            </div>
+          )}
           <div className="mt-[1px]">
             <ContentSyncStatus
               storage={post.storage}

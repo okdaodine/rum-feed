@@ -20,7 +20,7 @@ import { IImage } from 'apis/image';
 import { v4 as uuid } from 'uuid';
 
 const PostEditor = observer((props: {
-  post?: IPost
+  retweet?: IPost
   rs: (result?: any) => void
 }) => {
   const { userStore, groupStore } = useStore();
@@ -28,7 +28,7 @@ const PostEditor = observer((props: {
   const groupId = matchedGroupId ? matchedGroupId : groupStore.defaultGroup.groupId;
   const group = groupStore.map[groupId];
 
-  const submit = async (activity: IActivity) => {
+  const submit = async (activity: IActivity, retweet?: IPost) => {
     if (!userStore.isLogin) {
       openLoginModal();
       return;
@@ -51,6 +51,9 @@ const PostEditor = observer((props: {
         groupName: group.groupName
       }
     };
+    if (retweet) {
+      post.extra.retweet = retweet;
+    }
     props.rs(post);
   }
 
@@ -68,10 +71,10 @@ const PostEditor = observer((props: {
       </div>
       <div className="bg-white dark:bg-[#181818] box-border">
         <Editor
+          retweet={props.retweet}
           groupId={group.groupId}
-          post={props.post}
           editorKey="post"
-          placeholder={props.post ? '' : lang.whatsHappening}
+          placeholder={lang.whatsHappening}
           autoFocus={isPc}
           autoFocusDisabled={isMobile}
           minRows={isPc ? 3 : 5}
@@ -91,7 +94,7 @@ const PostEditor = observer((props: {
                 } : {}
               },
             };
-            return submit(payload);
+            return submit(payload, data.retweet);
           }}
           enabledImage
           disabledEmoji={isMobile}
@@ -102,7 +105,7 @@ const PostEditor = observer((props: {
 });
 
 const ModalWrapper = observer((props: {
-  post?: IPost
+  retweet?: IPost
   close: (result?: any) => void
 }) => {
   const state = useLocalObservable(() => ({
@@ -127,14 +130,14 @@ const ModalWrapper = observer((props: {
   return (
     <Modal open={state.open} onClose={() => close()} hideCloseButton>
       <div ref={PostEditorRef}>
-        <PostEditor post={props.post} rs={close} />
+        <PostEditor retweet={props.retweet} rs={close} />
       </div>
     </Modal>
   )
 });
 
 
-export default (post?: IPost) => new Promise<IPost | null>((rs) => {
+export default (props?: { retweet?: IPost }) => new Promise<IPost | null>((rs) => {
   const div = document.createElement('div');
   document.body.append(div);
   const unmount = () => {
@@ -146,7 +149,7 @@ export default (post?: IPost) => new Promise<IPost | null>((rs) => {
       <ThemeRoot>
         <StoreProvider>
           <ModalWrapper
-            post={post}
+            {...props || {}}
             close={(result) => {
               rs(result);
               setTimeout(unmount, 800);

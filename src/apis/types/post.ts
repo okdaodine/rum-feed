@@ -24,4 +24,5 @@ export interface IPostExtra {
   userProfile: IProfile
   liked?: boolean
   groupName: string
+  retweet?: IPost
 }

@@ -31,6 +31,7 @@ const config = require('./routes/config');
 const sitemap = require('./routes/sitemap');
 const view = require('./routes/view');
 const v1Content = require('./routes/v1Content');
+const link = require('./routes/link');
 
 const {
   errorHandler,
@@ -72,6 +73,7 @@ router.use('/api/:groupId/trx', trx.routes(), trx.allowedMethods());
 router.use('/api/config', config.routes(), config.allowedMethods());
 router.use('/api/v1/contents', v1Content.routes(), v1Content.allowedMethods());
 router.use('/api/sitemap.txt', sitemap.routes(), sitemap.allowedMethods());
+router.use('/api/links', link.routes(), link.allowedMethods());
 
 router.use('(.*)', view.routes(), view.allowedMethods());
 

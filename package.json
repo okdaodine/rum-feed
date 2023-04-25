@@ -9,6 +9,7 @@
     "@rpldy/upload-paste": "^1.1.0",
     "@rpldy/upload-preview": "^1.1.0",
     "@rpldy/uploady": "^1.1.0",
+    "@tailwindcss/line-clamp": "^0.4.4",
     "@types/lodash": "^4.14.182",
     "@types/photoswipe": "^4.1.2",
     "@types/react-avatar-editor": "^13.0.0",

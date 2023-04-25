@@ -1,10 +1,10 @@
 const router = require('koa-router')();
-const axios = require('axios');
 const Profile = require('../database/profile');
 const Post = require('../database/post');
 const Comment = require('../database/comment');
 const { assert, Errors } = require('../utils/validator');
 const getDefaultProfile = require('../utils/getDefaultProfile');
+const urlToBase64 = require('../utils/urlToBase64');
 
 router.get('/posts/:id/:index', getPostImage);
 router.get('/comments/:id/:index', getCommentImage);
@@ -18,10 +18,9 @@ async function getPostImage(ctx) {
   assert(image && (image.content || image.url), Errors.ERR_NOT_FOUND('image'));
 
   if (image.url) {
-    const imageRes = await axios.get(image.url, { responseType: 'arraybuffer' });
-    image.content = imageRes.data;
+    image.content = await urlToBase64(image.url, { maxKbSize: 200 });
   }
-
+  
   const buffer = Buffer.from(image.content, 'base64');
   ctx.set('Content-Type', image.mediaType);
   ctx.set('Content-Length', buffer.length);
@@ -37,10 +36,9 @@ async function getCommentImage(ctx) {
   assert(image && (image.content || image.url), Errors.ERR_NOT_FOUND('image'));
 
   if (image.url) {
-    const imageRes = await axios.get(image.url, { responseType: 'arraybuffer' });
-    image.content = imageRes.data;
+    image.content = await urlToBase64(image.url, { maxKbSize: 200 });
   }
-
+  
   const buffer = Buffer.from(image.content, 'base64');
   ctx.set('Content-Type', image.mediaType);
   ctx.set('Content-Length', buffer.length);

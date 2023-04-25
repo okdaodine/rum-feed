@@ -20,8 +20,12 @@ import Query from 'utils/query';
 import escapeStringRegexp from 'escape-string-regexp';
 import UserName from 'components/UserName';
 import { useStore } from 'store';
+import LinkCard from 'components/LinkCard';
+import extractUrls from 'utils/extractUrls';
+import RetweetItem from './RetweetItem';
 
 import './index.css';
+import isRetweetUrl from 'utils/isRetweetUrl';
 
 interface IProps {
   post: IPost
@@ -142,6 +146,27 @@ export default observer((props: IProps) => {
   const state = useLocalObservable(() => ({
     canExpandContent: false,
     expandContent: inPostDetail || false,
+    get postContent() {
+      let postContent = post.content;
+      if (this.lastUrl) {
+        if (
+          !postContent.endsWith(this.lastUrl) ||
+          (isRetweetUrl(this.lastUrl) && !post.extra?.retweet) ||
+          (post.extra?.retweet && !(new URL(this.lastUrl).pathname.includes(post.extra?.retweet!.id)))
+        ) {
+          return postContent;
+        }
+        postContent = postContent.slice(0, -this.lastUrl.length);
+      }
+      return postContent;
+    },
+    get lastUrl() {
+      const urls = extractUrls(post.content || '');
+      if (urls.length > 0) {
+        return urls.pop();
+      }
+      return '';
+    },
   }));
   const postBoxRef = React.useRef<HTMLDivElement>(null);
   const contentRef = React.useRef<HTMLDivElement>(null);
@@ -244,11 +269,11 @@ export default observer((props: IProps) => {
                 })}
               </div>
             </div>
-            {post.content && (
+            {state.postContent && (
               <div className="pb-1 relative">
                 <div
                   ref={contentRef}
-                  key={post.content}
+                  key={state.postContent}
                   className={classNames(
                     {
                       expandContent: state.expandContent,
@@ -259,9 +284,9 @@ export default observer((props: IProps) => {
                     'mt-[4px] dark:text-white dark:text-opacity-80 text-gray-4a break-words whitespace-pre-wrap tracking-wide',
                   )}
                   dangerouslySetInnerHTML={{
-                    __html: replaceContent(`${post.content}`, {
+                    __html: replaceContent(`${state.postContent}`, {
                       disabled: isMobile && !inPostDetail
-                    }) +`${isTweet ? ` <a class="text-sky-400 text-12" href="${(post.title || '').split(' ')[0]}" ${isMobile && !inPostDetail ? 'disabled' : ''}>查看原文</a>` : ''}`,
+                    }) +`${isTweet && isMobile && inPostDetail ? ` <a class="text-sky-400 text-12" href="${(post.title || '').split(' ')[0]}"}>查看原文</a>` : ''}`,
                   }}
                   onClick={() => {
                     if (isMobile) {
@@ -295,7 +320,7 @@ export default observer((props: IProps) => {
                     </div>
                   </div>
                 )}
-                {isPc && state.expandContent && state.canExpandContent && post.content.length > 600 && (
+                {isPc && state.expandContent && state.canExpandContent && state.postContent.length > 600 && (
                   <div
                     className="text-sky-500 cursor-pointer tracking-wide flex items-center text-12 absolute top-[2px] right-[-90px] opacity-80"
                     onClick={() => {
@@ -308,10 +333,17 @@ export default observer((props: IProps) => {
                 )}
               </div>
             )}
-            {!post.content && <div className="pb-3" />}
-            {(post.images || []).length > 0 && <div className="pb-2">
+            {(post.images || []).length > 0 && <div className={classNames({ 'pt-3': !state.postContent }, "pb-2")}>
               <Images images={post.images || []} />
             </div>}
+            {post.extra!.retweet && (
+              <div className="mr-3 md:mr-0">
+                <RetweetItem post={post.extra!.retweet} />
+              </div>
+            )}
+            {state.lastUrl && !post.extra!.retweet && (
+              <LinkCard url={state.lastUrl} />
+            )}
             {groupStore.multiple && (
               <div className="flex pt-2 pb-2 tracking-wider">
                 <div className="bg-[#EFF3F4] bg-opacity-100 dark:bg-opacity-10 text-12 py-[2px] px-2 flex items-center rounded-full cursor-pointer" onClick={() => {

@@ -9,6 +9,7 @@ export default (text: string, options?: { disabled: boolean }) => {
         return item;
       }
     } catch(_) {}
-    return `<a class="text-sky-500" href="${item}" ${options && options.disabled ? 'disabled' : ''}>查看链接</a>`
+    const trimmedText = item.length > 32 ? `${item.slice(0, 32)}...` : item;
+    return `<a class="text-sky-500" href="${item}" ${options && options.disabled ? 'disabled' : ''}>${trimmedText}</a>`
   });
 };
