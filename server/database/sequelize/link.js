@@ -25,6 +25,6 @@ const Link = sequelize.define('links', {
   }]
 });
 
-Link.sync({ force: true });
+Link.sync();
 
 module.exports = Link;
