@@ -1,1 +1,1 @@
-export default (content: string) => content.match(/(https?:\/\/)([\w&@.:/?=-]+)/g) || [];
+export default (content: string) => content.match(/(https?:\/\/)([\S]+)/g) || [];

@@ -146,27 +146,6 @@ export default observer((props: IProps) => {
   const state = useLocalObservable(() => ({
     canExpandContent: false,
     expandContent: inPostDetail || false,
-    get postContent() {
-      let postContent = post.content;
-      if (this.lastUrl) {
-        if (
-          !postContent.endsWith(this.lastUrl) ||
-          (isRetweetUrl(this.lastUrl) && !post.extra?.retweet) ||
-          (post.extra?.retweet && !(new URL(this.lastUrl).pathname.includes(post.extra?.retweet!.id)))
-        ) {
-          return postContent;
-        }
-        postContent = postContent.slice(0, -this.lastUrl.length);
-      }
-      return postContent;
-    },
-    get lastUrl() {
-      const urls = extractUrls(post.content || '');
-      if (urls.length > 0) {
-        return urls.pop();
-      }
-      return '';
-    },
   }));
   const postBoxRef = React.useRef<HTMLDivElement>(null);
   const contentRef = React.useRef<HTMLDivElement>(null);
@@ -176,6 +155,29 @@ export default observer((props: IProps) => {
   const fromWeibo = (post.title || '').startsWith('https://weibo.com');
   const isTweet = fromTwitter || fromWeibo;
   const isIndexedBy = (post.title || '').includes('indexed by');
+
+  const lastUrl = React.useMemo(() => {
+    const urls = extractUrls(post.content || '');
+    if (urls.length > 0) {
+      return urls.pop();
+    }
+    return '';
+  }, [post.content]);
+
+  const postContent = React.useMemo(() => {
+    let postContent = post.content;
+    if (lastUrl) {
+      if (
+        !postContent.endsWith(lastUrl) ||
+        (isRetweetUrl(lastUrl) && !post.extra?.retweet) ||
+        (post.extra?.retweet && !(new URL(lastUrl).pathname.includes(post.extra?.retweet!.id)))
+      ) {
+        return postContent;
+      }
+      postContent = postContent.slice(0, -lastUrl.length);
+    }
+    return postContent;
+  }, [post.content, lastUrl]);
 
   React.useEffect(() => {
     if (inPostDetail || !post.content) {
@@ -269,22 +271,22 @@ export default observer((props: IProps) => {
                 })}
               </div>
             </div>
-            {state.postContent && (
+            {postContent && (
               <div className="pb-1 relative">
                 <div
                   ref={contentRef}
-                  key={state.postContent}
+                  key={postContent}
                   className={classNames(
                     {
                       expandContent: state.expandContent,
                       fold: !state.expandContent,
                       'text-[15px]': inPostDetail,
-                      'text-[14px]': !inPostDetail
+                      'text-[14px]': !inPostDetail,
                     },
-                    'mt-[4px] dark:text-white dark:text-opacity-80 text-gray-4a break-words whitespace-pre-wrap tracking-wide',
+                    'mt-[4px] dark:text-white dark:text-opacity-80 text-gray-4a break-words whitespace-pre-wrap tracking-wide pr-2 md:pr-0',
                   )}
                   dangerouslySetInnerHTML={{
-                    __html: replaceContent(`${state.postContent}`, {
+                    __html: replaceContent(`${postContent}`, {
                       disabled: isMobile && !inPostDetail
                     }) +`${isTweet && isMobile && inPostDetail ? ` <a class="text-sky-400 text-12" href="${(post.title || '').split(' ')[0]}"}>查看原文</a>` : ''}`,
                   }}
@@ -320,7 +322,7 @@ export default observer((props: IProps) => {
                     </div>
                   </div>
                 )}
-                {isPc && state.expandContent && state.canExpandContent && state.postContent.length > 600 && (
+                {isPc && state.expandContent && state.canExpandContent && postContent.length > 600 && (
                   <div
                     className="text-sky-500 cursor-pointer tracking-wide flex items-center text-12 absolute top-[2px] right-[-90px] opacity-80"
                     onClick={() => {
@@ -333,16 +335,18 @@ export default observer((props: IProps) => {
                 )}
               </div>
             )}
-            {(post.images || []).length > 0 && <div className={classNames({ 'pt-3': !state.postContent }, "pb-2")}>
+            {(post.images || []).length > 0 && <div className={classNames({ 'pt-3': !postContent }, "pb-2")}>
               <Images images={post.images || []} />
             </div>}
             {post.extra!.retweet && (
-              <div className="mr-3 md:mr-0">
+              <div className="mr-2 md:mr-0">
                 <RetweetItem post={post.extra!.retweet} />
               </div>
             )}
-            {state.lastUrl && !post.extra!.retweet && (
-              <LinkCard url={state.lastUrl} />
+            {lastUrl && !post.extra!.retweet && (
+              <div className="mr-2 md:mr-0">
+                <LinkCard url={lastUrl} />
+              </div>
             )}
             {groupStore.multiple && (
               <div className="flex pt-2 pb-2 tracking-wider">

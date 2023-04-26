@@ -29,6 +29,7 @@ export default observer(() => {
     }
     (async () => {
       try {
+        state.loading = true;
         const post = await PostApi.get(id, {
           viewer: userStore.address
         });

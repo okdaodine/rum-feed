@@ -81,6 +81,8 @@ router.get('/', async ctx => {
     ].join(''));
     ctx.type = 'text/html';
     ctx.body = html;
+  } else {
+    return ctx.render('index');
   }
 });
 

@@ -11,6 +11,7 @@ router.get('/:url', get);
 async function get(ctx) {
   const url = decodeURIComponent(ctx.params.url);
   assert(/(https?:\/\/)([\w&@.:/?=-]+)/g.test(url), Errors.ERR_IS_INVALID('url'));
+
   if (config.excludedLinks) {
     for (const excludedLink of config.excludedLinks || []) {
       assert(!url.includes(excludedLink), Errors.ERR_IS_INVALID('url'));
@@ -29,7 +30,14 @@ async function get(ctx) {
 
   let data = null;
   try {
-    const res = await axios.get(url);
+    const source = axios.CancelToken.source();
+    const timeout = setTimeout(() => {
+      source.cancel();
+    }, 5 * 1000);
+    const res = await axios.get(url, {
+      cancelToken: source.token
+    });
+    clearTimeout(timeout);
     const $ = cheerio.load(res.data);
     data = {
       title: $('title').text().trim() || $('[property="og:title"]').attr('content'),
@@ -40,10 +48,11 @@ async function get(ctx) {
       if (imageUrl.startsWith('//')) {
         imageUrl = `https:${imageUrl}`;
       }
+      imageUrl = imageUrl.replace('100w_100h', '160w_160h');
       data.image = await urlToBase64(imageUrl, {
-        maxWidth: 360,
-        maxHeight: 360,
-        maxKbSize: 80
+        maxWidth: 320,
+        maxHeight: 320,
+        maxKbSize: 60
       });
     }
   } catch (err) {

@@ -58,7 +58,7 @@ export default observer((props: IProps) => {
       <div
         className={classNames({
           small: props.small
-        }, 'bg-white dark:bg-transparent p-3 px-4 rounded-12 my-[6px] relative border dark:border-white dark:border-opacity-10 border-gray-d8/80 border-opacity-80')}
+        }, 'bg-white dark:bg-transparent p-[10px] px-[14px] md:p-3 md:px-4 rounded-12 my-[6px] relative border dark:border-white dark:border-opacity-10 border-gray-d8/80 border-opacity-80')}
         ref={postBoxRef}
       >
         <div className="flex items-center">
