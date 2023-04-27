@@ -123,7 +123,7 @@ export function createPostStore() {
     },
 
     tryAddPostToMap(post: IPost) {
-      if (!this.map[post.id]) {
+      if (!this.map[post.id] || post.extra.retweet) {
         this.map[post.id] = post;
         if (post.extra.retweet) {
           this.map[post.extra.retweet.id] = post.extra.retweet;
