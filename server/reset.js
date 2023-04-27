@@ -11,6 +11,7 @@ const Activity = require('./database/sequelize/activity');
 const Relation = require('./database/sequelize/relation');
 const Orphan = require('./database/sequelize/orphan');
 const V1Content = require('./database/sequelize/v1Content');
+const Link = require('./database/sequelize/link');
 
 (async () => {
   await sleep(2000);
@@ -27,6 +28,7 @@ const V1Content = require('./database/sequelize/v1Content');
     await Relation.sync({ force: true });
     await Orphan.sync({ force: true });
     await V1Content.sync({ force: true });
+    await Link.sync({ force: true });
   } catch (err) {
     console.log(err);
   }

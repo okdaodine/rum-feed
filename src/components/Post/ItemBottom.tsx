@@ -254,7 +254,7 @@ export default observer((props: IProps) => {
               enterDelay={200}
               enterNextDelay={200}
               placement="top"
-              title={lang.copy}
+              title={lang.copyLink}
               arrow
               >
               <div className="text-18 mr-[6px]">

@@ -36,7 +36,7 @@ interface IProps {
   hideBottom?: boolean
 }
 
-const Images = observer((props: { images: string[] }) => {
+export const Images = observer((props: { images: string[] }) => {
   const count = props.images.length;
 
   return (
@@ -165,7 +165,7 @@ export default observer((props: IProps) => {
   }, [post.content]);
 
   const postContent = React.useMemo(() => {
-    let postContent = post.content;
+    let postContent = post.content.trim();
     if (lastUrl) {
       if (
         !postContent.endsWith(lastUrl) ||

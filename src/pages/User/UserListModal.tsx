@@ -75,21 +75,27 @@ const UserList = observer((props: IProps) => {
 
       if (type === 'unfollow') {
         await TrxApi.createActivity({
-          type: 'Ignore',
+          type: 'Undo',
           object: {
-            type: 'Person',
-            id: relation.to,
-          },
+            type: 'Follow',
+            object: {
+              type: 'Person',
+              id: relation.to,
+            },
+          }
         }, groupStore.relationGroup.groupId);
       }
 
       if (type === 'unmute') {
         await TrxApi.createActivity({
-          type: 'Unblock',
+          type: 'Undo',
           object: {
-            type: 'Person',
-            id: relation.to,
-          },
+            type: 'Block',
+            object: {
+              type: 'Person',
+              id: relation.to,
+            },
+          }
         }, groupStore.relationGroup.groupId);
       }
       

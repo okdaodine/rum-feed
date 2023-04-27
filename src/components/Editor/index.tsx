@@ -159,7 +159,7 @@ const Editor = observer((props: IProps) => {
   const isPastingFileRef = React.useRef<boolean>(false);
   const imageCount = Object.keys(state.imageMap).length;
   const imageIdSet = React.useMemo(() => new Set(Object.keys(state.imageMap)), [imageCount]);
-  const readyToSubmit = (state.content.trim() || imageCount > 0) && !state.submitting;
+  const readyToSubmit = ((state.content.trim() || imageCount > 0) && !state.submitting) || !!props.retweet;
   const imageLImit = props.imageLimit || 4;
   const alertedPreviewsRef = React.useRef<string[]>([]);
   const enabledLinkPreview = props.editorKey === 'post';
@@ -246,7 +246,7 @@ const Editor = observer((props: IProps) => {
           state.retweet = null;
         }
       }
-    }, 1000),
+    }, 800),
     [],
   );
 
@@ -304,7 +304,7 @@ const Editor = observer((props: IProps) => {
     if (state.retweet) {
       payload.retweet = state.retweet;
       if (props.retweet && !payload.content.includes(`/posts/${props.retweet.id}`)) {
-        payload.content += ` ${window.location.origin}/posts/${props.retweet.id}`;
+        payload.content += `${payload.content ? ' ' : ''}${window.location.origin}/posts/${props.retweet.id}`;
       }
     }
     let _draft = localStorage.getItem(draftKey) || '';
@@ -502,7 +502,7 @@ const Editor = observer((props: IProps) => {
       )}
       {state.retweet && (
         <div className="pb-1">
-          <RetweetItem post={state.retweet} small={isMobile}  />
+          <RetweetItem post={state.retweet} small={isMobile} disabledClick  />
         </div>
       )}
       {!state.retweetUrl && !state.retweet && state.lastUrl && (
@@ -565,8 +565,8 @@ const Editor = observer((props: IProps) => {
               )}
             </div>
             <Tooltip
-              enterDelay={1500}
-              enterNextDelay={1500}
+              enterDelay={2000}
+              enterNextDelay={2000}
               placement="left"
               title={`${lang.shortcut}: Ctrl + Enter, Cmd + Enter`}
               arrow
@@ -580,7 +580,7 @@ const Editor = observer((props: IProps) => {
                   })}
                   onClick={submit}
                 >
-                  {props.submitButtonText || lang.publish}
+                  {props.submitButtonText || (props.retweet ? '转发' : lang.publish)}
                 </Button>
               </div>
             </Tooltip>

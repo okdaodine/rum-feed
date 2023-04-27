@@ -12,12 +12,14 @@ import BFSReplace from 'utils/BFSReplace';
 import Query from 'utils/query';
 import escapeStringRegexp from 'escape-string-regexp';
 import UserName from 'components/UserName';
+import { Images } from './Item'
 
 import './index.css';
 
 interface IProps {
   post: IPost
   small?: boolean
+  disabledClick?: boolean
 }
 
 export default observer((props: IProps) => {
@@ -30,6 +32,7 @@ export default observer((props: IProps) => {
   const fromWeibo = (post.title || '').startsWith('https://weibo.com');
   const isTweet = fromTwitter || fromWeibo;
   const isIndexedBy = (post.title || '').includes('indexed by');
+  const postContent = post.content.trim();
 
   React.useEffect(() => {
     setTimeout(() => {
@@ -96,20 +99,25 @@ export default observer((props: IProps) => {
           </div>
         </div>
         <div className="flex items-start pt-[6px]">
-          {(post.images || []).length > 0 && (
+          {postContent && (post.images || []).length > 0 && (
             <div className={classNames({
               "w-[82px] h-[82px]": !props.small,
               "w-[40px] h-[40px]": props.small,
             }, "rounded-12 bg-cover bg-center mr-3 mt-[2px]")} style={{ backgroundImage: `url(${(post.images || [])[0]})` }} />
           )}
-          {post.content && (
+          {!postContent && (post.images || []).length > 0 && (
+            <div className="pt-1">
+              <Images images={post.images || []} />
+            </div>
+          )}
+          {postContent && (
             <div className="relative flex-1">
               {(post.images || []).length > 0 && (
                 <div className="pt-[2px]" />
               )}
               <div
                 ref={contentRef}
-                key={post.content}
+                key={postContent}
                 className={classNames(
                   {
                     'line-clamp-4': !props.small,
@@ -119,7 +127,7 @@ export default observer((props: IProps) => {
                   'dark:text-white dark:text-opacity-80 text-gray-4a break-all whitespace-pre-wrap tracking-wide',
                 )}
                 dangerouslySetInnerHTML={{
-                  __html: replaceContent(`${post.content}`, {
+                  __html: replaceContent(`${postContent}`, {
                     disabled: isMobile
                   }),
                 }}
@@ -133,6 +141,9 @@ export default observer((props: IProps) => {
           )}
         </div>
         <div className="absolute inset-0 z-10 cursor-pointer" onClick={() => {
+          if (props.disabledClick) {
+            return;
+          }
           history.push(`/posts/${post.id}`);
         }} />
       </div>

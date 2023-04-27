@@ -140,4 +140,5 @@ export const content = {
   contents: 'contents',
   exportData: 'Export',
   pleaseExportDataOnDesktop: 'Please export data on desktop',
+  copyLink: '复制链接',
 };
