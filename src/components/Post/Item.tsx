@@ -217,9 +217,9 @@ export default observer((props: IProps) => {
   }, []);
 
   React.useEffect(() => {
-    if (relationStore.mutedMe.has(post.userAddress)) {
-      (async () => {
-        await sleep(500);
+    (async () => {
+      await sleep(500);
+      if (relationStore.mutedMe.has(post.userAddress)) {
         confirmDialogStore.show({
           content: `您已被 <span class="text-sky-500">${post.extra.userProfile.name}</span> 屏蔽，无法查看 <span class="text-sky-500">${post.extra.userProfile.name}</span> 的内容`,
           cancelDisabled: true,
@@ -230,8 +230,8 @@ export default observer((props: IProps) => {
             history.push('/');
           },
         });
-      })();
-    }
+      }
+    })();
   }, []);
 
   if (relationStore.mutedMe.has(post.userAddress)) {
