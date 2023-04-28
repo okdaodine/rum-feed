@@ -24,7 +24,6 @@ import sleep from 'utils/sleep';
 import { TrxApi } from 'apis';
 import { FaRegComment } from 'react-icons/fa';
 import { IActivity } from 'rum-sdk-browser';
-import MutedContent from 'components/MutedContent';
 
 import './item.css';
 
@@ -40,7 +39,7 @@ interface IProps {
 }
 
 export default observer((props: IProps) => {
-  const { modalStore, userStore, commentStore, snackbarStore } = useStore();
+  const { modalStore, userStore, commentStore, snackbarStore, relationStore } = useStore();
   const commentRef = React.useRef<any>();
   const { comment, isTopComment } = props;
   const isSubComment = !isTopComment;
@@ -134,6 +133,12 @@ export default observer((props: IProps) => {
     state.submitting = false;
     state.likeAnimating = false;
   }
+
+  React.useEffect(() => {
+    if (relationStore.muted.has(comment.userAddress)) {
+      comment.content = '<span class="italic opacity-60">来自您屏蔽的用户，内容已隐藏</span>';
+    }
+  }, []);
 
   return (
     <Fade in={true} timeout={350}>
@@ -234,13 +239,11 @@ export default observer((props: IProps) => {
                           </span>
                         )
                         : '：'}
-                      <MutedContent address={comment.userAddress} className="opacity-70">
-                        <span
-                          dangerouslySetInnerHTML={{
-                            __html: replaceContent(`${comment.content}`),
-                          }}
-                        />
-                      </MutedContent>
+                      <span
+                        dangerouslySetInnerHTML={{
+                          __html: replaceContent(`${comment.content}`),
+                        }}
+                      />
                       {comment.images && comment.images.length > 0 && (
                         <span
                           className="mx-[6px] text-sky-500 opacity-90 cursor-pointer"
