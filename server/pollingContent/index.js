@@ -77,7 +77,7 @@ const startJob = async (groupId, duration) => {
         if (group.startTrx) {
           listOptions.startTrx = group.startTrx;
         }
-        if (pendingTrxHelper.isTimeOut(group.groupId) && group.status === 'connected') {
+        if (pendingTrxHelper.isTimeOut(group.groupId)) {
           const chainAPIs = await shuffleChainApi(group.groupId);
           if (chainAPIs.length > 1) {
             console.log(`[shuffleChainApi]:`, { groupId, chainAPIs });
@@ -108,10 +108,6 @@ const startJob = async (groupId, duration) => {
         try {
           console.log({ err });
           await sleep(2000);
-          const chainAPIs = await shuffleChainApi(group.groupId);
-          if (chainAPIs.length > 1) {
-            console.log(`[shuffleChainApi]:`, { groupId, chainAPIs });
-          }
         } catch (_) {}
         await Group.update({ status: 'disconnected' }, { where });
       }

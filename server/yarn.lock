@@ -2852,9 +2852,9 @@ long@^4.0.0:
   integrity sha512-XsP+KhQif4bjX1kbuSiySJFNAehNxgLb6hPRGJ9QsUr8ajHkuXGdrHmFUTUUXhDwVX2R5bY4JNZEwbUiMhV+MA==
 
 long@^5.2.1:
-  version "5.2.1"
-  resolved "https://registry.npmjs.org/long/-/long-5.2.1.tgz#e27595d0083d103d2fa2c20c7699f8e0c92b897f"
-  integrity sha512-GKSNGeNAtw8IryjjkhZxuKB3JzlcLTwjtiQCHKvqQet81I93kXslhDQruGI/QsddO83mcDToBVy7GqGS/zYf/A==
+  version "5.2.3"
+  resolved "https://registry.npmjs.org/long/-/long-5.2.3.tgz#a3ba97f3877cf1d778eccbcb048525ebb77499e1"
+  integrity sha512-lcHwpNoggQTObv5apGNCTdJrO69eHOZMi4BNC+rTLER8iHAqGrUVeLh/irVIM7zTw2bOXA8T6uNPeujwOLg/2Q==
 
 lru-cache@^4.1.5:
   version "4.1.5"
@@ -3704,10 +3704,10 @@ rlp@^2.2.4:
   dependencies:
     bn.js "^5.2.0"
 
-rum-sdk-nodejs@2.0.6:
-  version "2.0.6"
-  resolved "https://registry.npmjs.org/rum-sdk-nodejs/-/rum-sdk-nodejs-2.0.6.tgz#d035da2ec3ddc0a4f9b52a157e4511121408f37d"
-  integrity sha512-nJ/rYuuRWQkZmX+mRUZET/Lf7q0S94yvqV7fDqXSZiIl0qB8c6vxTfG0kFsIIzXXiqUcykRbT5GfP1Ebkt4kEQ==
+rum-sdk-nodejs@2.0.9:
+  version "2.0.9"
+  resolved "https://registry.npmjs.org/rum-sdk-nodejs/-/rum-sdk-nodejs-2.0.9.tgz#df6f1bd093ac125c6e2a69131aa037312dd39ee1"
+  integrity sha512-7Ml7X8iXN5bDnO6aS65qMQf5XTK6RTNzEg3K+6fxk2gtz0BMU32eN2W9JDRiJuUrd30uvBzz3FLvHFg4hZtV1A==
   dependencies:
     "@types/crypto-js" "^4.1.1"
     "@types/node-localstorage" "^1.3.0"
