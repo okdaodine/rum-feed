@@ -15,26 +15,23 @@ import sleep from 'utils/sleep';
 export default observer(() => {
   const { postStore, userStore } = useStore();
   const state = useLocalObservable(() => ({
-    post: null as IPost | null,
     loading: false,
     fetched: false,
   }));
   const { id } = useParams() as { id: string };
   const history = useHistory();
+  const post = postStore.map[id];
 
   React.useEffect(() => {
     scrollToTop();
-    const post = postStore.map[id];
     if (post) {
       if (state.fetched) {
+        state.loading = true;
         (async () => {
-          state.loading = true;
           await sleep(250);
-          state.post = post;
           state.loading = false;
         })();
       } else {
-        state.post = post;
         state.loading = false;
         state.fetched = true;
       }
@@ -48,7 +45,6 @@ export default observer(() => {
           viewer: userStore.address
         });
         if (post) {
-          state.post = post;
           postStore.tryAddPostToMap(post);
           document.title = post.content.slice(0, 50);
         }
@@ -72,7 +68,7 @@ export default observer(() => {
     return null;
   }
 
-  if (!state.post) {
+  if (!post) {
     return (
       <div>
         <TopPlaceHolder />
@@ -107,7 +103,7 @@ export default observer(() => {
       <div className="w-full md:w-[600px] box-border mx-auto min-h-screen dark:md-0 md:my-5">
         <div className="dark:md:border dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] rounded-12 overflow-hidden">
           <PostItem
-            post={state.post as IPost}
+            post={post as IPost}
             where="postDetail"
             hideBottom={isMobile}
           />
