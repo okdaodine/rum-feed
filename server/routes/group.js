@@ -16,6 +16,7 @@ const shuffleChainApi = require('../utils/shuffleChainApi');
 router.get('/:groupId', get);
 router.get('/:groupId/shuffle', _shuffleChainApi);
 router.get('/:groupId/ping', ping);
+router.delete('/:groupId/seeds/:chainAPI', ensurePermission, removeChainAPI);
 router.delete('/:groupId', ensurePermission, remove);
 router.get('/', list);
 
@@ -80,6 +81,68 @@ async function remove(ctx) {
   await Orphan.destroy({ where: { groupId }});
   await V1Content.destroy({ where: { groupId }});
   rumSDK.cache.Group.remove(groupId);
+  ctx.body = true;
+}
+
+async function removeChainAPI(ctx) {
+  const { groupId } = ctx.params;
+  const group = await Group.findOne({
+    where: {
+      groupId
+    }
+  });
+  assert(group, Errors.ERR_NOT_FOUND('group'));
+  const { chainAPIs } = rumSDK.utils.seedUrlToGroup(group.seedUrl);
+  assert(chainAPIs.length > 1, Errors.ERR_IS_INVALID('chainAPIs length'));
+  const chainAPI = decodeURIComponent(ctx.params.chainAPI);
+  let seeds = await Seed.findAll({
+    raw: true,
+    where: {
+      groupId,
+    },
+  });
+  seeds = seeds.map(seed => {
+    seed.url = decodeURIComponent(seed.url);
+    return seed;
+  });
+  const baseSeedUrl = seeds[0].url.split('&u=')[0];
+  const apiMap = {};
+  for (const seed of seeds) {
+    let { chainAPIs } = rumSDK.utils.seedUrlToGroup(seed.url);
+    const newChainAPIs = chainAPIs.filter(api => api !== chainAPI);
+    if (newChainAPIs.length === 0) {
+      await Seed.destroy({
+        where: {
+          url: seed.url
+        }
+      });
+    } else {
+      if (newChainAPIs.length !== chainAPI.length) {
+        const newSeedUrl = `${baseSeedUrl}&u=${newChainAPIs.join('|')}`;
+        await Seed.update({
+          url: newSeedUrl,
+        }, {
+          where: {
+            url: seed.url
+          }
+        });
+      }
+      for (const api of newChainAPIs) {
+        const origin = new URL(api).origin;
+        apiMap[origin] = api;
+      }
+    }
+  }
+  const combinedSeedUrl = `${baseSeedUrl}&u=${Object.values(apiMap).join('|')}`;
+  await Group.update({
+    seedUrl: combinedSeedUrl
+  }, {
+    where: {
+      groupId
+    }
+  });
+  rumSDK.cache.Group.remove(groupId);
+  rumSDK.cache.Group.add(combinedSeedUrl);
   ctx.body = true;
 }
 

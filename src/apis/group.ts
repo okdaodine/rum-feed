@@ -18,4 +18,10 @@ export default {
       method: 'delete'
     });
   },
+
+  async removeChainAPI(groupId: string, chainAPI: string) {
+    await request(`${API_BASE_URL}/groups/${groupId}/seeds/${encodeURIComponent(chainAPI)}`, {
+      method: 'delete'
+    });
+  },
 }

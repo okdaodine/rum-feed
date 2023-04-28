@@ -14,8 +14,10 @@ import Modal from 'components/Modal';
 import { MdOutlineErrorOutline } from 'react-icons/md';
 import { FaSeedling } from 'react-icons/fa';
 import { BiCopy, BiSearch } from 'react-icons/bi';
+import { IoMdClose } from 'react-icons/io';
 import Button from 'components/Button';
 import MigrateGroupModal from './migrateGroupModal';
+import sleep from 'utils/sleep';
 
 interface IModalProps {
   groupId: string
@@ -93,6 +95,44 @@ const Main = observer((props: IModalProps) => {
               type: 'error',
               duration: 4000
             });
+          } else {
+            snackbarStore.show({
+              message: 'something wrong',
+              type: 'error',
+            });
+            confirmDialogStore.hide();
+          }
+        }
+      },
+    });
+  }
+
+  const removeChainAPI = (chainAPI: string) => {
+    confirmDialogStore.show({
+      content: lang.youAreSureTo(lang.delete),
+      ok: async () => {
+        try {
+          confirmDialogStore.setLoading(true);
+          await GroupApi.removeChainAPI(props.groupId, chainAPI);
+          await sleep(500);
+          snackbarStore.show({
+            message: lang.done,
+          });
+          await sleep(500);
+          window.location.reload();
+        } catch (err: any) {
+          if (err.code === 'ERR_NOT_PERMISSION') {
+            snackbarStore.show({
+              message: lang.noPermission,
+              type: 'error',
+              duration: 4000
+            });
+          } else {
+            snackbarStore.show({
+              message: 'something wrong',
+              type: 'error',
+            });
+            confirmDialogStore.hide();
           }
         }
       },
@@ -161,26 +201,15 @@ const Main = observer((props: IModalProps) => {
                     </div>
                   )}
                   {state.group.extra.rawGroup.chainAPIs.map((api, i) => (
-                    <Tooltip
-                      key={api}
-                      enterDelay={300}
-                      enterNextDelay={300}
-                      placement="left"
-                      title={lang.copy}
-                      arrow
-                      interactive
-                    >
-                      <div className="flex items-center py-[2px] cursor-pointer" onClick={() => {
-                        copy(api);
-                        snackbarStore.show({
-                          message: lang.copied,
-                        });
-                      }}>
-                        <div className="w-[22px] h-[22px] box-border flex items-center justify-center dark:bg-white bg-black dark:text-black text-white text-12 mr-[10px] rounded-full opacity-90">{i + 1}</div>
-                        <div className="text-12 md:text-13 dark:text-white dark:text-opacity-80 text-gray-88 flex-1 pr-1 truncate">{api}</div>
-                        <BiCopy className="mr-2 text-sky-500 text-16" />
-                      </div>
-                    </Tooltip>
+                    <div className="flex items-center py-[2px] group" key={api}>
+                      <div className="w-[22px] h-[22px] box-border flex items-center justify-center dark:bg-white bg-black dark:text-black text-white text-12 mr-[10px] rounded-full opacity-90">{i + 1}</div>
+                      <div className="text-12 md:text-13 dark:text-white dark:text-opacity-80 text-gray-88 flex-1 pr-1 truncate cursor-pointer">{api}</div>
+                      {state.group.extra.rawGroup.chainAPIs.length > 1 && (
+                        <div className="pl-1 pr-2 cursor-pointer hidden group-hover:block" onClick={() => removeChainAPI(api)}>
+                          <IoMdClose className="text-red-500 text-16" />
+                        </div>
+                      )}
+                    </div>
                   ))}
                 </div>
               </div>
