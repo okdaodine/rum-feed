@@ -30,6 +30,7 @@ const pack = async item => {
         name,
         content,
         image,
+        object: retweetObject
       },
       published,
     },
@@ -52,6 +53,12 @@ const pack = async item => {
     const images = Array.isArray(image) ? image : [image];
     post.images = images;
     post.imageCount = images.length;
+  }
+  if (retweetObject) {
+    const retweet = await Post.get(retweetObject.id);
+    if (retweet) {
+      post.content += `${content.trim().length > 0 ? ' ' : ''}${config.origin || 'https://rumsystem.net'}/posts/${retweetObject.id}`
+    }
   }
   return post
 }
