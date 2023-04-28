@@ -21,7 +21,7 @@ export default observer((props: {
 
   return (
     <span className={`italic ${props.className}`}>
-      {(relationStore.muted.has(props.address)) ? (
+      {relationStore.muted.has(props.address) ? (
         <>
           来自您屏蔽的用户，内容已隐藏
           {!props.disabledUndoMuted && (
