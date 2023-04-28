@@ -221,7 +221,7 @@ export default observer((props: IProps) => {
       (async () => {
         await sleep(500);
         confirmDialogStore.show({
-          content: `你已被 <span class="text-sky-500">${post.extra.userProfile.name}</span> 屏蔽，无法查看 <span class="text-sky-500">${post.extra.userProfile.name}</span> 的内容`,
+          content: `您已被 <span class="text-sky-500">${post.extra.userProfile.name}</span> 屏蔽，无法查看 <span class="text-sky-500">${post.extra.userProfile.name}</span> 的内容`,
           cancelDisabled: true,
           okText: '我知道了',
           ok: async () => {

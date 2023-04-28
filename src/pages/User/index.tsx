@@ -530,7 +530,7 @@ export default observer((props: RouteChildrenProps) => {
           </div>
         </div>
         <div>
-        <MutedContent address={userAddress} className="dark:text-white dark:text-opacity-80 text-gray-4a opacity-60 border dark:border-white dark:border-opacity-20 border-gray-d8/80 border-opacity-80 my-5 py-8 px-4 rounded-12 flex justify-center mx-5" disabledUndoMuted>
+        <MutedContent enabledMutedMe address={userAddress} className="dark:text-white dark:text-opacity-80 text-gray-4a opacity-60 border dark:border-white dark:border-opacity-20 border-gray-d8/80 border-opacity-80 my-5 py-8 px-4 rounded-12 flex justify-center mx-5" disabledUndoMuted>
           <div className={classNames({
             'opacity-0': state.invisibleOverlay|| !state.fetched || user.postCount === 0
           }, "md:mt-5 w-full box-border dark:md:border-t dark:md:border-l dark:md:border-r dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] md:rounded-12 overflow-hidden")}>

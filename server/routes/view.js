@@ -55,7 +55,7 @@ router.get('/', async ctx => {
         withReplacedImage: true,
       });
       userName = profile ? profile.name.replace('\n', '') : userAddress;
-      image = profile.avatar;
+      image = profile ? profile.avatar : '';
       const posts = await Post.list({
         where: {
           userAddress,

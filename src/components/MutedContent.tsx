@@ -7,9 +7,10 @@ export default observer((props: {
   className?: string
   children: React.ReactNode
   disabledUndoMuted?: boolean
+  enabledMutedMe?: boolean
 }) => {
   const { relationStore } = useStore();
-  const muted = relationStore.muted.has(props.address) || relationStore.mutedMe.has(props.address);
+  const muted = relationStore.muted.has(props.address) || (props.enabledMutedMe && relationStore.mutedMe.has(props.address));
   const state = useLocalObservable(() => ({
     muted: muted,
   }));
@@ -20,7 +21,7 @@ export default observer((props: {
 
   return (
     <span className={`italic ${props.className}`}>
-      {relationStore.muted.has(props.address) ? (
+      {(relationStore.muted.has(props.address)) ? (
         <>
           来自您屏蔽的用户，内容已隐藏
           {!props.disabledUndoMuted && (
@@ -31,7 +32,7 @@ export default observer((props: {
         </>
       ) : (
         <span>
-          你已被 Ta 屏蔽，无法查看内容
+          您已被 Ta 屏蔽，无法查看内容
         </span>
       )}
     </span>

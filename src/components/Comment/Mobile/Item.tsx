@@ -91,7 +91,7 @@ export default observer((props: IProps) => {
       comment.content = '<span class="italic opacity-60">来自您屏蔽的用户，内容已隐藏</span>';
     }
     if (relationStore.mutedMe.has(comment.userAddress)) {
-      comment.content = '<span class="italic opacity-60">你已被 Ta 屏蔽，无法查看内容</span>';
+      comment.content = '<span class="italic opacity-60">您已被 Ta 屏蔽，无法查看内容</span>';
     }
   }, []);
 
