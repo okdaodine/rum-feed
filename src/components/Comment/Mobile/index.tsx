@@ -43,7 +43,8 @@ export default observer((props: IProps) => {
     snackbarStore,
     userStore,
     modalStore,
-    confirmDialogStore
+    confirmDialogStore,
+    relationStore
   } = useStore();
   const hasComments = props.post.commentCount > 0;
   const topComments = commentStore.comments.filter(
@@ -137,7 +138,6 @@ export default observer((props: IProps) => {
       openLoginModal();
       return;
     }
-    const res = await TrxApi.createActivity(activity, props.post.groupId);
     const comment: IComment = {
       content: activity.object?.content || '',
       images: (activity.object?.image as [])?.map(image => base64.getUrl(image as any)) ?? [],
@@ -146,7 +146,7 @@ export default observer((props: IProps) => {
       replyId: '',
       userAddress: userStore.address,
       groupId: props.post.groupId,
-      trxId: res.trx_id,
+      trxId: '',
       id: activity.object?.id ?? '',
       storage: TrxStorage.cache,
       commentCount: 0,
@@ -168,9 +168,24 @@ export default observer((props: IProps) => {
           } else {
             comment.threadId = toComment.id;
           }
+
+          if (relationStore.mutedMe.has(toComment.userAddress)) {
+            confirmDialogStore.show({
+              content: "你已被 Ta 屏蔽，无法进行回复",
+              cancelDisabled: true,
+              okText: '我知道了',
+              ok: () => {
+                confirmDialogStore.hide();
+              },
+            });
+            return;
+          }
+
         }
       }
     }
+    const res = await TrxApi.createActivity(activity, props.post.groupId);
+    comment.trxId = res.trx_id;
     return comment;
   }
 
@@ -200,6 +215,10 @@ export default observer((props: IProps) => {
         },
       };
       const newComment = (await _submit(activity))!;
+      if (!newComment) {
+        state.isCreating = false;
+        return false;
+      }
       commentStore.addComment(newComment);
       postStore.updatePost({
         ...props.post,

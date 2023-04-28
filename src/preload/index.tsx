@@ -1,7 +1,7 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
 import { useStore } from 'store';
-import { GroupApi, ProfileApi, UserApi, VaultApi, TrxApi, ConfigApi } from 'apis';
+import { GroupApi, ProfileApi, UserApi, VaultApi, TrxApi, ConfigApi, RelationApi } from 'apis';
 import { lang } from 'utils/lang';
 import Query from 'utils/query';
 import * as Vault from 'utils/vault';
@@ -19,7 +19,7 @@ import store from 'store2';
 
 
 const Preload = observer(() => {
-  const { userStore, groupStore, confirmDialogStore, modalStore, configStore } = useStore();
+  const { userStore, groupStore, confirmDialogStore, modalStore, configStore, relationStore } = useStore();
   const history = useHistory();
   const token = Query.get('token');
   const accessToken = Query.get('access_token');
@@ -71,6 +71,10 @@ const Preload = observer(() => {
         tryOpenLoginModal();
         tryOpenProfileModal();
         tryLogout();
+        
+        if (userStore.isLogin) {
+          initRelation(userStore.address);
+        }
       } catch (err: any) {
         console.log(err);
         confirmDialogStore.show({
@@ -156,6 +160,16 @@ const Preload = observer(() => {
       if (config.defaultGroupId) {
         groupStore.setDefaultGroupId(config.defaultGroupId);
       }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  const initRelation = async (userAddress: string) => {
+    try {
+      const { muted, mutedMe } = await RelationApi.listMutedRelations(userAddress);
+      relationStore.setMuted(muted);
+      relationStore.setMutedMe(mutedMe);
     } catch (err) {
       console.log(err);
     }

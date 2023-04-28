@@ -27,5 +27,13 @@ export default {
   }) {
     const item = await request(`${API_BASE_URL}/relations/${userAddress}/muted?${qs.stringify(options || {})}`);
     return item as IRelation[];
+  },
+
+  async listMutedRelations(userAddress: string) {
+    const item = await request(`${API_BASE_URL}/relations/${userAddress}/muted_relations`);
+    return item as {
+      muted: string[],
+      mutedMe: string[],
+    };
   }
 }

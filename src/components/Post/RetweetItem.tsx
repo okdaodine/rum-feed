@@ -13,6 +13,7 @@ import Query from 'utils/query';
 import escapeStringRegexp from 'escape-string-regexp';
 import UserName from 'components/UserName';
 import { Images } from './Item'
+import MutedContent from 'components/MutedContent';
 
 import './index.css';
 
@@ -98,48 +99,50 @@ export default observer((props: IProps) => {
             })}
           </div>
         </div>
-        <div className="flex items-start pt-[6px]">
-          {postContent && (post.images || []).length > 0 && (
-            <div className={classNames({
-              "w-[82px] h-[82px]": !props.small,
-              "w-[40px] h-[40px]": props.small,
-            }, "rounded-12 bg-cover bg-center mr-3 mt-[2px]")} style={{ backgroundImage: `url(${(post.images || [])[0]})` }} />
-          )}
-          {!postContent && (post.images || []).length > 0 && (
-            <div className="pt-1">
-              <Images images={post.images || []} />
-            </div>
-          )}
-          {postContent && (
-            <div className="relative flex-1">
-              {(post.images || []).length > 0 && (
-                <div className="pt-[2px]" />
-              )}
-              <div
-                ref={contentRef}
-                key={postContent}
-                className={classNames(
-                  {
-                    'line-clamp-4': !props.small,
-                    'line-clamp-2': props.small,
-                    'text-[14px]': true
-                  },
-                  'dark:text-white dark:text-opacity-80 text-gray-4a break-all whitespace-pre-wrap tracking-wide',
+        <MutedContent address={post.userAddress} className="dark:text-white dark:text-opacity-80 text-gray-4a opacity-60 pt-[6px] block"> 
+          <div className="flex items-start pt-[6px]">
+            {postContent && (post.images || []).length > 0 && (
+              <div className={classNames({
+                "w-[82px] h-[82px]": !props.small,
+                "w-[40px] h-[40px]": props.small,
+              }, "rounded-12 bg-cover bg-center mr-3 mt-[2px]")} style={{ backgroundImage: `url(${(post.images || [])[0]})` }} />
+            )}
+            {!postContent && (post.images || []).length > 0 && (
+              <div className="pt-1">
+                <Images images={post.images || []} />
+              </div>
+            )}
+            {postContent && (
+              <div className="relative flex-1">
+                {(post.images || []).length > 0 && (
+                  <div className="pt-[2px]" />
                 )}
-                dangerouslySetInnerHTML={{
-                  __html: replaceContent(`${postContent}`, {
-                    disabled: isMobile
-                  }),
-                }}
-                onClick={() => {
-                  if (isMobile) {
-                    history.push(`/posts/${post.id}`);
-                  }
-                }}
-              />
-            </div>
-          )}
-        </div>
+                <div
+                  ref={contentRef}
+                  key={postContent}
+                  className={classNames(
+                    {
+                      'line-clamp-4': !props.small,
+                      'line-clamp-2': props.small,
+                      'text-[14px]': true
+                    },
+                    'dark:text-white dark:text-opacity-80 text-gray-4a break-all whitespace-pre-wrap tracking-wide',
+                  )}
+                  dangerouslySetInnerHTML={{
+                    __html: replaceContent(`${postContent}`, {
+                      disabled: isMobile
+                    }),
+                  }}
+                  onClick={() => {
+                    if (isMobile) {
+                      history.push(`/posts/${post.id}`);
+                    }
+                  }}
+                />
+              </div>
+            )}
+          </div>
+        </MutedContent>
         <div className="absolute inset-0 z-10 cursor-pointer" onClick={() => {
           if (props.disabledClick) {
             return;

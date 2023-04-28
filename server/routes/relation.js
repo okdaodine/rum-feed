@@ -8,6 +8,7 @@ const { keyBy } = require('lodash');
 router.get('/:userAddress/following', listFollowing);
 router.get('/:userAddress/followers', listFollowers);
 router.get('/:userAddress/muted', listMuted);
+router.get('/:userAddress/muted_relations', listMutedRelations);
 
 async function listFollowing(ctx) {
   ctx.body = await list(ctx, 'following');
@@ -51,6 +52,29 @@ async function list(ctx, type) {
     return item;
   });
   return items;
+}
+
+async function listMutedRelations(ctx) {
+  const muted = await Relation.findAll({
+    raw: true,
+    where: {
+      type: 'muted',
+      from: ctx.params.userAddress
+    },
+  });
+  
+  const mutedMe = await Relation.findAll({
+    raw: true,
+    where: {
+      type: 'muted',
+      to: ctx.params.userAddress
+    }
+  });
+
+  ctx.body = {
+    muted: muted.map(item => item.to),
+    mutedMe: mutedMe.map(mute => mute.from)
+  }
 }
 
 module.exports = router;

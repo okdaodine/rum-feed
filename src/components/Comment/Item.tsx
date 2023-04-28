@@ -24,6 +24,7 @@ import sleep from 'utils/sleep';
 import { TrxApi } from 'apis';
 import { FaRegComment } from 'react-icons/fa';
 import { IActivity } from 'rum-sdk-browser';
+import MutedContent from 'components/MutedContent';
 
 import './item.css';
 
@@ -233,11 +234,13 @@ export default observer((props: IProps) => {
                           </span>
                         )
                         : '：'}
-                      <span
-                        dangerouslySetInnerHTML={{
-                          __html: replaceContent(`${comment.content}`),
-                        }}
-                      />
+                      <MutedContent address={comment.userAddress} className="opacity-70">
+                        <span
+                          dangerouslySetInnerHTML={{
+                            __html: replaceContent(`${comment.content}`),
+                          }}
+                        />
+                      </MutedContent>
                       {comment.images && comment.images.length > 0 && (
                         <span
                           className="mx-[6px] text-sky-500 opacity-90 cursor-pointer"

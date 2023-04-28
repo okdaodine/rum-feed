@@ -61,13 +61,24 @@ async function list(ctx) {
       where: {
         type: 'muted',
         from: ctx.query.viewer
+      },
+    });
+    
+    const mutedMe = await Relation.findAll({
+      raw: true,
+      where: {
+        type: 'muted',
+        to: ctx.query.viewer
       }
     });
 
-    if (muted.length > 0) {
+    if (muted.length > 0 || mutedMe.length > 0) {
       where[Op.and].push({
         userAddress: {
-          [Op.notIn]: muted.map(item => item.to)
+          [Op.notIn]: [
+            ...muted.map(item => item.to),
+            ...mutedMe.map(mute => mute.from)
+          ]
         }
       })
     };

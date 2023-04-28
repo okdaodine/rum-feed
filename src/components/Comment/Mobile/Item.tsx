@@ -43,7 +43,7 @@ export default observer((props: IProps) => {
     expand: false,
     readyToFold: isSafari || isIPhone ? false : true,
   }));
-  const { commentStore, userStore, snackbarStore } = useStore();
+  const { commentStore, userStore, snackbarStore, relationStore } = useStore();
   const commentRef = React.useRef<any>();
   const {
     hideDivider,
@@ -85,6 +85,15 @@ export default observer((props: IProps) => {
       window.removeEventListener('resize', setCanExpand);
     };
   }, [state, commentStore, comment.id]);
+
+  React.useEffect(() => {
+    if (relationStore.muted.has(comment.userAddress)) {
+      comment.content = '<span class="italic opacity-60">来自您屏蔽的用户，内容已隐藏</span>';
+    }
+    if (relationStore.mutedMe.has(comment.userAddress)) {
+      comment.content = '<span class="italic opacity-60">你已被 Ta 屏蔽，无法查看内容</span>';
+    }
+  }, []);
 
   const isOwner = comment.userAddress === userStore.address;
   const isFromAuthor = props.post.userAddress === comment.userAddress;
