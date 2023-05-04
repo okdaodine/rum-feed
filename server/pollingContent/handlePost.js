@@ -5,6 +5,10 @@ const config = require('../config');
 const Mixin = require('../mixin');
 const truncateByBytes = require('../utils/truncateByBytes');
 const within24Hours = require('../utils/within24Hours');
+const extractUrls = require('../utils/extractUrls');
+const isRetweetUrl = require('../utils/isRetweetUrl');
+const Notification = require('../database/notification');
+const { trySendSocket } = require('../socket');
 
 module.exports = async (item, group) => {
   const post = await pack(item);
@@ -19,6 +23,7 @@ module.exports = async (item, group) => {
   if (group.loaded) {
     await notify(post.id);
   }
+  await tryHandleRetweetNotification(post, group);
 }
 
 const pack = async item => {
@@ -38,7 +43,7 @@ const pack = async item => {
     TimeStamp,
   } = item;
   const post = {
-    content,
+    content: (content || '').trim(),
     title: name || '',
     userAddress: rumSDK.utils.pubkeyToAddress(SenderPubkey),
     groupId: item.GroupId,
@@ -57,10 +62,38 @@ const pack = async item => {
   if (retweetObject) {
     const retweet = await Post.get(retweetObject.id);
     if (retweet) {
-      post.content += `${content.trim().length > 0 ? ' ' : ''}${config.origin || 'https://rumsystem.net'}/posts/${retweetObject.id}`
+      post.content += `${content.length > 0 ? ' ' : ''}${config.origin || 'https://rumsystem.net'}/posts/${retweetObject.id}`
     }
   }
   return post
+}
+
+const tryHandleRetweetNotification = async (post, group) => {
+  const urls = extractUrls(post.content);
+  const retweetUrls = urls.filter(url => isRetweetUrl(url));
+  for (const retweetUrl of retweetUrls) {
+    const retweetId = retweetUrl ? new URL(retweetUrl).pathname.split('/')[2] : null;
+    const retweet = await Post.get(retweetId);
+    if (!retweet || retweet.userAddress === post.userAddress) {
+      continue;
+    }
+    const notification = {
+      groupId: '',
+      status: within24Hours(post.timestamp) ?'unread' : 'read',
+      type: 'retweet',
+      to: retweet.userAddress,
+      toObjectId: retweet.id,
+      toObjectType: 'post',
+      from: post.userAddress,
+      fromObjectId: post.id,
+      fromObjectType: 'post',
+      timestamp: post.timestamp,
+    };
+    await Notification.create(notification);
+    if (group.loaded) {
+      trySendSocket(notification.to, 'notification', notification);
+    }
+  }
 }
 
 const notify = async (id) => {

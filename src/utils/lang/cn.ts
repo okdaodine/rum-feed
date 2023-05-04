@@ -17,6 +17,7 @@ export const content = {
   replyYourComment: '回复了你的评论',
   replyYourContent: '评论了你的内容',
   likeFor: (name: string) => `赞了你的${name}`,
+  retweetYour: (name: string) => `转发了你的${name.toLowerCase()}`,
   object: '内容',
   notExist: (name: string) => `还没有${name}`,
   comment: '评论',
@@ -143,6 +144,7 @@ export const content = {
   exportData: '导出数据',
   pleaseExportDataOnDesktop: '请使用电脑来导出数据哦',
   copyLink: '复制链接',
+  retweet: '转发',
 };
 
 export type Content = typeof content;

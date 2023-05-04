@@ -10,6 +10,7 @@ import { lang } from 'utils/lang';
 import CommentMessages from './CommentMessages';
 import LikeMessages from './LikeMessages';
 import FollowMessages from './FollowMessages';
+import RetweetMessages from './RetweetMessages';
 import { INotification, NotificationType } from 'apis/types';
 import { NotificationApi } from 'apis';
 import sleep from 'utils/sleep';
@@ -17,8 +18,10 @@ import { useStore } from 'store';
 import { runInAction } from 'mobx';
 import Modal from 'components/Modal';
 import { useHistory } from 'react-router-dom';
+import classNames from 'classnames';
 
 interface IProps {
+  tab: number
   open: boolean
   onClose: () => void
   addReadCount: (count: number) => void
@@ -62,16 +65,22 @@ const Notification = observer((props: IProps) => {
     },
     {
       unreadCount: 0,
+      text: lang.retweet,
+      type: 'retweet',
+    },
+    {
+      unreadCount: 0,
       text: lang.follow,
       type: 'follow',
-    }
+    },
   ] as ITab[];
   const state = useLocalObservable(() => ({
     fetched: false,
     loading: false,
     loadingMore: false,
+    pending: true,
     hasMore: true,
-    tabIndex: 0,
+    tabIndex: props.tab || 0,
     idSet: new Set() as Set<number>,
     map: {} as Record<string, INotification>,
     page: 1,
@@ -150,7 +159,9 @@ const Notification = observer((props: IProps) => {
   return (
     <div className="w-full h-[90vh] md:h-[80vh] md:w-[550px] flex flex-col">
       <Tabs
-        className="px-8 relative bg-white dark:bg-[#181818] z-0 md:z-10 with-border flex-none mt-2"
+        className={classNames({
+          'invisible': !state.pending
+        }, "px-8 relative bg-white dark:bg-[#181818] z-0 md:z-10 with-border flex-none mt-2")}
         value={state.tabIndex}
         onChange={(_e, newIndex) => {
           if (state.loading || state.tabIndex === newIndex) {
@@ -194,6 +205,14 @@ const Notification = observer((props: IProps) => {
             }
             {state.tab.type === 'follow' && 
               <FollowMessages
+                notifications={state.notifications}
+                unreadCount={state.unreadCount}
+                close={props.onClose}
+                toUserPage={toUserPage}
+              />
+            }
+            {state.tab.type === 'retweet' && 
+              <RetweetMessages
                 notifications={state.notifications}
                 unreadCount={state.unreadCount}
                 close={props.onClose}

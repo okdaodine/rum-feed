@@ -1,6 +1,6 @@
 import { IPost, IComment, IProfile } from './';
 
-export type NotificationType = 'like' | 'comment' | 'follow';
+export type NotificationType = 'like' | 'comment' | 'follow' | 'retweet';
 export type NotificationToObjectType = 'post' | 'comment';
 
 export interface INotification {

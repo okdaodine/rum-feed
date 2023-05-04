@@ -17,6 +17,7 @@ export const content = {
   replyYourComment: 'Reply your comment',
   replyYourContent: 'Reply your content',
   likeFor: (name: string) => `Like for ${name.toLowerCase()}`,
+  retweetYour: (name: string) => `Retweet your ${name.toLowerCase()}`,
   object: 'Content',
   notExist: (name: string) => `No ${name.toLowerCase()}`,
   comment: 'Comment',
@@ -140,5 +141,6 @@ export const content = {
   contents: 'contents',
   exportData: 'Export',
   pleaseExportDataOnDesktop: 'Please export data on desktop',
-  copyLink: '复制链接',
+  copyLink: 'Copy Link',
+  retweet: 'Retweet',
 };

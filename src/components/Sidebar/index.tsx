@@ -56,7 +56,8 @@ export default observer(() => {
     consoleClickCount: 0,
     unreadCount: 0,
     tabIndex: 1,
-    anchorEl: null
+    anchorEl: null,
+    notificationTab: 0,
   }));
   const history = useHistory();
   const location = useLocation();
@@ -73,8 +74,14 @@ export default observer(() => {
     try {
       const count1 = await NotificationApi.getUnreadCount(userStore.address, 'like');
       const count2 = await NotificationApi.getUnreadCount(userStore.address, 'comment');
-      const count3 = await NotificationApi.getUnreadCount(userStore.address, 'follow');
-      state.unreadCount = count1 + count2 + count3;
+      const count3 = await NotificationApi.getUnreadCount(userStore.address, 'retweet');
+      const count4 = await NotificationApi.getUnreadCount(userStore.address, 'follow');
+      state.unreadCount = count1 + count2 + count3 + count4;
+      for (const [idx, value] of Object.entries([count1, count2, count3, count4])) {
+        if (value > 0) {
+          state.notificationTab = Number(idx);
+        }
+      }
     } catch (err) {
       console.log(err);
     }
@@ -448,6 +455,7 @@ export default observer(() => {
       )}
 
       <MessagesModal
+        tab={state.notificationTab}
         open={state.openMessageModal}
         onClose={() => {
           state.openMessageModal = false;
