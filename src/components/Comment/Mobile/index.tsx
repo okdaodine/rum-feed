@@ -171,9 +171,9 @@ export default observer((props: IProps) => {
 
           if (relationStore.mutedMe.has(toComment.userAddress)) {
             confirmDialogStore.show({
-              content: "您已被 Ta 屏蔽，无法进行回复",
+              content: lang.unableToCommentBecauseOfMuted,
               cancelDisabled: true,
-              okText: '我知道了',
+              okText: lang.gotIt,
               ok: () => {
                 confirmDialogStore.hide();
               },

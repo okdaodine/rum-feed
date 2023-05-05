@@ -16,7 +16,6 @@ import { FaSeedling } from 'react-icons/fa';
 import { BiCopy, BiSearch } from 'react-icons/bi';
 import { IoMdClose } from 'react-icons/io';
 import Button from 'components/Button';
-import MigrateGroupModal from './migrateGroupModal';
 import sleep from 'utils/sleep';
 
 interface IModalProps {
@@ -32,7 +31,6 @@ const Main = observer((props: IModalProps) => {
     open: false,
     contents: [] as IContent[],
     hasMoreContent: true,
-    openMigrateGroupModal: false
   }));
 
   React.useEffect(() => {
@@ -246,21 +244,6 @@ const Main = observer((props: IModalProps) => {
                     )}
                   </div>
                 </div>
-              )}
-              {state.group.extra.rawGroup.appKey.includes('v1') && (
-                <>
-                  <Button className="w-full mt-8" onClick={() => {
-                    state.openMigrateGroupModal = true;
-                  }}>升级</Button>
-                  <MigrateGroupModal
-                    oldGroupId={state.group.groupId}
-                    open={state.openMigrateGroupModal}
-                    onClose={() => state.openMigrateGroupModal = false}
-                    addGroup={() => {
-                      window.location.reload();
-                    }}
-                  />
-                </>
               )}
               <Button className="w-full mt-5" color="red" outline onClick={remove}>{lang.delete}</Button>
             </div>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { observer, useLocalObservable } from 'mobx-react-lite';
 import { useStore } from 'store';
+import { lang } from 'utils/lang';
 
 export default observer((props: {
   address: string
@@ -23,18 +24,14 @@ export default observer((props: {
     <span className={`italic ${props.className}`}>
       {relationStore.muted.has(props.address) ? (
         <>
-          来自您屏蔽的用户，内容已隐藏
+          {lang.contentFromMuted}
           {!props.disabledUndoMuted && (
             <span className="text-sky-500 ml-2 cursor-pointer" onClick={() => {
               state.muted = false;
             }}>查看</span>
           )}
         </>
-      ) : (
-        <span>
-          您已被 Ta 屏蔽，无法查看内容
-        </span>
-      )}
+      ) : lang.contentFromMutedMe}
     </span>
   )
 })

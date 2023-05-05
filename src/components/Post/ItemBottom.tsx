@@ -239,7 +239,7 @@ export default observer((props: IProps) => {
             <div className="text-20 mr-[4px] opacity-80">
               <TiArrowForwardOutline />
             </div>
-            <span className="hidden md:block mr-2">转发</span>
+            <span className="hidden md:block mr-2">{lang.retweet}</span>
           </div>
           <div
             className='flex items-center p-2 py-1 mr-5 cursor-pointer tracking-wide dark:text-white dark:text-opacity-50 opacity-80'

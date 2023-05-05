@@ -28,27 +28,29 @@ const ModalWrapper = observer((props: { rs: () => void }) => {
 
   return (
     <Modal open={state.open} onClose={() => handleClose()}>
-      <div className="p-8 relative w-full md:w-[240px] box-border">
-        <div className="pt-2 px-6 pb-5">
+      <div className="p-8 relative w-full md:w-[260px] box-border">
+        <div className="px-6 pb-5">
           <div className="text-18 font-bold dark:text-white dark:text-opacity-80 text-gray-700 text-center pb-5">
             {lang.language}
           </div>
-          <div className="pt-2">
+          <div className="pt-2 mx-auto flex justify-center">
             <RadioGroup
               value={state.value}
               onChange={(e) => {
-                const value = e.target.value as 'en' | 'cn';
+                const value = e.target.value as 'en' | 'cn' | 'tw';
                 state.value = value;
               }}
             >
               <FormControlLabel value="en" control={<Radio />} label={<span className="ml-2">English</span>} />
-              <div className="pt-4" />
+              <div className="pt-6 md:pt-4" />
               <FormControlLabel value="cn" control={<Radio />} label={<span className="ml-2">简体中文</span>} />
+              <div className="pt-6 md:pt-4" />
+              <FormControlLabel value="tw" control={<Radio />} label={<span className="ml-2">繁體中文</span>} />
             </RadioGroup>
           </div>
         </div>
         <Button
-          className="w-full mt-2"
+          className="w-full mt-3"
           onClick={() => {
           i18n.switchLang(state.value);
           window.location.reload();

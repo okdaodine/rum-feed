@@ -1,10 +1,9 @@
 module.exports = {
   database: {
-    host: "dev-postgres.prsdev.club",
-    port: '58000',
-    database: "feed",
-    user: "postgres",
-    password: "48ac0d2661bb5b8644fdcc",
+    host: "tiny.db.elephantsql.com",
+    database: "vvqncksk",
+    user: "vvqncksk",
+    password: "VoIBBmwV5a6jka2beGd3MrUSqxhZ-KG3",
     dialect: "postgres"
   },
 

@@ -38,9 +38,7 @@ export default observer(() => {
         userAddress: userStore.address
       });
     }
-    getSocket().on('authenticateResult', (result: string) => {
-      console.log(result);
-    });
+    getSocket().on('authenticateResult', (_result: string) => {});
     getSocket().on('connect', () => {
       if (userStore.isLogin) {
         connectSocket();

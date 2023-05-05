@@ -1,13 +1,22 @@
 import { action, observable } from 'mobx';
 
-const STORAGE_KEY = 'I18N_CURRENT_LANG';
+const STORAGE_KEY = 'I18N_LANGUAGE';
 
-const allLang = ['en', 'cn'] as const;
+const allLang = ['en', 'cn', 'tw'] as const;
 
 export type AllLanguages = typeof allLang[number];
 type LangData<T> = Record<AllLanguages, { content: T }>;
 
-const defaultLang = (process.env.REACT_APP_DEFAULT_LANG || 'cn') as AllLanguages;
+const defaultLang = (() => {
+  const language = navigator.language || '';
+  if (['zh-TW', 'zh-HK'].includes(language)) {
+    return 'tw';
+  }
+  if (language.startsWith('zh')) {
+    return 'cn';
+  }
+  return 'en';
+})() as AllLanguages;
 
 const state = observable({
   lang: defaultLang,

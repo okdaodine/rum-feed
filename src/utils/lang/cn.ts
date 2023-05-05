@@ -145,6 +145,12 @@ export const content = {
   pleaseExportDataOnDesktop: '请使用电脑来导出数据哦',
   copyLink: '复制链接',
   retweet: '转发',
+  contentFromMuted: '来自您屏蔽的用户，内容已隐藏',
+  contentFromMutedMe: '您已被 Ta 屏蔽，无法查看内容',
+  contentFromMutedMeDialogMessage: (name: string) => `您已被 <span class="text-sky-500">${name}</span> 屏蔽，无法查看 <span class="text-sky-500">${name}</span> 的内容`,
+  mismatchedAddress: '加解密的 address 不匹配',
+  unableToCommentBecauseOfMuted: '您已被 Ta 屏蔽，无法进行回复',
+  loginBy: (name: string) => `${name} 登录`,
 };
 
 export type Content = typeof content;

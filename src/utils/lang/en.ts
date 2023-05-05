@@ -143,4 +143,10 @@ export const content = {
   pleaseExportDataOnDesktop: 'Please export data on desktop',
   copyLink: 'Copy Link',
   retweet: 'Retweet',
+  contentFromMuted: 'Content hidden from user you\'ve muted',
+  contentFromMutedMe: "You've been blocked by this user, unable to view their content",
+  contentFromMutedMeDialogMessage: (name: string) => `You've been blocked by <span class="text-sky-500">${name}</span>, unable to view <span class="text-sky-500">${name}'s</span> content`,
+  mismatchedAddress: 'Mismatched address',
+  unableToCommentBecauseOfMuted: 'You\'ve been blocked by this user, unable to comment',
+  loginBy: (name: string) => `${name}`,
 };

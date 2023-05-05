@@ -19,6 +19,7 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import { BsFillMicMuteFill } from 'react-icons/bs';
 import { BiLogOutCircle, BiExport } from 'react-icons/bi';
+import { MdLanguage } from 'react-icons/md';
 import UserListModal from './UserListModal';
 import openLoginModal from 'components/Wallet/openLoginModal';
 import { TrxApi } from 'apis';
@@ -31,6 +32,7 @@ import openPhotoSwipe from 'components/openPhotoSwipe';
 import { RiKey2Fill } from 'react-icons/ri';
 import openWalletModal from 'components/Wallet/openWalletModal';
 import MutedContent from 'components/MutedContent';
+import openLanguageModal from 'components/openLanguageModal';
 
 import './index.css';
 
@@ -433,6 +435,16 @@ export default observer((props: RouteChildrenProps) => {
                         }}>  
                           <div className="py-1 pl-1 pr-3 flex items-center dark:text-white dark:text-opacity-80 text-neutral-700">
                             <RiKey2Fill className="mr-2 text-16" /> {lang.wallet}
+                          </div>
+                        </MenuItem>
+                      )}
+                      {isMyself && (
+                        <MenuItem onClick={() => {
+                          openLanguageModal();
+                          state.anchorEl = null;
+                        }}>  
+                          <div className="py-1 pl-1 pr-3 flex items-center dark:text-white dark:text-opacity-80 text-neutral-700">
+                            <MdLanguage className="mr-2 text-16" /> {lang.language}
                           </div>
                         </MenuItem>
                       )}

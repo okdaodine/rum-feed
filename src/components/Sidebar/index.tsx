@@ -37,6 +37,7 @@ import { scrollToTop } from 'components/TopPlaceHolder';
 import copy from 'copy-to-clipboard';
 import { lang } from 'utils/lang';
 import store from 'store2';
+import openLanguageModal from 'components/openLanguageModal';
 
 export default observer(() => {
   const {
@@ -289,6 +290,14 @@ export default observer(() => {
                       }}>
                       <div className="py-1 px-3 flex items-center">
                         {lang.me}
+                      </div>
+                    </MenuItem>
+                    <MenuItem onClick={() => {
+                      openLanguageModal();
+                      state.anchorEl = null;
+                    }}>
+                      <div className="py-1 px-3 flex items-center">
+                        {lang.language}
                       </div>
                     </MenuItem>
                     <MenuItem onClick={() => {

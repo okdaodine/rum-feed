@@ -23,4 +23,15 @@ export const lang = i18n.createLangLoader({
     'symbols': 'Symbols',
     'flags': 'Flags',
   } },
+  tw: { content: {
+    'recent': '最近使用',
+    'people': '人物/表情',
+    'nature': '動物/自然',
+    'foods': '食物/飲料',
+    'activity': '活動',
+    'places': '旅遊/地點',
+    'objects': '物體',
+    'symbols': '符號',
+    'flags': '旗幟',
+  } },
 });

@@ -136,7 +136,7 @@ export default observer((props: IProps) => {
 
   React.useEffect(() => {
     if (relationStore.muted.has(comment.userAddress)) {
-      comment.content = '<span class="italic opacity-60">来自您屏蔽的用户，内容已隐藏</span>';
+      comment.content = `<span class="italic opacity-60">${lang.contentFromMuted}</span>`;
     }
   }, []);
 

@@ -9,7 +9,8 @@ async function get(ctx) {
     logo: config.logo || '',
     defaultGroupId: config.defaultGroupId || '',
     repo: config.repo || '',
-    groupsPageIsOnlyVisibleToAdmin: config.groupsPageIsOnlyVisibleToAdmin || false
+    groupsPageIsOnlyVisibleToAdmin: config.groupsPageIsOnlyVisibleToAdmin || false,
+    walletProviders: config.walletProviders || []
   };
 }
 

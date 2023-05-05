@@ -580,7 +580,7 @@ const Editor = observer((props: IProps) => {
                   })}
                   onClick={submit}
                 >
-                  {props.submitButtonText || (props.retweet ? '转发' : lang.publish)}
+                  {props.submitButtonText || (props.retweet ? lang.retweet : lang.publish)}
                 </Button>
               </div>
             </Tooltip>
