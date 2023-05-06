@@ -3,9 +3,9 @@ const Profile = require('../database/profile');
 const Post = require('../database/post');
 const Comment = require('../database/comment');
 const { assert, Errors } = require('../utils/validator');
-const getDefaultProfile = require('../utils/getDefaultProfile');
 const urlToBase64 = require('../utils/urlToBase64');
 const multiavatar = require('@multiavatar/multiavatar');
+const sharp = require('sharp');
 
 router.get('/posts/:id/:index', getPostImage);
 router.get('/comments/:id/:index', getCommentImage);
@@ -53,9 +53,11 @@ async function getProfileImage(ctx) {
   });
   if (!profile || !profile.avatar) {
     const svgCode = multiavatar(ctx.params.userAddress);
-    ctx.set('Content-Type', 'image/svg+xml');
+    const buffer = await sharp(Buffer.from(svgCode)).resize(200, 200).png({ quality: 90 }).toBuffer();
+    ctx.set('Content-Type', 'image/png');
+    ctx.set('Content-Length', buffer.length);
     ctx.set('Cache-Control', 'public, max-age=31557600');
-    ctx.body = svgCode;  
+    ctx.body = buffer;
     return;
   }
   const url = profile.avatar;
