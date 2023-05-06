@@ -105,8 +105,9 @@ const notify = async (id) => {
     if (within24Hours(post.timestamp)) {  
       getSocketIo().emit('post', post);
       const name = post.extra.userProfile.name.split('\n')[0];
+      const avatar = post.extra.userProfile.avatar;
       Mixin.notifyByBot({
-        iconUrl: post.extra.userProfile.avatar,
+        iconUrl: avatar + (avatar.includes('?') ? `&` : '?') + 'rounded=true',
         title: (post.content || '').slice(0, 30) || '图片',
         description: `${truncateByBytes(name, 14)} 发布内容`,
         url: `${config.origin}/posts/${post.id}`

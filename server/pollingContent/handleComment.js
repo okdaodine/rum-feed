@@ -178,8 +178,9 @@ const notify = async (id) => {
     if (within24Hours(comment.timestamp)) {
       getSocketIo().emit('comment', comment);
       const name = comment.extra.userProfile.name.split('\n')[0];
+      const avatar = comment.extra.userProfile.avatar;
       Mixin.notifyByBot({
-        iconUrl: comment.extra.userProfile.avatar,
+        iconUrl: avatar + (avatar.includes('?') ? `&` : '?') + 'rounded=true',
         title: (comment.content || '').slice(0, 30) || '图片',
         description: `${truncateByBytes(name, 14)} 发布评论`,
         url: `${config.origin}/posts/${comment.objectId}?commentId=${comment.id}`

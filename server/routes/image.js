@@ -60,8 +60,23 @@ async function getProfileImage(ctx) {
     ctx.body = buffer;
     return;
   }
+
   const url = profile.avatar;
-  const buffer = Buffer.from(getContent(url), 'base64');
+  let buffer = Buffer.from(getContent(url), 'base64');
+
+  if (ctx.query.rounded) {
+    const roundedCorners = '<svg><circle r="100" cx="100" cy="100"/></svg>';
+    buffer = await sharp(buffer).resize(200, 200).composite([{
+      input: Buffer.from(roundedCorners),
+      blend: 'dest-in'
+    }]).png({ quality: 80 }).toBuffer();
+    ctx.set('Content-Type', 'image/png');
+    ctx.set('Content-Length', buffer.length);
+    ctx.set('Cache-Control', 'public, max-age=31557600');
+    ctx.body = buffer;
+    return;
+  }
+
   ctx.set('Content-Type', getMimeType(url));
   ctx.set('Content-Length', buffer.length);
   ctx.set('Cache-Control', 'public, max-age=31557600');
