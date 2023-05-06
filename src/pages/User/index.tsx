@@ -438,7 +438,7 @@ export default observer((props: RouteChildrenProps) => {
                           </div>
                         </MenuItem>
                       )}
-                      {isMyself && (
+                      {isMyself && isMobile && (
                         <MenuItem onClick={() => {
                           openLanguageModal();
                           state.anchorEl = null;
