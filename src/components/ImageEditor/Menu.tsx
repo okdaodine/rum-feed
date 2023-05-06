@@ -5,7 +5,7 @@ import Button from 'components/Button';
 import Loading from 'components/Loading';
 import { lang } from 'utils/lang';
 
-type MenuItemActions = 'openPresetImages' | 'upload' | 'openImageLib' | 'makeAvatar';
+type MenuItemActions = 'upload' | 'openImageLib';
 
 interface Props {
   open: boolean
@@ -23,7 +23,6 @@ export default observer((props: Props) => {
       <div className="px-12 text-16 text-center font-bold">{lang.selectProvider}</div>
       <div className="pt-1">
         {([
-          props.showAvatarSelect && ['openPresetImages', lang.selectAvatar] as const,
           ['upload', lang.uploadImage],
           ['openImageLib', lang.selectFromImageLib]
         ] as const)

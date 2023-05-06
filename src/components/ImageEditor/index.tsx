@@ -1,6 +1,5 @@
 import React from 'react';
 import classNames from 'classnames';
-import { action } from 'mobx';
 import { observer, useLocalObservable } from 'mobx-react-lite';
 import AvatarEditor from 'react-avatar-editor';
 import { MdEdit, MdCameraAlt } from 'react-icons/md';
@@ -17,7 +16,6 @@ import Base64 from 'utils/base64';
 
 import Menu from './Menu';
 import ImageLibModal from './ImageLibModal';
-import PresetImagesModal from './PresetImagesModal';
 
 import './index.css';
 
@@ -40,7 +38,6 @@ export default observer((props: IProps) => {
   const state = useLocalObservable(() => ({
     showMenu: false,
     showImageLib: false,
-    showPresetImages: false,
     proxyImageUrl: '',
     mimeType: '',
     isUploadingOriginImage: false,
@@ -104,12 +101,6 @@ export default observer((props: IProps) => {
       reader.readAsDataURL(file);
     }
   };
-
-  const handlePresetImageSelect = action((url: string) => {
-    props.getImageUrl(url);
-    state.showPresetImages = false;
-    state.showMenu = false;
-  });
 
   const handleAvatarSubmit = async () => {
     if (state.avatarLoading) {
@@ -296,8 +287,6 @@ export default observer((props: IProps) => {
             avatarInputRef.current!.click();
           } else if (action === 'openImageLib') {
             state.showImageLib = true;
-          } else if (action === 'openPresetImages') {
-            state.showPresetImages = true;
           }
         }}
       />
@@ -321,12 +310,6 @@ export default observer((props: IProps) => {
             state.avatarDialogOpen = true;
           }
         }}
-      />
-
-      <PresetImagesModal
-        open={state.showPresetImages}
-        close={() => { state.showPresetImages = false; }}
-        onSelect={handlePresetImageSelect}
       />
 
       {isMobile && (

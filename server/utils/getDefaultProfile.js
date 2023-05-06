@@ -1,5 +1,7 @@
+const config = require('../config');
+
 module.exports = (userAddress) => ({
   userAddress,
   name: userAddress.slice(-8),
-  avatar: 'https://static-assets.pek3b.qingstor.com/rum-avatars/default.png',
+  avatar: `${config.serverOrigin || config.origin || ''}/api/images/profiles/${userAddress}`
 });

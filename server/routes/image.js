@@ -5,6 +5,7 @@ const Comment = require('../database/comment');
 const { assert, Errors } = require('../utils/validator');
 const getDefaultProfile = require('../utils/getDefaultProfile');
 const urlToBase64 = require('../utils/urlToBase64');
+const multiavatar = require('@multiavatar/multiavatar');
 
 router.get('/posts/:id/:index', getPostImage);
 router.get('/comments/:id/:index', getCommentImage);
@@ -51,7 +52,10 @@ async function getProfileImage(ctx) {
     userAddress: ctx.params.userAddress
   });
   if (!profile || !profile.avatar) {
-    ctx.redirect(getDefaultProfile(ctx.params.userAddress).avatar);
+    const svgCode = multiavatar(ctx.params.userAddress);
+    ctx.set('Content-Type', 'image/svg+xml');
+    ctx.set('Cache-Control', 'public, max-age=31557600');
+    ctx.body = svgCode;  
     return;
   }
   const url = profile.avatar;

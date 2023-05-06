@@ -757,6 +757,11 @@
     uuid "^9.0.0"
     ws "^8.7.0"
 
+"@multiavatar/multiavatar@^1.0.7":
+  version "1.0.7"
+  resolved "https://registry.npmjs.org/@multiavatar/multiavatar/-/multiavatar-1.0.7.tgz#bc2b855bab728a51ee9cee2412ee9f76282b7c78"
+  integrity sha512-Yg9Uw57bmlErsWL0CSv4d6D4ZqVBE00OZmYr9MRgygoXZdboNtsEI6FbBRw1AY8l88Sm1ARcyojtlm2uwUn0Zg==
+
 "@opencensus/core@0.0.9":
   version "0.0.9"
   resolved "https://registry.npmjs.org/@opencensus/core/-/core-0.0.9.tgz#b16f775435ee309433e4126af194d37313fc93b3"
