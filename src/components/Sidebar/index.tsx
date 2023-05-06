@@ -79,7 +79,7 @@ export default observer(() => {
       const count4 = await NotificationApi.getUnreadCount(userStore.address, 'follow');
       state.unreadCount = count1 + count2 + count3 + count4;
       for (const [idx, value] of Object.entries([count1, count2, count3, count4])) {
-        if (value > 0) {
+        if (value > 0 && state.notificationTab === 0) {
           state.notificationTab = Number(idx);
         }
       }
