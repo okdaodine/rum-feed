@@ -87,7 +87,7 @@ export default {
         while (!stop) {
           kbSize = await this.getImageKbSize(url);
           console.log({ kbSize, quality });
-          if (kbSize < MAX_KB || quality === 0) {
+          if (kbSize < MAX_KB || quality < 0.1) {
             stop = true;
           } else {
             url = getDataUrl(img, _width, _height, quality);
