@@ -121,7 +121,7 @@ const Images = (props: {
   );
 };
 
-const extensions = ['jpg', 'jpeg', 'png', 'gif'];
+const extensions = ['jpg', 'jpeg', 'png'];
 const ACCEPT = extensions.map((v) => `.${v}`).join(', ');
 
 export default (props: IProps) => {
