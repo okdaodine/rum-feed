@@ -59,7 +59,6 @@ exports.notifyByBot = async (data) => {
     return;
   }
   while (isBusy) {
-    console.log(`别人正在 mixin notifying，我等待 ...`);
     await sleep(1000);
   }
   try {
