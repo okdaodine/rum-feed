@@ -7,8 +7,9 @@ export default {
   async list(p: {
     limit: number
     offset: number
+    viewer?: string
   }) {
-    const items: IActivity[] = await request(`${API_BASE_URL}/activities?${qs.stringify(p)}`);
+    const items: IActivity[] = await request(`${API_BASE_URL}/activities?${qs.stringify(p, { skipEmptyString: true })}`);
     return items;
   },
 }

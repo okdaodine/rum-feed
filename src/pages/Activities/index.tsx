@@ -11,8 +11,10 @@ import useInfiniteScroll from 'react-infinite-scroll-hook';
 import Fade from '@material-ui/core/Fade';
 import store from 'store2';
 import { isMobile, isPc } from 'utils/env';
+import { useStore } from 'store';
 
 export default observer(() => {
+  const { userStore } = useStore();
   const state = useLocalObservable(() => ({
     activities: [] as IActivity[],
     fetched: false,
@@ -30,7 +32,8 @@ export default observer(() => {
         const limit = 20;
         const activities = await ActivityApi.list({
           limit,
-          offset: state.page * limit
+          offset: state.page * limit,
+          viewer: userStore.address
         });
         state.activities.push(...activities);
         state.hasMore = activities.length === limit;
