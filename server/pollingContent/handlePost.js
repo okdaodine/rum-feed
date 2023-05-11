@@ -8,6 +8,7 @@ const within24Hours = require('../utils/within24Hours');
 const extractUrls = require('../utils/extractUrls');
 const isRetweetUrl = require('../utils/isRetweetUrl');
 const Notification = require('../database/notification');
+const Activity = require('../database/sequelize/activity');
 const { trySendSocket } = require('../socket');
 
 module.exports = async (item, group) => {
@@ -113,5 +114,13 @@ const notify = async (id) => {
         url: `${config.origin}/posts/${post.id}`
       });
     }
+    await Activity.create({
+      groupId: post.groupId,
+      userAddress: post.userAddress,
+      type: 'post',
+      content: (post.content || '').slice(0, 30) || 'Image',
+      url: `/posts/${post.id}`,
+      timestamp: Date.now(),
+    });
   }
 }

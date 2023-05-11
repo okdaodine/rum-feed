@@ -6,6 +6,7 @@ import Groups from './pages/Groups';
 import Search from './pages/Search';
 import PostDetail from './pages/PostDetail';
 import User from './pages/User';
+import Activities from './pages/Activities';
 import SnackBar from 'components/SnackBar';
 import ConfirmDialog from './components/ConfirmDialog';
 import { AliveScope } from 'react-activation';
@@ -53,6 +54,11 @@ const App = observer(() => {
                     window.location.pathname.startsWith(`/posts`)
                   )}>
                     <User { ...props } />
+                  </KeepAlive>
+                )} />
+                <Route path="/activities" exact component={() => (
+                  <KeepAlive name="activities">
+                    <Activities />
                   </KeepAlive>
                 )} />
                 <PostDetailModal />

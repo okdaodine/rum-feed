@@ -151,6 +151,9 @@ export const content = {
   mismatchedAddress: '加解密的 address 不匹配',
   unableToCommentBecauseOfMuted: '您已被 Ta 屏蔽，无法进行回复',
   loginBy: (name: string) => `${name} 登录`,
+  publishedPost: '发布内容',
+  publishedComment: '发布评论',
+  activities: '动态',
 };
 
 export type Content = typeof content;

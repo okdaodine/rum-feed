@@ -151,6 +151,9 @@ export const content = {
   mismatchedAddress: '加解密的 address 不匹配',
   unableToCommentBecauseOfMuted: '您已被 Ta 屏蔽，無法進行回覆',
   loginBy: (name: string) => `${name} 登入`,
+  publishedPost: '發布內容',
+  publishedComment: '發布評論',
+  activities: '動態',
 };
 
 export type Content = typeof content;

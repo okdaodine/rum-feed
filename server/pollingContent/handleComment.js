@@ -8,6 +8,7 @@ const config = require('../config');
 const Mixin = require('../mixin');
 const truncateByBytes = require('../utils/truncateByBytes');
 const Orphan = require('../database/sequelize/orphan');
+const Activity = require('../database/sequelize/activity');
 const within24Hours = require('../utils/within24Hours');
 
 module.exports = async (item, group) => {
@@ -186,5 +187,13 @@ const notify = async (id) => {
         url: `${config.origin}/posts/${comment.objectId}?commentId=${comment.id}`
       });
     }
+    await Activity.create({
+      groupId: comment.groupId,
+      userAddress: comment.userAddress,
+      type: 'comment',
+      content: (comment.content || '').slice(0, 30) || 'Image',
+      url: `/posts/${comment.objectId}?commentId=${comment.id}`,
+      timestamp: Date.now(),
+    });
   }
 }

@@ -104,9 +104,9 @@ const Notification = observer((props: IProps) => {
     state.loading = true;
     (async () => {
       try {
-        for (const tab of state.tabs) {
-          tab.unreadCount = await NotificationApi.getUnreadCount(userStore.address, tab.type);
-        }
+        await Promise.all(state.tabs.map(async tab => {
+          tab.unreadCount = await NotificationApi.getUnreadCount(userStore.address, tab.type)
+        }));
         state.unreadCount = state.tab.unreadCount;
         if (!state.fetched) {
           await sleep(200);

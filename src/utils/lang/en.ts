@@ -149,4 +149,7 @@ export const content = {
   mismatchedAddress: 'Mismatched address',
   unableToCommentBecauseOfMuted: 'You\'ve been blocked by this user, unable to comment',
   loginBy: (name: string) => `${name}`,
+  publishedPost: 'published',
+  publishedComment: 'commented',
+  activities: 'Activities',
 };

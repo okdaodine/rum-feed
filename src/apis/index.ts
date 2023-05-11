@@ -13,3 +13,4 @@ export { default as TweetApi } from './tweet';
 export { default as ConfigApi } from './config';
 export { default as V1ContentApi } from './v1Content';
 export { default as LinkApi } from './link';
+export { default as ActivityApi } from './activity';

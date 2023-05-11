@@ -38,6 +38,8 @@ import copy from 'copy-to-clipboard';
 import { lang } from 'utils/lang';
 import store from 'store2';
 import openLanguageModal from 'components/openLanguageModal';
+import { TbActivity } from 'react-icons/tb';
+import { sum } from 'lodash';
 
 export default observer(() => {
   const {
@@ -67,18 +69,21 @@ export default observer(() => {
   const isHomePage = location.pathname === `/`;
   const isSearchPage = location.pathname === `/search`;
   const isGroupsPage = location.pathname === `/groups`;
+  const isActivitiesPage = location.pathname === `/activities`;
   const isMyUserPage = location.pathname === `/users/${userStore.address}`;
   const isGroupPage = location.pathname.startsWith(`/groups/`);
   const isPostPage = location.pathname.startsWith(`/posts`);
 
   const fetchUnreadCount = async () => {
     try {
-      const count1 = await NotificationApi.getUnreadCount(userStore.address, 'like');
-      const count2 = await NotificationApi.getUnreadCount(userStore.address, 'comment');
-      const count3 = await NotificationApi.getUnreadCount(userStore.address, 'retweet');
-      const count4 = await NotificationApi.getUnreadCount(userStore.address, 'follow');
-      state.unreadCount = count1 + count2 + count3 + count4;
-      for (const [idx, value] of Object.entries([count1, count2, count3, count4])) {
+      const counts = await Promise.all([
+        NotificationApi.getUnreadCount(userStore.address, 'like'),
+        NotificationApi.getUnreadCount(userStore.address, 'comment'),
+        NotificationApi.getUnreadCount(userStore.address, 'retweet'),
+        NotificationApi.getUnreadCount(userStore.address, 'follow')
+      ]);
+      state.unreadCount = sum(counts);
+      for (const [idx, value] of Object.entries(counts)) {
         if (value > 0) {
           state.notificationTab = Number(idx);
           break;
@@ -93,7 +98,7 @@ export default observer(() => {
     if (!userStore.isLogin) {
       return;
     }
-    fetchUnreadCount();
+    setTimeout(fetchUnreadCount, 1000)
   }, []);
 
   React.useEffect(() => {
@@ -168,7 +173,7 @@ export default observer(() => {
   return (
     <div>
       <div className={classNames({
-        hidden: isSearchPage
+        hidden: (isMobile && isActivitiesPage) || isSearchPage
       }, "fixed top-0 left-0 z-[999] h-[40px] md:h-[42px] flex items-center justify-center w-screen bg-white dark:bg-[#181818] border-b dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] border-neutral-100")}>
         <div className="w-[600px] flex items-center justify-between">
           {isPc && (
@@ -200,14 +205,24 @@ export default observer(() => {
           )}
           {userStore.isLogin && (
             <div className="flex items-center">
+              {isPc && configStore.config.enabledActivities && (
+                <div
+                  className="p-1 cursor-pointer mr-4"
+                  onClick={async () => {
+                    await aliveController.drop('activities');
+                    history.push('/activities');
+                  }}>
+                  <TbActivity className="text-22 dark:text-white/70 text-neutral-500/90 opacity-70 dark:opacity-100" />
+                </div>
+              )}
               {(isPc || isMyUserPage) && (
                 <div
                   className="p-1 cursor-pointer mr-1 md:mr-4"
                   onClick={() => {
                     settingStore.setTheme(settingStore.isDarkMode ? 'light' : 'dark');
                   }}>
-                  <MdOutlineDarkMode className="dark:hidden text-22 dark:text-white text-neutral-500 opacity-60 dark:opacity-100 dark:dark:text-white" />
-                  <MdOutlineLightMode className="hidden dark:block text-22 dark:text-white text-neutral-500 opacity-60 dark:opacity-100 dark:dark:text-white" />
+                  <MdOutlineDarkMode className="dark:hidden text-22 dark:text-white/80 text-neutral-500 opacity-60 dark:opacity-100" />
+                  <MdOutlineLightMode className="hidden dark:block text-22 dark:text-white/80 text-neutral-500 opacity-60 dark:opacity-100" />
                 </div>
               )}
               {isPc && (
@@ -223,7 +238,7 @@ export default observer(() => {
                       })}`);
                     }
                   }}>
-                  <AiOutlineSearch className="text-22 dark:text-white text-neutral-500 opacity-70 dark:opacity-100 dark:dark:text-white" />
+                  <AiOutlineSearch className="text-22 dark:text-white/80 text-neutral-500 opacity-70 dark:opacity-100" />
                 </div>
               )}
               {isMobile && isPostPage && (
@@ -382,7 +397,7 @@ export default observer(() => {
               </div>
             </Fade>
           )}
-          {(isHomePage || isMyUserPage || isSearchPage) && (
+          {(isHomePage || isMyUserPage || isSearchPage || isActivitiesPage) && (
             <div>
               <div className="ios-safe-area-padding pt-[6px] fixed bottom-0 left-0 w-screen flex justify-around dark:text-white dark:text-opacity-80 text-gray-88 text-12 border-t dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] border-neutral-100 bg-white dark:bg-[#181818] z-50">
                 <div
@@ -413,6 +428,25 @@ export default observer(() => {
                   </div>
                   <div className="transform scale-90">{lang.home}</div>
                 </div>
+                {configStore.config.enabledActivities && (
+                  <div
+                    className={classNames(
+                      {
+                        'dark:text-white dark:text-opacity-80 text-black': isActivitiesPage,
+                      },
+                      'px-4 text-center flex flex-col items-center',
+                    )}
+                    onClick={async () => {
+                      await aliveController.drop('activities');
+                      history.push('/activities');
+                    }}
+                  >
+                    <div className="flex items-center justify-center text-24 h-6 w-6">
+                      {isActivitiesPage ? <TbActivity /> : <TbActivity />}
+                    </div>
+                    <div className="transform scale-90">{lang.activities}</div>
+                  </div>
+                )}
                 <div
                   className={classNames(
                     {

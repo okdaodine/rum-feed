@@ -1,7 +1,7 @@
 import { format } from 'date-fns';
 import { lang } from 'utils/lang';
 
-export default (blockTimeStamp: number, options: { trimmed?: boolean } = {}) => {
+export default (blockTimeStamp: number, options: { trimmed?: boolean, disabledText?: boolean } = {}) => {
   if (!blockTimeStamp) {
     return '';
   }
@@ -23,7 +23,7 @@ export default (blockTimeStamp: number, options: { trimmed?: boolean } = {}) => 
     result = format(time, options.trimmed ? 'yyyy-MM-dd' : 'yyyy-MM-dd HH:mm');
   } else if (_day >= 1 || isDiffDay) {
     result = format(time, options.trimmed ? 'MM-dd' : 'MM-dd HH:mm');
-  } else if (_hour >= 4) {
+  } else if (_hour >= 4 || options.disabledText) {
     result = format(time, 'HH:mm');
   } else if (_hour >= 1) {
     result = Math.floor(_hour) + lang.hoursAgo;

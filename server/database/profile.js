@@ -46,7 +46,7 @@ exports.bulkGet = async (indexes, options ={}) => {
     }
   };
   if (options.withReplacedImage) {
-    query.attributes = { exclude: ['avatar'] };
+    query.attributes = { exclude: ['avatar', 'id', 'groupId'] };
   }
   const items = await Profile.findAll(query);
   return items.map(item => pack(item.toJSON(), options));
