@@ -442,7 +442,6 @@ const Editor = observer((props: IProps) => {
             onPreviewsChanged={async (previews: PreviewItem[]) => {
               const newPreviews = previews.filter((preview: PreviewItem) => {
                 const ext = (preview.name || '').split('.').pop()?.toLowerCase() || '';
-                console.log(preview);
                 if (!extensions.includes(ext)) {
                   if (!alertedPreviewsRef.current.includes(preview.name)) {
                     alertedPreviewsRef.current.push(preview.name);
