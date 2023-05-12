@@ -77,7 +77,7 @@ export default observer(() => {
             动态
           </div>
         )}
-        <div className="w-full px-3 md:px-0 md:w-[460px] md:mx-auto pt-[56px] pb-20 md:py-[70px]">
+        <div className="w-full px-4 md:px-0 md:w-[460px] md:mx-auto pt-[56px] pb-20 md:py-[70px]">
           {isPc && (
             <div className="text-gray-4a/80 dark:text-white/90 text-18 font-bold pb-3 flex items-center">
               <TbActivity className="text-24 mr-2 text-orange-500" />
@@ -91,16 +91,16 @@ export default observer(() => {
                   {lang.lastSeenHere}
                 </div>
               )}
-              <div className="min-w-[60vw] md:min-w-[240px] inline-block py-1 px-3 md:px-[14px] rounded-12 text-gray-4a bg-white dark:bg-slate-400/10 dark:text-white/80 mb-[14px] cursor-pointer border border-gray-88/20 dark:border-gray-88/5" onClick={() => {
+              <div className="min-w-[60vw] md:min-w-[240px] inline-block py-1 px-[10px] md:px-[14px] rounded-12 text-gray-4a bg-white dark:bg-slate-400/10 dark:text-white/80 mb-[14px] cursor-pointer border border-gray-88/20 dark:border-gray-88/5" onClick={() => {
                 history.push(activity.url);
               }}>
-                <div className="flex items-center relative">
+                <div className="flex items-center relative py-[4px]">
                   <img src={activity.extra.userProfile.avatar} alt="avatar" className="w-[42px] h-[42px] rounded-full flex-shrink-0" />
-                  <div className="flex-1 ml-2 md:ml-3 leading-none flex-wrap py-[10px]">
+                  <div className="flex-1 ml-2 md:ml-3 leading-1 flex-wrap pt-[3px]">
                     <div className="truncate max-w-[70vw] md:max-w-[372px] text-[14px]">
                       {activity.content === 'Image' ? lang.image : activity.content}
                     </div>
-                    <div className="mt-2 opacity-50 flex items-center justify-between text-[12px]">
+                    <div className="mt-[2px] opacity-50 flex items-center justify-between text-[12px]">
                       <div className="flex">
                         <div className="truncate max-w-[100px] mr-1">{activity.extra.userProfile.name}</div>
                         {activity.type === 'post' && lang.publishedPost}
