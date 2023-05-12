@@ -209,6 +209,9 @@ export default observer(() => {
                 <div
                   className="p-1 cursor-pointer mr-4"
                   onClick={async () => {
+                    if (location.pathname === '/activities') {
+                      return;
+                    }
                     await aliveController.drop('activities');
                     history.push('/activities');
                   }}>
@@ -437,6 +440,9 @@ export default observer(() => {
                       'px-4 text-center flex flex-col items-center',
                     )}
                     onClick={async () => {
+                      if (location.pathname === '/activities') {
+                        return;
+                      }
                       await aliveController.drop('activities');
                       history.push('/activities');
                     }}
