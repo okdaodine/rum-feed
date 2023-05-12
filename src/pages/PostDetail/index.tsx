@@ -14,16 +14,18 @@ import sleep from 'utils/sleep';
 
 export default observer(() => {
   const { postStore, userStore } = useStore();
+  const params = useParams() as { id: string };
   const state = useLocalObservable(() => ({
     loading: false,
     fetched: false,
+    id: params.id,
   }));
-  const { id } = useParams() as { id: string };
   const history = useHistory();
-  const post = postStore.map[id];
+  const { id } = state;
 
   React.useEffect(() => {
     scrollToTop();
+    const post = postStore.map[id];
     if (post) {
       if (state.fetched) {
         state.loading = true;
@@ -56,6 +58,16 @@ export default observer(() => {
     })();
   }, [id]);
 
+  React.useEffect(() => {
+    if (state.id === params.id) {
+      return;
+    }
+    if (state.fetched) {
+      state.fetched = false;
+    }
+    state.id = params.id;
+  }, [params.id]);
+
   if (state.loading) {
     return (
       <div className="pt-[30vh] flex justify-center">
@@ -67,6 +79,8 @@ export default observer(() => {
   if (!state.fetched) {
     return null;
   }
+
+  const post = postStore.map[id];
 
   if (!post) {
     return (
