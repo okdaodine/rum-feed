@@ -24,7 +24,6 @@ export const content = {
   reply: 'Reply',
   publish: 'Publish',
   back: 'Back',
-  blockInfo: 'Block Info',
   sender: 'Sender',
   group: 'Group',
   data: 'Data',
@@ -152,4 +151,7 @@ export const content = {
   publishedPost: 'published',
   publishedComment: 'commented',
   activities: 'Activities',
+  favorite: 'favorite',
+  unfavorite: 'Unfavorite',
+  onChainInfo: 'On Chain info'
 };

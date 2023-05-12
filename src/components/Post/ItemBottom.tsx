@@ -14,10 +14,7 @@ import sleep from 'utils/sleep';
 import openLoginModal from 'components/Wallet/openLoginModal';
 import { isMobile, isPc } from 'utils/env';
 import { TiArrowForwardOutline } from 'react-icons/ti';
-import { AiOutlineLink } from 'react-icons/ai';
 import { lang } from 'utils/lang';
-import copy from 'copy-to-clipboard';
-import Tooltip from '@material-ui/core/Tooltip';
 import { TrxApi, PostApi } from 'apis';
 import openEditor from 'components/Post/OpenEditor';
 import { scrollToTop } from 'components/TopPlaceHolder';
@@ -233,34 +230,13 @@ export default observer((props: IProps) => {
               )}
           </div>
           <div
-            className='flex items-center p-2 py-1 ml-[2px] md:ml-0 mr-3 cursor-pointer tracking-wide opacity-9'
+            className='flex items-center p-2 py-1 ml-[2px] md:ml-0 pr-2 mr-4 cursor-pointer tracking-wide opacity-9'
             onClick={onOpenEditor}
           >
             <div className="text-20 mr-[4px] opacity-80">
               <TiArrowForwardOutline />
             </div>
             <span className="hidden md:block mr-2">{lang.retweet}</span>
-          </div>
-          <div
-            className='flex items-center p-2 py-1 mr-5 cursor-pointer tracking-wide dark:text-white dark:text-opacity-50 opacity-80'
-            onClick={() => {
-              copy(`${window.origin}/posts/${post.id}`);
-              snackbarStore.show({
-                message: lang.copied,
-              });
-            }}
-          >
-            <Tooltip
-              enterDelay={200}
-              enterNextDelay={200}
-              placement="top"
-              title={lang.copyLink}
-              arrow
-              >
-              <div className="text-18 mr-[6px]">
-                <AiOutlineLink />
-              </div>
-            </Tooltip>
           </div>
           {isTweet && (
             <div className={classNames({
@@ -276,11 +252,8 @@ export default observer((props: IProps) => {
               SyncedComponent={() => (
                 <div className="mt-[-1px]">
                   <Menu
-                    data={{
-                      groupId: post.groupId,
-                      trxId: post.trxId,
-                      userAddress: post.userAddress
-                    }}
+                    type="post"
+                    data={post}
                     onClickDeleteMenu={() => {
                       const deleteByAdmin = userStore.user.role === 'admin' && post.userAddress !== userStore.address;
                       confirmDialogStore.show({

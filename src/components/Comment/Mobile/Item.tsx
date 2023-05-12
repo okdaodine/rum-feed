@@ -9,8 +9,6 @@ import { useStore } from 'store';
 import { IComment, IPost } from 'apis/types';
 import ago from 'utils/ago';
 import Fade from '@material-ui/core/Fade';
-import { AiOutlineLink } from 'react-icons/ai';
-import copy from 'copy-to-clipboard';
 import { lang } from 'utils/lang';
 import openLoginModal from 'components/Wallet/openLoginModal';
 import { RiThumbUpLine, RiThumbUpFill } from 'react-icons/ri';
@@ -19,6 +17,8 @@ import openPhotoSwipe from 'components/openPhotoSwipe';
 import sleep from 'utils/sleep';
 import { TrxApi } from 'apis';
 import { BsFillCaretDownFill } from 'react-icons/bs';
+import ContentSyncStatus from 'components/ContentSyncStatus';
+import Menu from 'components/ObjectMenu';
 
 import './Item.css';
 
@@ -317,18 +317,17 @@ export default observer((props: IProps) => {
                     </span>
                   </div>
                 )}
-                <div
-                  className='flex items-center justify-center cursor-pointer pr-6'
-                  onClick={() => {
-                    copy(`${window.origin}/posts/${comment.objectId}?commentId=${comment.id}`);
-                    snackbarStore.show({
-                      message: lang.copied,
-                    });
-                  }}
-                >
-                  <span className="flex items-center text-20 pr-1 opacity-80">
-                    <AiOutlineLink />
-                  </span>
+                <div className='ml-[2px] mt-[2px]'>
+                  <ContentSyncStatus
+                    alwaysShow
+                    storage={comment.storage}
+                    SyncedComponent={() => (
+                      <Menu
+                        type="comment"
+                        data={comment}
+                      />
+                    )}
+                  />
                 </div>
               </div>
             </div>

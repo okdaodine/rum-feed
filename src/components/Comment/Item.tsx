@@ -7,7 +7,6 @@ import { RiThumbUpLine, RiThumbUpFill } from 'react-icons/ri';
 import Avatar from 'components/Avatar';
 import ContentSyncStatus from 'components/ContentSyncStatus';
 import { useStore } from 'store';
-import TrxInfo from 'components/TrxInfo';
 import UserCard from 'components/UserCard';
 import { lang } from 'utils/lang';
 import { IComment } from 'apis/types';
@@ -16,14 +15,12 @@ import openPhotoSwipe from 'components/openPhotoSwipe';
 import Images from 'components/Images';
 import { isMobile, isPc } from 'utils/env';
 import Fade from '@material-ui/core/Fade';
-import { AiOutlineLink } from 'react-icons/ai';
-import copy from 'copy-to-clipboard';
-import Tooltip from '@material-ui/core/Tooltip';
 import openLoginModal from 'components/Wallet/openLoginModal';
 import sleep from 'utils/sleep';
 import { TrxApi } from 'apis';
 import { FaRegComment } from 'react-icons/fa';
 import { IActivity } from 'rum-sdk-browser';
+import Menu from 'components/ObjectMenu';
 
 import './item.css';
 
@@ -350,34 +347,13 @@ export default observer((props: IProps) => {
                     </span>
                   </span>
                 )}
-                <div
-                  className='items-center cursor-pointer pr-6 tracking-wide leading-none hidden group-hover:flex'
-                  onClick={() => {
-                    copy(`${window.origin}/posts/${comment.objectId}?commentId=${comment.id}`);
-                    snackbarStore.show({
-                      message: lang.copied,
-                    });
-                  }}
-                >
-                  <Tooltip
-                    enterDelay={200}
-                    enterNextDelay={200}
-                    placement="top"
-                    title={lang.copyLink}
-                    arrow
-                    >
-                    <div className="flex items-center text-18">
-                      <AiOutlineLink />
-                    </div>
-                  </Tooltip>
-                </div>
                 <div className='ml-[2px] mt-[2px]'>
                   <ContentSyncStatus
                     storage={comment.storage}
                     SyncedComponent={() => (
-                      <TrxInfo
-                        groupId={comment.groupId}
-                        trxId={comment.trxId}
+                      <Menu
+                        type="comment"
+                        data={comment}
                       />
                     )}
                   />

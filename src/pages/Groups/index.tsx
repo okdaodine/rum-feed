@@ -32,7 +32,7 @@ export default observer(() => {
   }));
 
   React.useEffect(() => {
-    document.title = configStore.config.siteName || 'Rum 微博广场';
+    document.title = configStore.config.siteName || 'Rum Feed';
   }, []);
 
   React.useEffect(() => {

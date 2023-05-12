@@ -158,11 +158,11 @@ const Main = observer((props: IModalProps) => {
               </div>
               <div className="mt-8">
                 <div className="flex">
-                  <div className="dark:text-white dark:text-opacity-80 text-gray-500 font-bold bg-gray-100 dark:bg-black dark:bg-opacity-70 rounded-0 pt-2 pb-3 px-4">
+                  <div className="dark:text-white dark:text-opacity-80 text-gray-500 font-bold bg-gray-ec dark:bg-neutral-800 rounded-0 pt-2 pb-3 px-4 rounded-t-12">
                     {lang.seed}
                   </div>
                 </div>
-                <div className="-mt-3 justify-center bg-gray-100 dark:bg-black dark:bg-opacity-70 rounded-0 pt-3 px-4 md:px-6 pb-3 leading-7 tracking-wide">
+                <div className="-mt-3 justify-center bg-gray-ec dark:bg-neutral-800 rounded-0 pt-3 px-4 md:px-6 pb-3 leading-7 tracking-wide rounded-12 rounded-lt-none">
                     <Tooltip
                       enterDelay={300}
                       enterNextDelay={300}
@@ -188,11 +188,11 @@ const Main = observer((props: IModalProps) => {
               </div>
               <div className="mt-8">
                 <div className="flex">
-                  <div className="dark:text-white dark:text-opacity-80 text-gray-500 font-bold bg-gray-100 dark:bg-black dark:bg-opacity-70 rounded-0 pt-2 pb-3 px-4">
+                  <div className="dark:text-white dark:text-opacity-80 text-gray-500 font-bold bg-gray-ec dark:bg-neutral-800 rounded-0 pt-2 pb-3 px-4 rounded-t-12">
                     {lang.node}
                   </div>
                 </div>
-                <div className="-mt-3 justify-center bg-gray-100 dark:bg-black dark:bg-opacity-70 rounded-0 pt-3 px-4 md:px-6 pb-3 leading-7 tracking-wide">
+                <div className="-mt-3 justify-center bg-gray-ec dark:bg-neutral-800 rounded-0 pt-3 px-4 md:px-6 pb-3 leading-7 tracking-wide rounded-12 rounded-lt-none">
                   {state.group.status === 'disconnected' && (
                     <div className="flex items-center justify-center bg-red-400 dark:text-black text-white px-2 text-12 rounded-12 mb-2 py-1 leading-none">
                       <MdOutlineErrorOutline className="mr-1 text-18" /> {lang.disconnected}
@@ -214,11 +214,11 @@ const Main = observer((props: IModalProps) => {
               {state.contents.length > 0 && (
                 <div className="mt-8">
                   <div className="flex">
-                    <div className="dark:text-white dark:text-opacity-80 text-gray-500 font-bold bg-gray-100 dark:bg-black dark:bg-opacity-70 rounded-0 pt-2 pb-3 px-4">
+                    <div className="dark:text-white dark:text-opacity-80 text-gray-500 font-bold bg-gray-ec dark:bg-neutral-800 rounded-0 pt-2 pb-3 px-4 rounded-t-12">
                       {lang.block}
                     </div>
                   </div>
-                  <div className="-mt-3 justify-center bg-gray-100 dark:bg-black dark:bg-opacity-70 rounded-0 pt-3 px-4 md:px-6 pb-3 leading-7 tracking-wide">
+                  <div className="-mt-3 justify-center bg-gray-ec dark:bg-neutral-800 rounded-0 pt-3 px-4 md:px-6 pb-3 leading-7 tracking-wide rounded-12 rounded-lt-none">
                     {state.contents.map((content, index) => (
                       <Tooltip
                         key={content.id}

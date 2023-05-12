@@ -46,11 +46,11 @@ const ModalWrapper = observer((props: IProps) => {
         </div>
         <div className="mt-8">
           <div className="flex">
-            <div className="dark:text-white dark:text-opacity-80 text-gray-500 font-bold bg-gray-100 dark:bg-black dark:bg-opacity-70 rounded-0 pt-2 pb-3 px-4">
+            <div className="dark:text-white dark:text-opacity-80 text-gray-500 font-bold bg-gray-ec dark:bg-neutral-800 rounded-0 pt-2 pb-3 px-4 rounded-t-12">
               {lang.privateKey}
             </div>
           </div>
-          <div className="-mt-3 justify-center bg-gray-100 dark:bg-black dark:bg-opacity-70 rounded-0 pt-3 px-4 md:px-5 pb-3 leading-7 tracking-wide">
+          <div className="-mt-3 justify-center bg-gray-ec dark:bg-neutral-800 rounded-0 pt-3 px-4 md:px-5 pb-3 leading-7 tracking-wide rounded-12 rounded-lt-none">
             <div className="flex items-center py-[2px] cursor-pointer" onClick={() => {
               copy(props.privateKey);
               snackbarStore.show({

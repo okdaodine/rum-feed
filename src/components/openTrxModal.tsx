@@ -8,7 +8,6 @@ import { ITrx } from 'rum-sdk-browser';
 import { lang } from 'utils/lang';
 import Loading from 'components/Loading';
 import { useStore } from 'store';
-import MiddleTruncate from 'components/MiddleTruncate';
 import { TrxApi } from 'apis';
 
 interface IProps {
@@ -56,46 +55,82 @@ const ModalWrapper = observer((props: IModalProps) => {
 
   return (
     <Modal open={state.open} onClose={() => handleClose(false)}>
-      <div className=" p-8 relative w-full md:w-[540px] h-[90vh] md:h-auto box-border">
+      <div className="py-8 px-0 md:px-8 relative w-full md:w-[540px] h-[90vh] md:h-auto box-border overflow-y-auto">
         <div className="pt-2 px-6 pb-5">
           <div className="text-18 font-bold dark:text-white dark:text-opacity-80 text-gray-700 text-center pb-5">
-            {lang.blockInfo}
+            {lang.onChainInfo}
           </div>
-          <div className="p-6 dark:text-white dark:text-opacity-80 text-gray-88 text-13 border dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] border-gray-d8 rounded-0 shadow">
-            <div className="flex items-center">
-              <span className="w-22">ID：</span>
-              <span className="dark:text-white dark:text-opacity-80 text-gray-4a opacity-90">{state.trx.TrxId}</span>
+          <div className="p-2 leading-normal break-all tracking-wide">
+
+            <div className="inline-block dark:text-white dark:text-opacity-80 text-gray-500 font-bold bg-gray-ec dark:bg-neutral-800 rounded-0 pt-2 pb-3 px-4 rounded-t-12">
+              ID
             </div>
-            <div className="mt-4 flex items-center">
-              <span className="w-22">{lang.group} ID：</span>
-              <span className="dark:text-white dark:text-opacity-80 text-gray-4a opacity-90">{state.trx.GroupId}</span>
+            <div className="-mt-3 justify-center bg-gray-ec dark:bg-neutral-800 rounded-0 pt-3 px-4 md:px-5 pb-3 rounded-12 rounded-lt-none">
+              <div className="flex items-center py-[2px] cursor-pointer">
+                <div className="text-12 dark:text-white dark:text-opacity-80 text-gray-88 flex-1 pr-2">
+                  {state.trx.TrxId}
+                </div>
+              </div>
             </div>
-            <div className="mt-4 flex items-center">
-              <span className="w-22">{lang.sender}：</span>
-              <span className="dark:text-white dark:text-opacity-80 text-gray-4a opacity-90">
-                <MiddleTruncate string={state.trx.SenderPubkey} length={15} />
-              </span>
+
+            <div className="mt-6 inline-block dark:text-white dark:text-opacity-80 text-gray-500 font-bold bg-gray-ec dark:bg-neutral-800 rounded-0 pt-2 pb-3 px-4 rounded-t-12">
+              {lang.group} ID
             </div>
-            <div className="mt-4 flex items-center">
-              <span className="w-22">{lang.sign}：</span>
-              <span className="dark:text-white dark:text-opacity-80 text-gray-4a opacity-90">
-                <MiddleTruncate string={state.trx.SenderSign} length={15} />
-              </span>
+            <div className="-mt-3 justify-center bg-gray-ec dark:bg-neutral-800 rounded-0 pt-3 px-4 md:px-5 pb-3 rounded-12 rounded-lt-none">
+              <div className="flex items-center py-[2px] cursor-pointer">
+                <div className="text-12 dark:text-white dark:text-opacity-80 text-gray-88 flex-1 pr-2">
+                  {state.trx.GroupId}
+                </div>
+              </div>
             </div>
-            <div className="mt-4 flex items-center">
-              <span className="w-22">{lang.timestamp}：</span>
-              <span className="dark:text-white dark:text-opacity-80 text-gray-4a opacity-90">
-                {state.trx.TimeStamp}
-              </span>
+
+            <div className="mt-6 inline-block dark:text-white dark:text-opacity-80 text-gray-500 font-bold bg-gray-ec dark:bg-neutral-800 rounded-0 pt-2 pb-3 px-4 rounded-t-12">
+              {lang.sender}
             </div>
-            <div className="mt-4 flex items-center">
-              <span className="w-22">{lang.version}：</span>
-              <span className="dark:text-white dark:text-opacity-80 text-gray-4a opacity-90">{state.trx.Version}</span>
+            <div className="-mt-3 justify-center bg-gray-ec dark:bg-neutral-800 rounded-0 pt-3 px-4 md:px-5 pb-3 rounded-12 rounded-lt-none">
+              <div className="flex items-center py-[2px] cursor-pointer">
+                <div className="text-12 dark:text-white dark:text-opacity-80 text-gray-88 flex-1 pr-2">
+                  {state.trx.SenderPubkey}
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-6 inline-block dark:text-white dark:text-opacity-80 text-gray-500 font-bold bg-gray-ec dark:bg-neutral-800 rounded-0 pt-2 pb-3 px-4 rounded-t-12">
+              {lang.sign}
+            </div>
+            <div className="-mt-3 justify-center bg-gray-ec dark:bg-neutral-800 rounded-0 pt-3 px-4 md:px-5 pb-3 rounded-12 rounded-lt-none">
+              <div className="flex items-center py-[2px] cursor-pointer">
+                <div className="text-12 dark:text-white dark:text-opacity-80 text-gray-88 flex-1 pr-2">
+                  {state.trx.SenderSign}
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-6 inline-block dark:text-white dark:text-opacity-80 text-gray-500 font-bold bg-gray-ec dark:bg-neutral-800 rounded-0 pt-2 pb-3 px-4 rounded-t-12">
+              {lang.timestamp}
+            </div>
+            <div className="-mt-3 justify-center bg-gray-ec dark:bg-neutral-800 rounded-0 pt-3 px-4 md:px-5 pb-3 rounded-12 rounded-lt-none">
+              <div className="flex items-center py-[2px] cursor-pointer">
+                <div className="text-12 dark:text-white dark:text-opacity-80 text-gray-88 flex-1 pr-2">
+                  {state.trx.TimeStamp}
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-6 inline-block dark:text-white dark:text-opacity-80 text-gray-500 font-bold bg-gray-ec dark:bg-neutral-800 rounded-0 pt-2 pb-3 px-4 rounded-t-12">
+              {lang.version}
+            </div>
+            <div className="-mt-3 justify-center bg-gray-ec dark:bg-neutral-800 rounded-0 pt-3 px-4 md:px-5 pb-3 rounded-12 rounded-lt-none">
+              <div className="flex items-center py-[2px] cursor-pointer">
+                <div className="text-12 dark:text-white dark:text-opacity-80 text-gray-88 flex-1 pr-2">
+                  {state.trx.Version}
+                </div>
+              </div>
             </div>
           </div>
         </div>
         {state.loading && (
-          <div className="absolute inset-0 flex items-center justify-center bg-white dark:bg-[#181818]">
+          <div className="absolute inset-0 flex justify-center bg-white dark:bg-[#181818]">
             <Loading size={24} />
           </div>
         )}

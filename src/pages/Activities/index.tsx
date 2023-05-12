@@ -26,6 +26,10 @@ export default observer(() => {
   const history = useHistory();
 
   React.useEffect(() => {
+    document.title = lang.activities;
+  }, []);
+
+  React.useEffect(() => {
     (async () => {
       state.loading = true;
       try {
