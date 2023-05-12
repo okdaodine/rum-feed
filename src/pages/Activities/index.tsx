@@ -91,7 +91,7 @@ export default observer(() => {
                   {lang.lastSeenHere}
                 </div>
               )}
-              <div className="min-w-[60vw] md:min-w-[240px] inline-block py-1 px-3 md:px-[14px] rounded-12 text-gray-4a/90 bg-white dark:bg-slate-400/10 dark:text-white/80 mb-[14px] cursor-pointer" onClick={() => {
+              <div className="min-w-[60vw] md:min-w-[240px] inline-block py-1 px-3 md:px-[14px] rounded-12 text-gray-4a bg-white dark:bg-slate-400/10 dark:text-white/80 mb-[14px] cursor-pointer border border-gray-88/20 dark:border-gray-88/5" onClick={() => {
                 history.push(activity.url);
               }}>
                 <div className="flex items-center relative">
@@ -100,7 +100,7 @@ export default observer(() => {
                     <div className="truncate max-w-[70vw] md:max-w-[372px] text-[14px]">
                       {activity.content === 'Image' ? lang.image : activity.content}
                     </div>
-                    <div className="mt-2 opacity-60 dark:opacity-50 flex items-center justify-between text-[12px]">
+                    <div className="mt-2 opacity-50 flex items-center justify-between text-[12px]">
                       <div className="flex">
                         <div className="truncate max-w-[100px] mr-1">{activity.extra.userProfile.name}</div>
                         {activity.type === 'post' && lang.publishedPost}
