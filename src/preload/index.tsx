@@ -71,6 +71,7 @@ const Preload = observer(() => {
         tryOpenLoginModal();
         tryOpenProfileModal();
         tryLogout();
+        tryAutoLogin();
         
         if (userStore.isLogin) {
           initRelation(userStore.address);
@@ -210,6 +211,21 @@ const Preload = observer(() => {
           window.location.href = `/?action=openLoginModal`;
         },
       });
+    }
+  }
+
+  const tryAutoLogin = async () => {
+    const action = Query.get('action');
+    if (action.startsWith('login')) {
+      Query.remove('action');
+      const privateKey = action.split(':')[1];
+      if (privateKey) {
+        store.clear();
+        const wallet = new ethers.Wallet(privateKey);
+        userStore.saveAddress(wallet.address);
+        userStore.savePrivateKey(wallet.privateKey);
+        window.location.reload();
+      }
     }
   }
 
