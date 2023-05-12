@@ -59,7 +59,9 @@ const pack = async (items) => {
   const profileMap = keyBy(profiles, 'userAddress');
   items = items.map((item) => {
     item.extra = {};
-    item.extra.userProfile = profileMap[item.userAddress] || getDefaultProfile(item.userAddress)
+    const profile = profileMap[item.userAddress] || getDefaultProfile(item.userAddress);
+    profile.name = profile.name.split('\n')[0];
+    item.extra.userProfile = profile;
     return item;
   });
   return items;
