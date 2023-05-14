@@ -5,6 +5,7 @@ const { assert, Errors } = require('../utils/validator');
 const Relation = require('../database/sequelize/relation');
 const { Op, fn } = require("sequelize");
 const { ensurePermission } = require('../middleware/api');
+const config = require('../config');
 
 router.get('/:id', get);
 router.delete('/:id', ensurePermission, remove);
@@ -33,7 +34,6 @@ async function list(ctx) {
   }
 
   if (ctx.query.viewer && ctx.query.type === 'following') {
-    where[Op.and] ||= [];
     const following = await Relation.findAll({
       raw: true,
       where: {
@@ -47,6 +47,7 @@ async function list(ctx) {
       return;
     }
 
+    where[Op.and] ||= [];
     where[Op.and].push({
       userAddress: {
         [Op.in]: following.map(item => item.to)
@@ -55,7 +56,6 @@ async function list(ctx) {
   }
 
   if (ctx.query.viewer) {
-    where[Op.and] ||= [];
     const muted = await Relation.findAll({
       raw: true,
       where: {
@@ -73,6 +73,7 @@ async function list(ctx) {
     });
 
     if (muted.length > 0 || mutedMe.length > 0) {
+      where[Op.and] ||= [];
       where[Op.and].push({
         userAddress: {
           [Op.notIn]: [
@@ -99,6 +100,18 @@ async function list(ctx) {
   if (ctx.query.minComment) {
     where.commentCount = {
       [Op.gte]: ~~ctx.query.minComment
+    }
+  }
+
+  if (config.mutedList) {
+    const mutedList = config.mutedList.filter(address => address !== ctx.query.viewer);
+    if (mutedList.length > 0) {
+      where[Op.and] ||= [];
+      where[Op.and].push({
+        userAddress: {
+          [Op.notIn]: mutedList
+        }
+      });
     }
   }
 
