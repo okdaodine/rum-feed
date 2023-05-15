@@ -14,6 +14,8 @@ export function createPostStore() {
 
     searchedIds: [] as string[],
 
+    favoritedIds: [] as string[],
+
     map: {} as Record<string, IPost>,
 
     feedType: (store('feedType') || 'latest') as FeedType,
@@ -34,6 +36,10 @@ export function createPostStore() {
       return this.searchedIds.length;
     },
 
+    get favoritedTotal() {
+      return this.favoritedIds.length;
+    },
+
     get posts() {
       return this.ids.map((rId: string) => this.map[rId]);
     },
@@ -48,6 +54,10 @@ export function createPostStore() {
 
     get searchedPosts() {
       return this.searchedIds.map((rId: string) => this.map[rId]);
+    },
+
+    get favoritedPosts() {
+      return this.favoritedIds.map((rId: string) => this.map[rId]);
     },
 
     clear() {
@@ -108,6 +118,17 @@ export function createPostStore() {
       });
     },
 
+    addFavoritedPosts(posts: IPost[]) {
+      runInAction(() => {
+        for (const post of posts) {
+          if (!this.favoritedIds.includes(post.id)) {
+            this.favoritedIds.push(post.id);
+          }
+          this.tryAddPostToMap(post);
+        }
+      });
+    },
+
     addGroupPost(post: IPost) {
       runInAction(() => {
         this.groupIds.unshift(post.id);
@@ -141,6 +162,12 @@ export function createPostStore() {
       });
     },
 
+    removeFavoritedPost(id: string) {
+      runInAction(() => {
+        this.favoritedIds = this.favoritedIds.filter(t => t !== id);
+      });
+    },
+
     removePostByUser(address: string) {
       this.ids = this.ids.filter(id => this.map[id].userAddress !== address);
     },
@@ -169,6 +196,10 @@ export function createPostStore() {
 
     resetSearchedIds() {
       this.searchedIds = [];
+    },
+
+    resetFavoritedIds() {
+      this.favoritedIds = [];
     },
 
     setFeedType(feedType: FeedType) {

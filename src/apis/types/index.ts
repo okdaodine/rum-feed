@@ -12,3 +12,4 @@ export * from './config';
 export * from './v1Content';
 export * from './link';
 export * from './activity';
+export * from './favorite';

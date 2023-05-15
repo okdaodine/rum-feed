@@ -151,7 +151,9 @@ export const content = {
   publishedPost: 'published',
   publishedComment: 'commented',
   activities: 'Activities',
-  favorite: 'favorite',
+  favorite: 'Favorite',
   unfavorite: 'Unfavorite',
+  favorited: 'Favorited',
+  favorites: 'Favorites',
   onChainInfo: 'On Chain info'
 };

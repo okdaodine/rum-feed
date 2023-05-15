@@ -7,11 +7,12 @@ const Comment = require('./database/sequelize/comment');
 const Profile = require('./database/sequelize/profile');
 const UniqueCounter = require('./database/sequelize/uniqueCounter');
 const Notification = require('./database/sequelize/notification');
-const userActivity = require('./database/sequelize/userActivity');
 const Relation = require('./database/sequelize/relation');
 const Orphan = require('./database/sequelize/orphan');
 const V1Content = require('./database/sequelize/v1Content');
 const Link = require('./database/sequelize/link');
+const Activity = require('./database/sequelize/activity');
+const Favorite = require('./database/sequelize/favorite');
 
 (async () => {
   await sleep(2000);
@@ -24,11 +25,12 @@ const Link = require('./database/sequelize/link');
     await Profile.sync({ force: true });
     await UniqueCounter.sync({ force: true });
     await Notification.sync({ force: true });
-    await userActivity.sync({ force: true });
     await Relation.sync({ force: true });
     await Orphan.sync({ force: true });
     await V1Content.sync({ force: true });
     await Link.sync({ force: true });
+    await Activity.sync({ force: true });
+    await Favorite.sync({ force: true });
   } catch (err) {
     console.log(err);
   }

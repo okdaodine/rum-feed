@@ -155,6 +155,8 @@ export const content = {
   activities: '動態',
   favorite: '加入收藏',
   unfavorite: '取消收藏',
+  favorited: '已收藏',
+  favorites: '收藏',
   onChainInfo: '链上信息',
 };
 

@@ -18,4 +18,7 @@ module.exports = (item) => {
   if (type === 'Follow' || (type === 'Undo' && object.type === 'Follow') || type === 'Block' || (type === 'Undo' && object.type === 'Block')) {
     return 'relation';
   }
+  if (type === 'Favorite' || (type === 'Undo' && object.type === 'Favorite')) {
+    return 'favorite';
+  }
 };

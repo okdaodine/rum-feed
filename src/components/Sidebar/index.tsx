@@ -16,7 +16,7 @@ import { useLocation } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
 import { isPc, isMobile } from 'utils/env';
 import { RiSearchLine, RiSearchFill } from 'react-icons/ri';
-import { AiOutlineHome, AiFillHome, AiOutlineSearch, AiOutlineGithub, AiOutlineLink } from 'react-icons/ai';
+import { AiOutlineHome, AiFillHome, AiOutlineSearch, AiOutlineGithub, AiOutlineLink, AiOutlineStar } from 'react-icons/ai';
 import { TiArrowForwardOutline } from 'react-icons/ti';
 import Badge from '@material-ui/core/Badge';
 import classNames from 'classnames';
@@ -205,6 +205,20 @@ export default observer(() => {
           )}
           {userStore.isLogin && (
             <div className="flex items-center">
+              {(isMobile && isMyUserPage) && (
+                <div
+                  className="p-1 cursor-pointer pl-1 pr-3 mr-4"
+                  onClick={async () => {
+                    if (location.pathname === '/favorites') {
+                      return;
+                    }
+                    state.anchorEl = null;
+                    await aliveController.drop('favorites');
+                    history.push('/favorites');
+                  }}>
+                  <AiOutlineStar className="text-22 dark:text-white dark:text-opacity-80 text-neutral-400 opacity-80" />
+                </div>
+              )}
               {isPc && configStore.config.enabledActivities && (
                 <div
                   className="p-1 cursor-pointer mr-4"
@@ -309,6 +323,19 @@ export default observer(() => {
                       }}>
                       <div className="py-1 px-3 flex items-center">
                         {lang.me}
+                      </div>
+                    </MenuItem>
+                    <MenuItem 
+                      onClick={async () => {
+                        if (location.pathname === '/favorites') {
+                          return;
+                        }
+                        state.anchorEl = null;
+                        await aliveController.drop('favorites');
+                        history.push('/favorites');
+                      }}>
+                      <div className="py-1 px-3 flex items-center">
+                        {lang.favorites}
                       </div>
                     </MenuItem>
                     <MenuItem onClick={() => {

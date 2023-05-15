@@ -98,7 +98,7 @@ export const content = {
   user: '用户',
   following: '关注',
   followers: '被关注',
-  mute: '屏蔽 TA',
+  mute: '屏蔽 TA ',
   muted: '已屏蔽',
   youAreSureTo: (action: string) => `确定${action}吗？`,
   follow: '关注',
@@ -155,6 +155,8 @@ export const content = {
   activities: '动态',
   favorite: '加入收藏',
   unfavorite: '取消收藏',
+  favorited: '已收藏',
+  favorites: '收藏',
   onChainInfo: '链上信息',
 };
 

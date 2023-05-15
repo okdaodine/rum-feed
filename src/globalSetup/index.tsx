@@ -101,9 +101,11 @@ export default observer(() => {
             if (origin !== window.origin) {
               confirmDialogStore.show({
                 content: `${lang.youAreSureTo(lang.openExternalLink)}<div class="text-12 max-w-[250px] break-words leading-[1.5] opacity-80 mt-2">${href.slice(0, 200)}</div>`,
-                ok: () => {
+                ok: async () => {
                   isMobile ? confirmDialogStore.setLoading(true) : confirmDialogStore.hide();
                   isMobile ? window.location.href = href : window.open(href);
+                  await sleep(1000);
+                  confirmDialogStore.hide();
                 },
               });
             } else {

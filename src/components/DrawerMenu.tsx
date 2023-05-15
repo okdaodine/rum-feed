@@ -1,5 +1,6 @@
 import DrawerModal from 'components/DrawerModal';
 import sleep from 'utils/sleep';
+import { lang } from 'utils/lang';
 
 type Item = {
   invisible?: boolean;
@@ -62,10 +63,9 @@ export default (props: IProps) => {
           <MenuItem
             onClick={() => {
               onClose();
-              // stopBodyScroll(false);
             }}
           >
-            取消
+            {lang.cancel}
           </MenuItem>
         </div>
       </div>
