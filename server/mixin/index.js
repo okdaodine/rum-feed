@@ -80,7 +80,7 @@ exports.notifyByBot = async (data) => {
         fetchedAll = true;
       }
       botSubs.push(...items);
-      await sleep(500);
+      await sleep(100);
     }
     const client = MixinApi({
       keystore: {
@@ -90,7 +90,7 @@ exports.notifyByBot = async (data) => {
     });
     for (const botSub of botSubs) {
       try {
-        await sleep(100);
+        await sleep(50);
         client.message.sendAppCard(botSub.userId, {
           icon_url: iconUrl,
           title,
