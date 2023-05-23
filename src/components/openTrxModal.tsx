@@ -129,9 +129,11 @@ const ModalWrapper = observer((props: IModalProps) => {
             </div>
           </div>
         </div>
-        {state.loading && (
-          <div className="absolute inset-0 flex justify-center bg-white dark:bg-[#181818]">
-            <Loading size={24} />
+        {true && (
+          <div className="absolute inset-0 flex justify-center items-center bg-white dark:bg-[#181818]">
+            <div className="-mt-20">
+              <Loading />
+            </div>
           </div>
         )}
       </div>

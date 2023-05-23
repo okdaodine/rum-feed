@@ -55,7 +55,8 @@ export default observer((props: IProps) => {
       try {
         const messages = await MessageApi.listMessages(props.conversationId, {
           limit: 999,
-          offset: 0
+          offset: 0,
+          viewer: userStore.address,
         });
         await handleMessages(messages);
         state.messages = messages;
@@ -89,9 +90,12 @@ export default observer((props: IProps) => {
         ...message,
         status: 'read'
       });
-      await sleep(100);
+      await sleep(10);
       if (scrollRef.current) {
-        scrollRef.current.scrollTop = 9999;
+        scrollRef.current.scroll({
+          behavior: 'smooth',
+          top: 9999,
+        });
       }
       state.pending = false;
       await MessageApi.markAsRead(message.conversationId, message.toAddress);

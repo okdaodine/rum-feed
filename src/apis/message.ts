@@ -12,6 +12,7 @@ export default {
   async listMessages(conversationId: string, p: {
     limit: number
     offset: number
+    viewer: string
   }) {
     const items: IMessage[] = await request(`${API_BASE_URL}/messages/conversations/${conversationId}?${qs.stringify(p, { skipEmptyString: true })}`);
     return items;

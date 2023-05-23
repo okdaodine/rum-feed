@@ -236,7 +236,7 @@ const ModalWrapper = observer((props: IModalProps) => {
                     <div className="text-[12px] opacity-60 dark:opacity-50 absolute top-[8px] right-[14px] tracking-wide">{ago(new Date(item.timestamp).getTime(), {
                       disabledText: true,
                     })}</div>
-                    <div className="text-[10px] opacity-60 dark:opacity-50 absolute top-[30px] right-[22px] tracking-wide">
+                    <div className="text-[10px] absolute top-[30px] right-[22px] tracking-wide">
                       <Badge
                         badgeContent={item.unreadCount}
                         className="scale-75 cursor-pointer"
@@ -248,7 +248,7 @@ const ModalWrapper = observer((props: IModalProps) => {
                 </div>
               )
             })}
-            {state.conversations.length === 0 && <div className="py-32 text-center dark:text-white/60 text-gray-500 text-14">空空如也 ~</div>}
+            {state.conversations.length === 0 && <div className="pt-48 text-center dark:text-white/60 text-gray-500 text-14">空空如也 ~</div>}
             {!state.fetched && !state.toPubKey && (
               <div className="absolute inset-0 flex items-center justify-center bg-white dark:bg-[#181818]">
                 <div className="-mt-20 opacity-50">

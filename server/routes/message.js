@@ -88,6 +88,8 @@ async function listConversations(ctx) {
 
 async function listMessages(ctx) {
   const { conversationId } = ctx.params;
+  const { viewer } = ctx.query;
+  assert(viewer, Errors.ERR_IS_REQUIRED('viewer'));
   const messages = await Message.findAll({
     raw: true,
     where: {
@@ -99,13 +101,13 @@ async function listMessages(ctx) {
     limit: Math.min(~~ctx.query.limit || 10, 100),
     offset: ctx.query.offset || 0,
   });
-  const hasUnread = messages.some(m => m.status === 'unread');
+  const hasUnread = messages.some(m => m.status === 'unread' && m.toAddress === viewer);
   if (hasUnread) {
     await Message.update({
       status: 'read'
     }, {
       where: {
-        conversationId
+        conversationId,
       }
     });
   }

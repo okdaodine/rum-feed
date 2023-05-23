@@ -284,7 +284,7 @@ export default observer(() => {
               {isMobile && isPostPage && (
                 <>
                   <div
-                    className="p-1 cursor-pointer mr-[28px]"
+                    className="p-1 cursor-pointer mr-6"
                     onClick={onOpenEditor}>
                     <TiArrowForwardOutline className="text-22 dark:text-white dark:text-opacity-80 text-neutral-400 opacity-80" />
                   </div>
