@@ -440,26 +440,28 @@ export default observer(() => {
             </Fade>
           )}
 
-          <Fade in={true} timeout={350}>
-            <div
-              className='mt-10 w-10 h-10 mx-auto rounded-full hidden md:flex items-center justify-center cursor-pointer border dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] border-gray-c4 relative'
-              onClick={async () => {
-                state.chatUnreadCount = 0;
-                await openChatModal();
-                fetchChatUnreadCount();
-              }}
-            >
-              <div className="absolute top-[-2px] right-[2px]">
-                <Badge
-                  badgeContent={state.chatUnreadCount}
-                  className='cursor-pointer scale-90'
-                  color="error"
-                  overlap='rectangular'
-                />
+          {userStore.isLogin && (
+            <Fade in={true} timeout={350}>
+              <div
+                className='mt-10 w-10 h-10 mx-auto rounded-full hidden md:flex items-center justify-center cursor-pointer border dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] border-gray-c4 relative'
+                onClick={async () => {
+                  state.chatUnreadCount = 0;
+                  await openChatModal();
+                  fetchChatUnreadCount();
+                }}
+              >
+                <div className="absolute top-[-2px] right-[2px]">
+                  <Badge
+                    badgeContent={state.chatUnreadCount}
+                    className='cursor-pointer scale-90'
+                    color="error"
+                    overlap='rectangular'
+                  />
+                </div>
+                <BiMessageSquareDetail className="text-18 dark:text-white dark:text-opacity-80 text-gray-af" />
               </div>
-              <BiMessageSquareDetail className="text-18 dark:text-white dark:text-opacity-80 text-gray-af" />
-            </div>
-          </Fade>
+            </Fade>
+          )}
 
           <Tooltip
             enterDelay={200}
