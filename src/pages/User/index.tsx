@@ -406,7 +406,7 @@ export default observer((props: RouteChildrenProps) => {
                       <RiMoreFill className="text-20 text-white cursor-pointer" />
                     </div>
                   )}
-                  {userStore.isLogin && !user.muted && !isMyself && !fromTwitter && !fromWeibo && !relationStore.mutedMe.has(userAddress) && (
+                  {userStore.isLogin && !user.muted && !isMyself && !fromTwitter && !fromWeibo && !relationStore.mutedMe.has(userAddress) && !!user.pubKey && (
                     <div
                       className="mr-3 md:mr-5 h-8 w-8 rounded-full border border-white/70 flex items-center justify-center opacity-60 md:opacity-80"
                       onClick={() => {
