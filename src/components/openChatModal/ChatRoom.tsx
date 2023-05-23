@@ -97,7 +97,6 @@ export default observer((props: IProps) => {
           top: 9999,
         });
       }
-      state.pending = false;
       await MessageApi.markAsRead(message.conversationId, message.toAddress);
     }
     getSocket().on('message', listener);
@@ -201,8 +200,8 @@ export default observer((props: IProps) => {
               return (
                 <div key={message.timestamp}>
                   {index > 0 && state.firstUnreadMessage === message && (
-                    <div id="unread-bar" className="pt-3 -mx-5 mb-5">
-                      <div className="py-[2px] text-center bg-slate-300/70 text-black/80 dark:bg-slate-300/10 dark:text-white/50 text-13">未读消息</div>
+                    <div id="unread-bar" className="pt-3 mb-5">
+                      <div className="py-[2px] text-center bg-slate-300/50 text-black/50 dark:bg-slate-200/10 dark:text-white/50 text-13 rounded-12">未读消息</div>
                     </div>
                   )}
                   {message.toAddress === userStore.address && (

@@ -124,6 +124,7 @@ async function markAsRead(ctx) {
       toAddress: userAddress,
     }
   });
+  ctx.body = true;
 }
 
 async function create(ctx) {

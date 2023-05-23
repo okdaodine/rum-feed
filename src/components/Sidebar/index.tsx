@@ -130,7 +130,7 @@ export default observer(() => {
     }
     const listener = (message: any) => {
       console.log({ message });
-      fetchChatUnreadCount();
+      setTimeout(fetchChatUnreadCount, 2000);
     }
     getSocket().on('message', listener);
     return () => {

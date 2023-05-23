@@ -96,6 +96,9 @@ const ModalWrapper = observer((props: IModalProps) => {
 
   React.useEffect(() => {
     const listener = async (message: IMessage) => {
+      if (state.toPubKey) {
+        return;
+      }
       console.log(`[openChatModal index]:`, { message });
       const conversation = state.conversationMap[message.conversationId];
       if (conversation) {

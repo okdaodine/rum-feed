@@ -13,6 +13,7 @@ const V1Content = require('./database/sequelize/v1Content');
 const Link = require('./database/sequelize/link');
 const Activity = require('./database/sequelize/activity');
 const Favorite = require('./database/sequelize/favorite');
+const Message = require('./database/sequelize/message');
 
 (async () => {
   await sleep(2000);
@@ -31,6 +32,7 @@ const Favorite = require('./database/sequelize/favorite');
     await Link.sync({ force: true });
     await Activity.sync({ force: true });
     await Favorite.sync({ force: true });
+    await Message.sync({ force: true });
   } catch (err) {
     console.log(err);
   }
