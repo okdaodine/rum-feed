@@ -21,4 +21,7 @@ module.exports = (item) => {
   if (type === 'Favorite' || (type === 'Undo' && object.type === 'Favorite')) {
     return 'favorite';
   }
+  if (type === 'CreateDirectMessage') {
+    return 'directMessage';
+  }
 };

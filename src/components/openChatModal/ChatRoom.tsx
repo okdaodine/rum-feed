@@ -6,13 +6,14 @@ import EthCrypto from  'utils/ethCrypto';
 import { useStore } from 'store';
 import { BiLockAlt } from 'react-icons/bi';
 import pubKeyUtils from 'utils/pubKeyUtils';
-import { MessageApi } from 'apis';
+import { MessageApi, TrxApi } from 'apis';
 import { IMessage } from 'apis/types';
 import { getSocket } from 'utils/socket';
 import ago from 'utils/ago';
 import classNames from 'classnames';
 import sleep from 'utils/sleep';
 import { lang } from 'utils/lang';
+import { v4 as uuid } from 'uuid';
 
 interface IProps {
   toPubKey: string
@@ -20,7 +21,7 @@ interface IProps {
 }
 
 export default observer((props: IProps) => {
-  const { userStore, relationStore, confirmDialogStore, snackbarStore } = useStore();
+  const { userStore, relationStore, confirmDialogStore, snackbarStore, groupStore } = useStore();
   const state = useLocalObservable(() => ({
     loading: false,
     pending: true,
@@ -130,6 +131,7 @@ export default observer((props: IProps) => {
     }
     try {
       const message = {
+        uuid: uuid(),
         conversationId: props.conversationId,
         fromAddress: userStore.address,
         fromPubKey: userStore.user.pubKey,
@@ -166,6 +168,16 @@ export default observer((props: IProps) => {
             vaultJWT: userStore.jwt,
           });
           await MessageApi.createMessage(message);
+          await TrxApi.createActivity({
+            type: 'CreateDirectMessage',
+            object: {
+              type: 'DirectMessage',
+              content: JSON.stringify({
+                ...message,
+                status: '',
+              })
+            }
+          }, groupStore.directMessageGroup.groupId)
         } catch (err) {
           console.error(err);
           snackbarStore.show({
@@ -198,7 +210,7 @@ export default observer((props: IProps) => {
               const nextMessage = state.messages[index + 1];
               const myNextMessage = nextMessage && message.fromAddress === nextMessage.fromAddress ? nextMessage : null;
               return (
-                <div key={message.timestamp}>
+                <div key={message.uuid}>
                   {index > 0 && state.firstUnreadMessage === message && (
                     <div id="unread-bar" className="pt-3 mb-5">
                       <div className="py-[2px] text-center bg-slate-300/50 text-black/50 dark:bg-slate-200/10 dark:text-white/50 text-13 rounded-12">未读消息</div>

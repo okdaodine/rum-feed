@@ -1,6 +1,7 @@
 import { IProfile } from './profile';
 
 export interface IMessage {
+  uuid: string
   conversationId: string
   fromAddress: string
   fromPubKey: string

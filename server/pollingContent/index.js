@@ -6,6 +6,7 @@ const handleCounter = require('./handleCounter');
 const handleProfile = require('./handleProfile');
 const handleRelation = require('./handleRelation');
 const handleFavorite = require('./handleFavorite');
+const handleDirectMessage = require('./handleDirectMessage');
 const getTrxType = require('../utils/getTrxType');
 const Content = require('../database/sequelize/content');
 const Group = require('../database/sequelize/group');
@@ -142,6 +143,7 @@ const handleContents = async (groupId, contents) => {
             case 'profile': await handleProfile(content); break;
             case 'relation': await handleRelation(content, group); break;
             case 'favorite': await handleFavorite(content); break;
+            case 'directMessage': await handleDirectMessage(content, group); break;
             default: break;
           }
           console.log(`${content.TrxId} ✅`);

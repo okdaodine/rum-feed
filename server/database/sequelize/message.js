@@ -10,6 +10,11 @@ const Message = sequelize.define('messages', {
     primaryKey: true,
     autoIncrement: true
   },
+  uuid: {
+    unique: true,
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
   conversationId: {
     type: Sequelize.STRING,
     allowNull: false,
@@ -50,6 +55,8 @@ const Message = sequelize.define('messages', {
   charset: 'utf8mb4',
   timestamps: false,
   indexes: [{
+    fields: ['uuid']
+  }, {
     fields: ['conversationId']
   }, {
     fields: ['fromAddress']
