@@ -72,7 +72,7 @@ export default observer(() => {
   return (
     <Fade in={true} timeout={350}>  
       <div className="h-screen overflow-x-auto" ref={rootRef}>
-        <div className="text-gray-4a/80 dark:text-white/80 text-16 font-bold fixed top-0 left-[50%] ml-[-30px] w-[60vw] box-border pr-[30vw] pt-[2px] z-[999] h-[40px] md:h-[41px] flex items-center bg-white dark:bg-[#181818]">
+        <div className="text-gray-4a/80 dark:text-white/80 text-16 font-bold fixed top-0 left-[50%] ml-[-30px] w-[60vw] box-border pr-[30vw] pt-[2px] z-[999] h-[39px] md:h-[41px] flex items-center bg-white dark:bg-[#181818]">
           <AiOutlineStar className="text-22 mr-2 text-orange-500" />
           {lang.favorites}
         </div>
@@ -103,7 +103,7 @@ export default observer(() => {
                 </div>
               )}
               {postStore.favoritedTotal === 0 && (
-                <div className="py-28 text-center text-14 dark:text-white dark:text-opacity-80 text-gray-400 opacity-80">
+                <div className="pt-[28vh] text-center text-14 dark:text-white dark:text-opacity-80 text-gray-400 opacity-80">
                   {lang.empty}
                 </div>
               )}

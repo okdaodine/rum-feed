@@ -251,7 +251,7 @@ const ModalWrapper = observer((props: IModalProps) => {
                 </div>
               )
             })}
-            {state.conversations.length === 0 && <div className="pt-48 text-center dark:text-white/60 text-gray-500 text-14">空空如也 ~</div>}
+            {state.conversations.length === 0 && <div className="pt-32 md:pt-48 text-center dark:text-white/60 text-gray-500 text-14">空空如也 ~</div>}
             {!state.fetched && !state.toPubKey && (
               <div className="absolute inset-0 flex items-center justify-center bg-white dark:bg-[#181818]">
                 <div className="-mt-20 opacity-50">
