@@ -2,13 +2,13 @@ import React from 'react';
 import { observer, useLocalObservable } from 'mobx-react-lite';
 import Modal from 'components/Modal';
 import { useStore } from 'store';
-import { TextField } from '@material-ui/core';
+import TextField from '@material-ui/core/TextField';
 import Button from 'components/Button';
 import sleep from 'utils/sleep';
 import { lang } from 'utils/lang';
 import { GroupApi, SeedApi } from 'apis';
 import { IGroup } from 'apis/types';
-import rumSDK from 'rum-sdk-browser';
+import { utils as RumSdkUtils } from 'rum-sdk-browser';
 import Loading from 'components/Loading';
 import { BsFillCheckCircleFill } from 'react-icons/bs';
 import Fade from '@material-ui/core/Fade';
@@ -38,7 +38,7 @@ const Main = observer((props: IProps) => {
  
   const submit = async () => {
     try {
-      const group = rumSDK.utils.seedUrlToGroup(state.seedUrl);
+      const group = RumSdkUtils.seedUrlToGroup(state.seedUrl);
       console.log(group)
     } catch (err) {
       console.error(err)

@@ -5,7 +5,9 @@ import Modal from 'components/Modal';
 import { StoreProvider } from 'store';
 import { ThemeRoot } from 'utils/theme';
 import { lang } from 'utils/lang';
-import { Radio, RadioGroup, FormControlLabel } from '@material-ui/core';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { i18n } from 'store/i18n';
 import Button from 'components/Button';
 

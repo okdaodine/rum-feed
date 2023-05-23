@@ -1,5 +1,5 @@
 import { IoMdClose } from 'react-icons/io';
-import { Dialog, DialogProps } from '@material-ui/core';
+import Dialog, { DialogProps } from '@material-ui/core/Dialog';
 import DrawerModal from 'components/DrawerModal';
 import { isMobile } from 'utils/env';
 

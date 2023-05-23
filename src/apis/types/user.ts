@@ -5,4 +5,5 @@ export interface IUser {
   following?: boolean
   muted?: boolean
   role: 'admin' | ''
+  pubKey?: string
 }

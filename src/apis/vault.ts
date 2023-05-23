@@ -59,4 +59,23 @@ export default {
     });
     return res as IVaultAppUser;
   },
+
+  async decrypt(p: {
+    encryptedMessages: string[]
+    jwt: string
+  }) {
+    const res = await request(`/app/user/decrypt`, {
+      base: VAULT_API_BASE_URL,
+      method: 'POST',
+      jwt: p.jwt,
+      body: {
+        appid: VAULT_APP_ID,
+        messages: p.encryptedMessages
+      },
+    });
+    return res as {
+      address: string
+      decrypted: string[]
+    };
+  }
 }

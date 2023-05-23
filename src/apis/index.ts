@@ -15,3 +15,4 @@ export { default as V1ContentApi } from './v1Content';
 export { default as LinkApi } from './link';
 export { default as ActivityApi } from './activity';
 export { default as FavoriteApi } from './favorite';
+export { default as MessageApi } from './message';

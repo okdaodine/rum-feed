@@ -7,7 +7,7 @@ export default {
   async get(userAddress: string, options: {
     viewer: string
   }) {
-    const item: IUser = await request(`${API_BASE_URL}/users/${userAddress}?${qs.stringify(options)}`);
+    const item: IUser = await request(`${API_BASE_URL}/users/${userAddress}?${qs.stringify(options, { skipEmptyString: true })}`);
     return item;
   }
 }

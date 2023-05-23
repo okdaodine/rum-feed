@@ -1,7 +1,7 @@
 import React from 'react';
 import { observer, useLocalObservable } from 'mobx-react-lite';
 import BottomLine from 'components/BottomLine';
-import { debounce } from 'lodash';
+import debounce from 'lodash/debounce';
 import { toJS } from 'mobx';
 import Comments from './items';
 import { useStore } from 'store';

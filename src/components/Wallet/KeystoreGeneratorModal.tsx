@@ -6,7 +6,7 @@ import copy from 'copy-to-clipboard';
 import { useStore } from 'store';
 import { BiCopy } from 'react-icons/bi';
 import MiddleTruncate from 'components/MiddleTruncate';
-import { TextField } from '@material-ui/core';
+import TextField from '@material-ui/core/TextField';
 import { ethers } from 'ethers';
 
 interface IProps {

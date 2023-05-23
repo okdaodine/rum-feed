@@ -19,6 +19,7 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import { BsFillMicMuteFill } from 'react-icons/bs';
 import { BiLogOutCircle, BiExport } from 'react-icons/bi';
+import { MdOutlineMail } from 'react-icons/md';
 import { MdLanguage } from 'react-icons/md';
 import UserListModal from './UserListModal';
 import openLoginModal from 'components/Wallet/openLoginModal';
@@ -33,6 +34,7 @@ import { RiKey2Fill } from 'react-icons/ri';
 import openWalletModal from 'components/Wallet/openWalletModal';
 import MutedContent from 'components/MutedContent';
 import openLanguageModal from 'components/openLanguageModal';
+import openChatModal from 'components/openChatModal';
 
 import './index.css';
 
@@ -43,7 +45,8 @@ export default observer((props: RouteChildrenProps) => {
     postStore,
     snackbarStore,
     confirmDialogStore,
-    modalStore
+    modalStore,
+    relationStore,
   } = useStore();
   const state = useLocalObservable(() => ({
     profile: {} as IProfile,
@@ -114,9 +117,9 @@ export default observer((props: RouteChildrenProps) => {
         const profile = await ProfileApi.get(userAddress);
         state.profile = profile;
       }
-      if (!user) {
+      if (!user || (!isMyself && !user.pubKey)) {
         const user = await UserApi.get(userAddress, {
-          viewer: userStore.address
+          viewer: userStore.address,
         });
         userStore.setUser(userAddress, user);
       }
@@ -126,10 +129,6 @@ export default observer((props: RouteChildrenProps) => {
     }
     document.title = state.profile.name;
   }
-
-  React.useEffect(() => {
-    fetchProfile();
-  }, []);
 
   const fetchPosts = async () => {
     state.fetchingPosts = true;
@@ -396,18 +395,41 @@ export default observer((props: RouteChildrenProps) => {
                   </div>
                 )}
               </div>
-              <div className="mt-5 md:mt-12 pt-4 mr-3 md:mr-5 absolute top-0 right-0">
+              <div className="mt-5 md:mt-12 pt-4 md:mr-5 absolute top-0 right-0">
                 <div className="flex items-center">
-                  {!user.muted && (
+                  {userStore.isLogin &&!user.muted && (
                     <div
-                      className="mr-5 md:mr-6 h-8 w-8 rounded-full border border-white flex items-center justify-center opacity-60 md:opacity-80"
+                      className="mr-3 md:mr-5 h-8 w-8 rounded-full border border-white/70 flex items-center justify-center opacity-60 md:opacity-80"
                       onClick={(e: any) => {
                         state.anchorEl = e.currentTarget
                       }}>
                       <RiMoreFill className="text-20 text-white cursor-pointer" />
                     </div>
                   )}
-                  {(isMyself || !user.muted) && (
+                  {userStore.isLogin && !user.muted && !isMyself && !fromTwitter && !fromWeibo && !relationStore.mutedMe.has(userAddress) && (
+                    <div
+                      className="mr-3 md:mr-5 h-8 w-8 rounded-full border border-white/70 flex items-center justify-center opacity-60 md:opacity-80"
+                      onClick={() => {
+                        if (!userStore.user.pubKey) {
+                          confirmDialogStore.show({
+                            content: '您未曾发布过内容，无法使用私信功能哦。请至少发布一条内容。',
+                            cancelDisabled: true,
+                            okText: lang.gotIt,
+                            ok: async () => {
+                              confirmDialogStore.hide();
+                            },
+                          });
+                          return;
+                        }
+                        openChatModal({
+                          toPubKey: user.pubKey,
+                          toUserProfile: profile
+                        });
+                      }}>
+                      <MdOutlineMail className="text-18 text-white cursor-pointer" />
+                    </div>
+                  )}
+                  {userStore.isLogin &&(isMyself || !user.muted) && (
                     <Menu
                       anchorEl={state.anchorEl}
                       getContentAnchorEl={null}

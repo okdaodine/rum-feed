@@ -3,7 +3,7 @@ import Modal from 'components/Modal';
 import { lang } from 'utils/lang';
 import Button from 'components/Button';
 import { useStore } from 'store';
-import { TextField } from '@material-ui/core';
+import TextField from '@material-ui/core/TextField';
 import KeystoreImportModal from './KeystoreImportModal';
 import { ethers } from 'ethers';
 import sleep from 'utils/sleep';

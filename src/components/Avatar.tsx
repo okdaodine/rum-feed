@@ -1,5 +1,5 @@
 import Loading from 'components/Loading';
-import { Tooltip } from '@material-ui/core';
+import Tooltip from '@material-ui/core/Tooltip';
 
 interface IProps {
   url: string | undefined

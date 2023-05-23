@@ -11,7 +11,7 @@ import openGroupInfo from 'components/openGroupInfo';
 import Avatar from 'components/Avatar';
 import sleep from 'utils/sleep';
 import { MdArrowUpward, MdOutlineDarkMode, MdOutlineLightMode } from 'react-icons/md';
-import { BiArrowBack } from 'react-icons/bi';
+import { BiArrowBack, BiMessageSquareDetail } from 'react-icons/bi';
 import { useLocation } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
 import { isPc, isMobile } from 'utils/env';
@@ -21,10 +21,9 @@ import { TiArrowForwardOutline } from 'react-icons/ti';
 import Badge from '@material-ui/core/Badge';
 import classNames from 'classnames';
 import openLoginModal from 'components/Wallet/openLoginModal';
-import MessagesModal from 'components/Notification/NotificationModal';
-import VConsole from 'vconsole';
+import NotificationModal from 'components/Notification/NotificationModal';
 import { getSocket } from 'utils/socket';
-import { NotificationApi } from 'apis';
+import { MessageApi, NotificationApi } from 'apis';
 import openSearchModal from 'components/openSearchModal';
 import qs from 'query-string';
 import { useAliveController } from 'react-activation';
@@ -39,7 +38,8 @@ import { lang } from 'utils/lang';
 import store from 'store2';
 import openLanguageModal from 'components/openLanguageModal';
 import { TbActivity } from 'react-icons/tb';
-import { sum } from 'lodash';
+import sum from 'lodash/sum';
+import openChatModal from 'components/openChatModal';
 
 export default observer(() => {
   const {
@@ -56,8 +56,8 @@ export default observer(() => {
   const state = useLocalObservable(() => ({
     showBackToTop: true,
     openMessageModal: false,
-    consoleClickCount: 0,
-    unreadCount: 0,
+    notificationUnreadCount: 0,
+    chatUnreadCount: 0,
     tabIndex: 1,
     anchorEl: null,
     notificationTab: 0,
@@ -74,7 +74,15 @@ export default observer(() => {
   const isGroupPage = location.pathname.startsWith(`/groups/`);
   const isPostPage = location.pathname.startsWith(`/posts`);
 
-  const fetchUnreadCount = async () => {
+  React.useEffect(() => {
+    if (!userStore.isLogin) {
+      return;
+    }
+    setTimeout(fetchNotificationUnreadCount, 1000);
+    setTimeout(fetchChatUnreadCount, 2000);
+  }, []);
+
+  const fetchNotificationUnreadCount = async () => {
     try {
       const counts = await Promise.all([
         NotificationApi.getUnreadCount(userStore.address, 'like'),
@@ -82,7 +90,7 @@ export default observer(() => {
         NotificationApi.getUnreadCount(userStore.address, 'retweet'),
         NotificationApi.getUnreadCount(userStore.address, 'follow')
       ]);
-      state.unreadCount = sum(counts);
+      state.notificationUnreadCount = sum(counts);
       for (const [idx, value] of Object.entries(counts)) {
         if (value > 0) {
           state.notificationTab = Number(idx);
@@ -94,12 +102,13 @@ export default observer(() => {
     }
   }
 
-  React.useEffect(() => {
-    if (!userStore.isLogin) {
-      return;
+  const fetchChatUnreadCount = async () => {
+    try {
+      state.chatUnreadCount = await MessageApi.getUnreadCount(userStore.address);
+    } catch (err) {
+      console.log(err);
     }
-    setTimeout(fetchUnreadCount, 1000)
-  }, []);
+  }
 
   React.useEffect(() => {
     if (!userStore.isLogin) {
@@ -107,11 +116,25 @@ export default observer(() => {
     }
     const listener = (notification: any) => {
       console.log({ notification });
-      fetchUnreadCount();
+      fetchNotificationUnreadCount();
     }
     getSocket().on('notification', listener);
     return () => {
       getSocket().off('notification', listener);
+    }
+  }, []);
+
+  React.useEffect(() => {
+    if (!userStore.isLogin) {
+      return;
+    }
+    const listener = (message: any) => {
+      console.log({ message });
+      fetchChatUnreadCount();
+    }
+    getSocket().on('message', listener);
+    return () => {
+      getSocket().off('message', listener);
     }
   }, []);
 
@@ -277,13 +300,33 @@ export default observer(() => {
                   </div>
                 </>
               )}
+              {isMobile && (
+                <div
+                  className="py-2 cursor-pointer relative ml-3 pl-3 pr-1"
+                  onClick={async () => {
+                    state.chatUnreadCount = 0;
+                    await openChatModal();
+                    fetchChatUnreadCount();
+                  }}
+                >
+                  <div className="absolute top-[-1px] right-[2px] z-10">
+                    <Badge
+                      badgeContent={state.chatUnreadCount}
+                      className='cursor-pointer scale-90'
+                      color="error"
+                      overlap='rectangular'
+                    />
+                  </div>
+                  <BiMessageSquareDetail className="text-20 dark:text-white dark:text-opacity-80 text-neutral-400 opacity-80 md:opacity-90" />
+                </div>
+              )}
               <div
-                className="px-6 md:mr-5 md:px-1 py-2 cursor-pointer"
+                className="px-2 mx-4 md:mx-0 md:mr-5 md:px-1 py-2 cursor-pointer"
                 onClick={() => { 
                   state.openMessageModal = true;
                 }}>
                 <Badge
-                  badgeContent={state.unreadCount}
+                  badgeContent={state.notificationUnreadCount}
                   className='transform cursor-pointer scale-90 lower'
                   color="error"
                   overlap='rectangular'
@@ -397,6 +440,27 @@ export default observer(() => {
             </Fade>
           )}
 
+          <Fade in={true} timeout={350}>
+            <div
+              className='mt-10 w-10 h-10 mx-auto rounded-full hidden md:flex items-center justify-center cursor-pointer border dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] border-gray-c4 relative'
+              onClick={async () => {
+                state.chatUnreadCount = 0;
+                await openChatModal();
+                fetchChatUnreadCount();
+              }}
+            >
+              <div className="absolute top-[-2px] right-[2px]">
+                <Badge
+                  badgeContent={state.chatUnreadCount}
+                  className='cursor-pointer scale-90'
+                  color="error"
+                  overlap='rectangular'
+                />
+              </div>
+              <BiMessageSquareDetail className="text-18 dark:text-white dark:text-opacity-80 text-gray-af" />
+            </div>
+          </Fade>
+
           <Tooltip
             enterDelay={200}
             enterNextDelay={200}
@@ -405,13 +469,13 @@ export default observer(() => {
             arrow
             interactive
             >
-              <div
-                className='mt-8 w-10 h-10 rounded-full items-center justify-center cursor-pointer border dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] border-gray-c4 hidden'
-                onClick={() => openGroupInfo(groupStore.defaultGroup.groupId)}
-              >
-                <BsInfo className="text-24 dark:text-white dark:text-opacity-80 text-gray-af" />
-              </div>
-            </Tooltip>
+            <div
+              className='mt-8 w-10 h-10 rounded-full items-center justify-center cursor-pointer border dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] border-gray-c4 hidden'
+              onClick={() => openGroupInfo(groupStore.defaultGroup.groupId)}
+            >
+              <BsInfo className="text-24 dark:text-white dark:text-opacity-80 text-gray-af" />
+            </div>
+          </Tooltip>
         </div>
       )}
 
@@ -441,15 +505,6 @@ export default observer(() => {
                     const path = `/`;
                     if (location.pathname !== path) {
                       history.push(path);
-                    } else {
-                      state.consoleClickCount++;
-                      if (state.consoleClickCount === 5) {
-                        new VConsole({ theme: 'dark' });
-                      } else {
-                        setTimeout(() => {
-                          state.consoleClickCount = 0;
-                        }, 4000);
-                      }
                     }
                   }}
                 >
@@ -531,16 +586,16 @@ export default observer(() => {
         </div>
       )}
 
-      <MessagesModal
+      <NotificationModal
         tab={state.notificationTab}
         open={state.openMessageModal}
         onClose={() => {
           state.openMessageModal = false;
-          fetchUnreadCount();
+          fetchNotificationUnreadCount();
         }}
         addReadCount={(count) => {
-          if (state.unreadCount >= count) {
-            state.unreadCount -= count
+          if (state.notificationUnreadCount >= count) {
+            state.notificationUnreadCount -= count
           }
         }}
       />

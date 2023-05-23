@@ -1,6 +1,7 @@
 import React from 'react';
 import { observer, useLocalObservable } from 'mobx-react-lite';
-import { Menu, MenuItem } from '@material-ui/core';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 import { RiMoreFill } from 'react-icons/ri';
 import { AiOutlineStar, AiOutlineLink } from 'react-icons/ai';
 import { MdInfoOutline, MdClose } from 'react-icons/md';

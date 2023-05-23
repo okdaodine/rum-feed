@@ -13,7 +13,7 @@ import openWalletModal from './openWalletModal';
 import ImportModal from './ImportModal';
 import * as Vault from 'utils/vault';
 import { VaultApi } from 'apis';
-import rumSDK from 'rum-sdk-browser';
+import { utils as RumSdkUtils } from 'rum-sdk-browser';
 
 const Main = observer(() => {
   const { userStore, confirmDialogStore, snackbarStore, configStore } = useStore();
@@ -79,7 +79,7 @@ const Main = observer(() => {
               }
               state.loadingMetaMask = true;
               try {
-                const { typeTransform } = rumSDK.utils;
+                const { typeTransform } = RumSdkUtils;
                 const PREFIX = '\x19Ethereum Signed Message:\n';
                 const message = `Session: ${Math.round(Date.now() / 1000)}`;
                 const provider = new ethers.providers.Web3Provider((window as any).ethereum);

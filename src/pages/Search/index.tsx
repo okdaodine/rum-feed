@@ -9,7 +9,7 @@ import classNames from 'classnames';
 import useInfiniteScroll from 'react-infinite-scroll-hook';
 import Loading from 'components/Loading';
 import Query from 'utils/query';
-import { TextField } from '@material-ui/core';
+import TextField from '@material-ui/core/TextField';
 import { FiFilter } from 'react-icons/fi';
 import openSearchModal from 'components/openSearchModal';
 import qs from 'query-string';

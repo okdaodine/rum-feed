@@ -1,6 +1,6 @@
 // @ts-nocheck
 
-const { isEmpty } = require('lodash');
+import isEmpty from 'lodash/isEmpty';
 
 export const isProduction = process.env.REACT_APP_ENV === 'production';
 

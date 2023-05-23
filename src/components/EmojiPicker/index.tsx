@@ -1,7 +1,9 @@
 import React from 'react';
 import { action, autorun, runInAction } from 'mobx';
 import { observer, useLocalObservable } from 'mobx-react-lite';
-import { ClickAwayListener, Grow, Popper, PopperProps } from '@material-ui/core';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import Grow from '@material-ui/core/Grow';
+import Popper, { PopperProps } from '@material-ui/core/Popper';
 import { emojis } from './emoji';
 import { lang } from './lang';
 

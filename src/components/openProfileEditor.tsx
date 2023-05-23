@@ -10,7 +10,7 @@ import { IProfile } from 'apis/types';
 import { TrxApi } from 'apis';
 import ImageEditor from 'components/ImageEditor';
 import { lang } from 'utils/lang';
-import { TextField } from '@material-ui/core';
+import TextField from '@material-ui/core/TextField';
 import { runInAction } from 'mobx';
 import openLoginModal from 'components/Wallet/openLoginModal';
 import sleep from 'utils/sleep';

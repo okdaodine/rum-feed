@@ -1,5 +1,5 @@
 import React from 'react';
-import { createTheme, StylesProvider, ThemeProvider } from '@material-ui/core';
+import { createTheme, StylesProvider, ThemeProvider } from '@material-ui/core/styles';
 
 const theme = createTheme({
   palette: {

@@ -150,9 +150,3 @@ const replaceImages = item => {
   }
   return item;
 }
-
-exports.count = async (where) => {
-  return await Post.count({
-    where
-  });
-};

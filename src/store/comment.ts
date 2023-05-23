@@ -1,4 +1,4 @@
-import { groupBy } from 'lodash';
+import groupBy from 'lodash/groupBy';
 import { runInAction } from 'mobx';
 import { IComment } from 'apis/types';
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Drawer, DrawerProps } from '@material-ui/core';
+import Drawer, { DrawerProps } from '@material-ui/core/Drawer';
 import { MdClear } from 'react-icons/md';
 import classNames from 'classnames';
 

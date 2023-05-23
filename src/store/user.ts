@@ -1,8 +1,6 @@
 import { IProfile, IUser, IVaultAppUser } from 'apis/types';
 import store from 'store2';
-import { utils as etherUtils } from 'ethers';
-import { utils as RumSdkUtils } from 'rum-sdk-browser';
-import * as Base64 from 'js-base64';
+import pubKeyUtils from 'utils/pubKeyUtils';
 
 export function createUserStore() {
   return {
@@ -35,9 +33,7 @@ export function createUserStore() {
         return this.vaultAppUser.eth_pub_key;
       }
       if (this.privateKey) {
-        const signingKey = new etherUtils.SigningKey(this.privateKey);
-        const pubKeyBuffer = RumSdkUtils.typeTransform.hexToUint8Array(signingKey.compressedPublicKey.replace('0x', ''));
-        return Base64.fromUint8Array(pubKeyBuffer, true);
+        return pubKeyUtils.getPubKeyFromPrivateKey(this.privateKey);
       }
       return '';
     },

@@ -1,5 +1,6 @@
 const router = require('koa-router')();
-const Post = require('../database/post');
+const Post = require('../database/sequelize/post');
+const Content = require('../database/sequelize/content');
 const Relation = require('../database/sequelize/relation');
 const config = require('../config');
 
@@ -11,10 +12,13 @@ async function get(ctx) {
     followingCount,
     followerCount,
     following,
-    muted
+    muted,
+    pubKey,
   ] = await Promise.all([
     Post.count({
-      userAddress: ctx.params.userAddress,
+      where: {
+        userAddress: ctx.params.userAddress,
+      }
     }),
     Relation.count({
       where: {
@@ -41,7 +45,8 @@ async function get(ctx) {
         to: ctx.params.userAddress,
         from: ctx.query.viewer || ''
       }
-    })
+    }),
+    getPubKey(ctx.params.userAddress),
   ]);
   ctx.body = {
     postCount,
@@ -49,8 +54,21 @@ async function get(ctx) {
     followerCount,
     following: !!following,
     muted: !!muted,
-    role: (config.admins || []).includes(ctx.params.userAddress) ? 'admin' : ''
+    role: (config.admins || []).includes(ctx.params.userAddress) ? 'admin' : '',
+    pubKey,
   };
+}
+
+const getPubKey = async userAddress => {
+  const post = await Post.findOne({ attributes: { include: ['trxId'] }, where: { userAddress } });
+  if (!post) {
+    return '';
+  }
+  const content = await Content.findOne({ attributes: { include: ['SenderPubkey'] }, where: { TrxId: post.trxId } });
+  if (!content) {
+    return '';
+  }
+  return content.SenderPubkey;
 }
 
 module.exports = router;

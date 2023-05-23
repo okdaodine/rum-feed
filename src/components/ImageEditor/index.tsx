@@ -4,7 +4,9 @@ import { observer, useLocalObservable } from 'mobx-react-lite';
 import AvatarEditor from 'react-avatar-editor';
 import { MdEdit, MdCameraAlt } from 'react-icons/md';
 import { RiZoomOutLine, RiZoomInLine } from 'react-icons/ri';
-import { Dialog, Slider, withStyles } from '@material-ui/core';
+import Dialog from '@material-ui/core/Dialog';
+import Slider from '@material-ui/core/Slider';
+import { withStyles } from '@material-ui/core/styles';
 import DrawerModal from 'components/DrawerModal';
 import { isMobile, isPc } from 'utils/env';
 

@@ -34,6 +34,7 @@ const v1Content = require('./routes/v1Content');
 const link = require('./routes/link');
 const activity = require('./routes/activity');
 const favorite = require('./routes/favorite');
+const message = require('./routes/message');
 
 const {
   errorHandler,
@@ -78,6 +79,7 @@ router.use('/api/sitemap.txt', sitemap.routes(), sitemap.allowedMethods());
 router.use('/api/links', link.routes(), link.allowedMethods());
 router.use('/api/activities', activity.routes(), activity.allowedMethods());
 router.use('/api/favorites', favorite.routes(), favorite.allowedMethods());
+router.use('/api/messages', message.routes(), message.allowedMethods());
 
 router.use('(.*)', view.routes(), view.allowedMethods());
 

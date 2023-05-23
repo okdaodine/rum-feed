@@ -7,7 +7,7 @@ import Query from 'utils/query';
 import * as Vault from 'utils/vault';
 import Base64 from 'utils/base64';
 import { IVaultAppUser } from 'apis/types';
-import { isEmpty } from 'lodash';
+import isEmpty from 'lodash/isEmpty';
 import openProfileEditor from 'components/openProfileEditor';
 import openLoginModal from 'components/Wallet/openLoginModal';
 import sleep from 'utils/sleep';
