@@ -109,7 +109,7 @@ export default observer((props: IProps) => {
   const submit = async (value: string) => {
     if (relationStore.mutedMe.has(pubKeyUtils.getAddress(props.toPubKey))) {
       confirmDialogStore.show({
-        content: '您已被 TA 屏蔽，无法发送私信',
+        content: lang.unableToUseDMOfMuted,
         cancelDisabled: true,
         okText: lang.gotIt,
         ok: async () => {
@@ -120,7 +120,7 @@ export default observer((props: IProps) => {
     }
     if (!userStore.user.pubKey) {
       confirmDialogStore.show({
-        content: '您未曾发布过内容，无法使用私信功能哦。请至少发布一条内容。',
+        content: lang.needOnePostToUseDM,
         cancelDisabled: true,
         okText: lang.gotIt,
         ok: async () => {
@@ -262,7 +262,7 @@ export default observer((props: IProps) => {
           {state.loading && (
             <div className="absolute inset-0 flex items-center justify-center bg-white dark:bg-[#181818] z-20">
               <div className="-mt-20 opacity-50">
-                加载中...
+                {lang.loading}
               </div>
             </div>
           )}

@@ -412,7 +412,7 @@ export default observer((props: RouteChildrenProps) => {
                       onClick={() => {
                         if (!userStore.user.pubKey) {
                           confirmDialogStore.show({
-                            content: '您未曾发布过内容，无法使用私信功能哦。请至少发布一条内容。',
+                            content: lang.needOnePostToUseDM,
                             cancelDisabled: true,
                             okText: lang.gotIt,
                             ok: async () => {

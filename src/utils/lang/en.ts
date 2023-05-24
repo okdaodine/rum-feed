@@ -155,5 +155,9 @@ export const content = {
   unfavorite: 'Unfavorite',
   favorited: 'Favorited',
   favorites: 'Favorites',
-  onChainInfo: 'On Chain info'
+  onChainInfo: 'On Chain info',
+  directMessage: 'Direct message',
+  needOnePostToUseDM: 'You need to create at least one post to use direct messaging. Please create a post first.',
+  unableToUseDMOfMuted: 'You cannot send direct messages because the user has muted you.',
+  loading: 'Loading...',
 };

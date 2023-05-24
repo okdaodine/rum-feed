@@ -171,7 +171,8 @@ export default observer((props: IProps) => {
       if (
         !postContent.endsWith(lastUrl) ||
         (isRetweetUrl(lastUrl) && !post.extra?.retweet) ||
-        (post.extra?.retweet && !(new URL(lastUrl).pathname.includes(post.extra?.retweet!.id)))
+        (post.extra?.retweet && !(new URL(lastUrl).pathname.includes(post.extra?.retweet!.id))) ||
+        lastUrl.includes('commentId')
       ) {
         return postContent;
       }

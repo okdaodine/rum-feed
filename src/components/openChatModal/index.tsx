@@ -174,7 +174,7 @@ const ModalWrapper = observer((props: IModalProps) => {
       <div className="relative w-full md:w-[360px]">
         <div className="py-3 text-18 font-bold dark:text-white/80 text-gray-700 text-center border-b dark:border-white/10 border-neutral-100 relative">
           <div className={state.toPubKey ? 'invisible' : ''}>
-            私信
+            {lang.directMessage}
           </div>
           {configStore.config.supportAccountPubKey && configStore.config.supportAccountPubKey !== userStore.pubKey && !state.toPubKey && (
             <div className="text-18 absolute top-[18px] right-4 cursor-pointer opacity-50" onClick={() => {
@@ -269,7 +269,7 @@ const ModalWrapper = observer((props: IModalProps) => {
             {!state.fetched && !state.toPubKey && (
               <div className="absolute inset-0 flex items-center justify-center bg-white dark:bg-[#181818]">
                 <div className="-mt-20 opacity-50">
-                  加载中...
+                  {lang.loading}
                 </div>
               </div>
             )}

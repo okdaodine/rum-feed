@@ -158,6 +158,10 @@ export const content = {
   favorited: '已收藏',
   favorites: '收藏',
   onChainInfo: '链上信息',
+  directMessage: '私訊',
+  needOnePostToUseDM: '您尚未發布任何內容，無法使用私訊功能。請先發布一條內容。',
+  unableToUseDMOfMuted: '您已被該用戶屏蔽，無法發送私訊。',
+  loading: '正在加載...',
 };
 
 export type Content = typeof content;

@@ -158,6 +158,10 @@ export const content = {
   favorited: '已收藏',
   favorites: '收藏',
   onChainInfo: '链上信息',
+  directMessage: '私信',
+  needOnePostToUseDM: '您未曾发布过内容，无法使用私信功能哦。请至少发布一条内容。',
+  unableToUseDMOfMuted: '您已被 TA 屏蔽，无法发送私信',
+  loading: '加载中...',
 };
 
 export type Content = typeof content;
