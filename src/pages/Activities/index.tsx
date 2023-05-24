@@ -68,7 +68,7 @@ export default observer(() => {
     <Fade in={true} timeout={350}>  
       <div className="h-screen overflow-x-auto" ref={rootRef}>
         {isPc && (
-          <div className="text-gray-4a/80 dark:text-white/80 text-16 font-bold fixed top-0 left-[50%] ml-[-10vw] w-[50vw] box-border pr-[30vw] pt-[2px] z-[999] h-[40px] md:h-[41px] flex items-center justify-center bg-white dark:bg-[#181818]">
+          <div className="text-gray-4a/80 dark:text-white/80 text-16 font-bold fixed top-0 left-[50%] ml-[-30px] w-[60vw] box-border pr-[30vw] pt-[2px] z-[999] h-[40px] md:h-[41px] flex items-center bg-white dark:bg-[#181818]">
             <TbActivity className="text-22 mr-2 text-orange-500" />
             {lang.activities}
           </div>
