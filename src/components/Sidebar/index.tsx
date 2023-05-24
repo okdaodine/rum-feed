@@ -43,7 +43,6 @@ export default observer(() => {
     userStore,
     postStore,
     confirmDialogStore,
-    groupStore,
     modalStore,
     pathStore,
     settingStore,
