@@ -1,13 +1,10 @@
 import React from 'react';
 import { observer, useLocalObservable } from 'mobx-react-lite';
 import { useStore } from 'store';
-import Tooltip from '@material-ui/core/Tooltip';
 import Fade from '@material-ui/core/Fade';
 import { BsPencil } from 'react-icons/bs';
 import openEditor from 'components/Post/OpenEditor';
 import { MdNotificationsNone } from 'react-icons/md';
-import { BsInfo } from 'react-icons/bs';
-import openGroupInfo from 'components/openGroupInfo';
 import Avatar from 'components/Avatar';
 import sleep from 'utils/sleep';
 import { MdArrowUpward, MdOutlineDarkMode, MdOutlineLightMode } from 'react-icons/md';
@@ -300,26 +297,24 @@ export default observer(() => {
                   </div>
                 </>
               )}
-              {isMobile && (
-                <div
-                  className="py-2 cursor-pointer relative ml-3 pl-3 pr-1"
-                  onClick={async () => {
-                    state.chatUnreadCount = 0;
-                    await openChatModal();
-                    fetchChatUnreadCount();
-                  }}
-                >
-                  <div className="absolute top-[-1px] right-[2px] z-10">
-                    <Badge
-                      badgeContent={state.chatUnreadCount}
-                      className='cursor-pointer scale-90'
-                      color="error"
-                      overlap='rectangular'
-                    />
-                  </div>
-                  <BiMessageSquareDetail className="text-20 dark:text-white dark:text-opacity-80 text-neutral-400 opacity-80 md:opacity-90" />
+              <div
+                className="py-2 cursor-pointer relative ml-3 pl-3 pr-1 md:pr-1 md:mr-[14px] md:ml-0 md:pl-1"
+                onClick={async () => {
+                  state.chatUnreadCount = 0;
+                  await openChatModal();
+                  fetchChatUnreadCount();
+                }}
+              >
+                <div className="absolute top-[-1px] right-[2px] z-10">
+                  <Badge
+                    badgeContent={state.chatUnreadCount}
+                    className='cursor-pointer scale-90'
+                    color="error"
+                    overlap='rectangular'
+                  />
                 </div>
-              )}
+                <BiMessageSquareDetail className="text-20 dark:text-white dark:text-opacity-80 text-neutral-400 opacity-80 md:opacity-90" />
+              </div>
               <div
                 className="px-2 mx-4 md:mx-0 md:mr-5 md:px-1 py-2 cursor-pointer"
                 onClick={() => { 
@@ -426,59 +421,20 @@ export default observer(() => {
               </div>
             </Fade>
           )}
-
-          {configStore.config.repo && (
-            <Fade in={true} timeout={350}>
-              <div
-                className='mt-10 w-10 h-10 mx-auto rounded-full hidden md:flex items-center justify-center cursor-pointer border dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] border-gray-c4'
-                onClick={() => {
-                  window.open(configStore.config.repo);
-                }}
-              >
-                <AiOutlineGithub className="text-20 dark:text-white dark:text-opacity-80 text-gray-af" />
-              </div>
-            </Fade>
-          )}
-
-          {userStore.isLogin && (
-            <Fade in={true} timeout={350}>
-              <div
-                className='mt-10 w-10 h-10 mx-auto rounded-full hidden md:flex items-center justify-center cursor-pointer border dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] border-gray-c4 relative'
-                onClick={async () => {
-                  state.chatUnreadCount = 0;
-                  await openChatModal();
-                  fetchChatUnreadCount();
-                }}
-              >
-                <div className="absolute top-[-2px] right-[2px]">
-                  <Badge
-                    badgeContent={state.chatUnreadCount}
-                    className='cursor-pointer scale-90'
-                    color="error"
-                    overlap='rectangular'
-                  />
-                </div>
-                <BiMessageSquareDetail className="text-18 dark:text-white dark:text-opacity-80 text-gray-af" />
-              </div>
-            </Fade>
-          )}
-
-          <Tooltip
-            enterDelay={200}
-            enterNextDelay={200}
-            placement="left"
-            title="种子网络详情"
-            arrow
-            interactive
-            >
-            <div
-              className='mt-8 w-10 h-10 rounded-full items-center justify-center cursor-pointer border dark:border-white dark:md:border-opacity-10 dark:border-opacity-[0.05] border-gray-c4 hidden'
-              onClick={() => openGroupInfo(groupStore.defaultGroup.groupId)}
-            >
-              <BsInfo className="text-24 dark:text-white dark:text-opacity-80 text-gray-af" />
-            </div>
-          </Tooltip>
         </div>
+      )}
+
+      {isPc && configStore.config.repo && (
+        <Fade in={true} timeout={350}>
+          <div
+            className='fixed bottom-5 right-5 w-10 h-10 mx-auto rounded-full hidden md:flex items-center justify-center cursor-pointer'
+            onClick={() => {
+              window.open(configStore.config.repo);
+            }}
+          >
+            <AiOutlineGithub className="text-20 dark:text-white/30 text-gray-af/70" />
+          </div>
+        </Fade>
       )}
 
       {isMobile && (

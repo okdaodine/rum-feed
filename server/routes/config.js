@@ -12,6 +12,7 @@ async function get(ctx) {
     groupsPageIsOnlyVisibleToAdmin: config.groupsPageIsOnlyVisibleToAdmin || false,
     walletProviders: config.walletProviders || [],
     enabledActivities: config.enabledActivities || false,
+    supportAccountPubKey: config.supportAccountPubKey || '',
   };
 }
 

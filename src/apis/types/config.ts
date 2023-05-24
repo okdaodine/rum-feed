@@ -7,4 +7,5 @@ export interface IConfig {
   groupsPageIsOnlyVisibleToAdmin: boolean
   walletProviders: string[]
   enabledActivities: boolean
+  supportAccountPubKey: string
 }

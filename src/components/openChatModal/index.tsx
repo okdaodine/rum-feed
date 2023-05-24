@@ -10,7 +10,7 @@ import ago from 'utils/ago';
 import { BiArrowBack } from 'react-icons/bi';
 import ChatRoom from './ChatRoom';
 import { IProfile, IConversation, IMessage } from 'apis/types';
-import { MessageApi, TrxApi } from 'apis';
+import { MessageApi, TrxApi, ProfileApi } from 'apis';
 import EthCrypto from 'utils/ethCrypto';
 import { runInAction } from 'mobx';
 import Badge from '@material-ui/core/Badge';
@@ -19,6 +19,7 @@ import { getSocket } from 'utils/socket';
 import pubKeyUtils from 'utils/pubKeyUtils';
 import { BsFillMicMuteFill } from 'react-icons/bs';
 import classNames from 'classnames';
+import { BiSupport } from 'react-icons/bi';
 
 interface IProps {
   toPubKey?: string
@@ -30,7 +31,7 @@ interface IModalProps extends IProps {
 }
 
 const ModalWrapper = observer((props: IModalProps) => {
-  const { snackbarStore, userStore, confirmDialogStore, groupStore, relationStore } = useStore();
+  const { snackbarStore, userStore, confirmDialogStore, groupStore, relationStore, configStore } = useStore();
   const state = useLocalObservable(() => ({
     open: false,
     fetched: false,
@@ -171,10 +172,23 @@ const ModalWrapper = observer((props: IModalProps) => {
       onClose={() => handleClose()}
     >
       <div className="relative w-full md:w-[360px]">
-        <div className="py-3 text-18 font-bold dark:text-white/80 text-gray-700 text-center border-b dark:border-white/10 border-neutral-100">
+        <div className="py-3 text-18 font-bold dark:text-white/80 text-gray-700 text-center border-b dark:border-white/10 border-neutral-100 relative">
           <div className={state.toPubKey ? 'invisible' : ''}>
             私信
           </div>
+          {configStore.config.supportAccountPubKey && configStore.config.supportAccountPubKey !== userStore.pubKey && !state.toPubKey && (
+            <div className="text-18 absolute top-[18px] right-4 cursor-pointer opacity-50" onClick={() => {
+              runInAction(async () => {
+                const toPubKey = configStore.config.supportAccountPubKey;
+                const address = pubKeyUtils.getAddress(toPubKey);
+                state.toUserProfile = await ProfileApi.get(address);
+                state.conversationId = getConversationId(userStore.address, address);
+                state.toPubKey = toPubKey;
+              });
+            }}>
+              <BiSupport />
+            </div>
+          )}
           {state.toPubKey && (
             <div className="flex items-center justify-center absolute top-4 z-50 opacity-90 w-full">
               <div className="text-20 px-5 absolute top-[2px] left-0 cursor-pointer" onClick={() => {
