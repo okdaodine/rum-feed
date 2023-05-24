@@ -1,8 +1,8 @@
 A social product that is built on Quorum.
 
-All functional implementations refer to the [ActivityPub](https://docs.rumsystem.net/docs/data-format-and-examples/) format recommended by Quorum official.
+All data format refer to the [ActivityPub](https://docs.rumsystem.net/docs/data-format-and-examples/).
 
-live version: [https://feed.base.one](https://feed.base.one/)
+Live version: [https://feed.base.one](https://feed.base.one/)
 
 ## Start frontend service
 
