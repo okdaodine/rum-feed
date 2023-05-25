@@ -72,6 +72,9 @@ const ModalWrapper = observer((props: IModalProps) => {
   }, []);
 
   React.useEffect(() => {
+    if (state.fetched && state.toPubKey) {
+      return;
+    }
     (async () => {
       try {
         let conversations = await MessageApi.listConversations(userStore.address);
