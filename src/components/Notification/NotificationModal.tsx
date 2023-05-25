@@ -186,7 +186,7 @@ const Notification = observer((props: IProps) => {
           </div>
         )}
         {state.fetched && (
-          <div className="py-1 md:py-4">
+          <div className="py-1">
             {state.tab.type === 'like' && 
               <LikeMessages
                 notifications={state.notifications}

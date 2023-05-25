@@ -5,6 +5,7 @@ import TextField from '@material-ui/core/TextField';
 import EthCrypto from  'utils/ethCrypto';
 import { useStore } from 'store';
 import { BiLockAlt } from 'react-icons/bi';
+import { MdSend } from 'react-icons/md';
 import pubKeyUtils from 'utils/pubKeyUtils';
 import { MessageApi, TrxApi } from 'apis';
 import { IMessage } from 'apis/types';
@@ -14,6 +15,7 @@ import classNames from 'classnames';
 import sleep from 'utils/sleep';
 import { lang } from 'utils/lang';
 import { v4 as uuid } from 'uuid';
+import urlify from 'utils/urlify';
 
 interface IProps {
   toPubKey: string
@@ -107,6 +109,9 @@ export default observer((props: IProps) => {
   }, []);
 
   const submit = async (value: string) => {
+    if (!value) {
+      return;
+    }
     if (relationStore.mutedMe.has(pubKeyUtils.getAddress(props.toPubKey))) {
       confirmDialogStore.show({
         content: lang.unableToUseDMOfMuted,
@@ -153,39 +158,29 @@ export default observer((props: IProps) => {
           top: 9999,
         });
       }
-      (async () => {
-        try {
-          message.fromContent = await EthCrypto.encrypt({
-            message: message.fromContent,
-            publicKey: pubKeyUtils.decompress(userStore.user.pubKey!),
-            privateKey: userStore.privateKey,
-            vaultJWT: userStore.jwt,
-          });
-          message.toContent = await EthCrypto.encrypt({
-            message: message.toContent,
-            publicKey: pubKeyUtils.decompress(props.toPubKey),
-            privateKey: userStore.privateKey,
-            vaultJWT: userStore.jwt,
-          });
-          await MessageApi.createMessage(message);
-          await TrxApi.createActivity({
-            type: 'CreateDirectMessage',
-            object: {
-              type: 'DirectMessage',
-              content: JSON.stringify({
-                ...message,
-                status: '',
-              })
-            }
-          }, groupStore.directMessageGroup.groupId)
-        } catch (err) {
-          console.error(err);
-          snackbarStore.show({
-            message: lang.somethingWrong,
-            type: 'error',
-          });
+      message.fromContent = await EthCrypto.encrypt({
+        message: message.fromContent,
+        publicKey: pubKeyUtils.decompress(userStore.user.pubKey!),
+        privateKey: userStore.privateKey,
+        vaultJWT: userStore.jwt,
+      });
+      message.toContent = await EthCrypto.encrypt({
+        message: message.toContent,
+        publicKey: pubKeyUtils.decompress(props.toPubKey),
+        privateKey: userStore.privateKey,
+        vaultJWT: userStore.jwt,
+      });
+      await MessageApi.createMessage(message);
+      await TrxApi.createActivity({
+        type: 'CreateDirectMessage',
+        object: {
+          type: 'DirectMessage',
+          content: JSON.stringify({
+            ...message,
+            status: '',
+          })
         }
-      })();
+      }, groupStore.directMessageGroup.groupId);
     } catch (err) {
       console.error(err);
       snackbarStore.show({
@@ -217,14 +212,14 @@ export default observer((props: IProps) => {
                     </div>
                   )}
                   {message.toAddress === userStore.address && (
-                    <div className="bg-slate-300/70 text-black/80 dark:bg-slate-300/10 dark:text-white/90 py-[10px] px-[14px] max-w-[80%] inline-block rounded-12">
-                      {message.toContent}
+                    <div className="bg-slate-300/70 text-black/80 dark:bg-slate-300/10 dark:text-white/90 py-[10px] px-[14px] max-w-[80%] inline-block rounded-12 break-words whitespace-pre-wrap">
+                      <div dangerouslySetInnerHTML={{ __html: urlify(message.toContent) }} />
                     </div>
                   )}
                   {message.fromAddress === userStore.address && (
                     <div className="flex justify-end">
-                      <div className="bg-black/90 text-white dark:bg-white dark:text-black/90 py-[10px] px-[14px] max-w-[80%] inline-block rounded-12">
-                        {message.fromContent}
+                      <div className="bg-black/90 text-white dark:bg-white dark:text-black/90 py-[10px] px-[14px] max-w-[80%] inline-block rounded-12 break-words whitespace-pre-wrap">
+                        <div dangerouslySetInnerHTML={{ __html: urlify(message.fromContent) }} />
                       </div>
                     </div>
                   )}
@@ -243,21 +238,40 @@ export default observer((props: IProps) => {
               )
             })}
           </div>
-          <div className="mt-2 pb-3">
-            <TextField
-              placeholder='说点什么...'
-              value={state.value}
-              onChange={(e) => { state.value = e.target.value; }}
-              variant="outlined"
-              fullWidth
-              multiline
-              onKeyDown={async (e) => {
-                if (e.key === 'Enter' && state.value) {
-                  e.preventDefault();
-                  await submit(state.value.trim());
-                }
-              }}
-            />
+          <div className="mt-2 pb-3 flex items-center">
+            <div className="flex-1">
+              <TextField
+                placeholder='说点什么...'
+                value={state.value}
+                onChange={(e) => { state.value = e.target.value; }}
+                variant="outlined"
+                fullWidth
+                multiline
+                inputProps={{
+                  enterKeyHint: 'send'
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && state.value) {
+                    if (e.shiftKey) {
+                      return;
+                    }
+                    if (e.altKey || e.ctrlKey || e.metaKey) {
+                      state.value += '\n';
+                      return;
+                    }
+                    e.preventDefault();
+                    submit(state.value.trim());
+                  }
+                }}
+              />
+            </div>
+            <div className={classNames({
+              'opacity-30': !state.value.trim(),
+            }, "pl-4 -mr-1 py-2 cursor-pointer text-black/90 dark:text-white/90")} onClick={() => {
+              submit(state.value.trim());
+            }}>
+              <MdSend className="text-24" />
+            </div>
           </div>
           {state.loading && (
             <div className="absolute inset-0 flex items-center justify-center bg-white dark:bg-[#181818] z-20">

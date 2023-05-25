@@ -8,7 +8,7 @@ import { MdNotificationsNone } from 'react-icons/md';
 import Avatar from 'components/Avatar';
 import sleep from 'utils/sleep';
 import { MdArrowUpward, MdOutlineDarkMode, MdOutlineLightMode } from 'react-icons/md';
-import { BiArrowBack, BiMessageSquareDetail } from 'react-icons/bi';
+import { BiArrowBack } from 'react-icons/bi';
 import { useLocation } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
 import { isPc, isMobile } from 'utils/env';
@@ -35,6 +35,7 @@ import { lang } from 'utils/lang';
 import store from 'store2';
 import openLanguageModal from 'components/openLanguageModal';
 import { TbActivity } from 'react-icons/tb';
+import { FiMail } from 'react-icons/fi';
 import sum from 'lodash/sum';
 import openChatModal from 'components/openChatModal';
 
@@ -312,7 +313,7 @@ export default observer(() => {
                     overlap='rectangular'
                   />
                 </div>
-                <BiMessageSquareDetail className="text-20 dark:text-white dark:text-opacity-80 text-neutral-400 opacity-80 md:opacity-90" />
+                <FiMail className="text-20 dark:text-white dark:text-opacity-80 text-neutral-400 opacity-80 md:opacity-90" />
               </div>
               <div
                 className="px-2 mx-4 md:mx-0 md:mr-5 md:px-1 py-2 cursor-pointer"
