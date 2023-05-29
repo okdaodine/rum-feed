@@ -107,12 +107,14 @@ const notify = async (id) => {
       getSocketIo().emit('post', post);
       const name = post.extra.userProfile.name.split('\n')[0];
       const avatar = post.extra.userProfile.avatar;
-      Mixin.notifyByBot({
-        iconUrl: avatar + (avatar.includes('?') ? `&` : '?') + 'rounded=true',
-        title: (post.content || '').slice(0, 30) || '图片',
-        description: `${truncateByBytes(name, 14)} 发布内容`,
-        url: `${config.origin}/posts/${post.id}`
-      });
+      if (!config.mutedList?.includes(post.userAddress)) {
+        Mixin.notifyByBot({
+          iconUrl: avatar + (avatar.includes('?') ? `&` : '?') + 'rounded=true',
+          title: (post.content || '').slice(0, 30) || '图片',
+          description: `${truncateByBytes(name, 14)} 发布内容`,
+          url: `${config.origin}/posts/${post.id}`
+        });
+      }
     }
     await Activity.create({
       groupId: post.groupId,

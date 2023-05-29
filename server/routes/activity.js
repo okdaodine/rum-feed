@@ -5,6 +5,7 @@ const getDefaultProfile = require('../utils/getDefaultProfile');
 const Relation = require('../database/sequelize/relation');
 const { Op } = require("sequelize");
 const { keyBy } = require('lodash');
+const config = require('../config');
 
 router.get('/', list);
 
@@ -36,6 +37,18 @@ async function list(ctx) {
         ]
       };
     };
+  }
+
+  if (config.mutedList) {
+    const mutedList = config.mutedList.filter(address => address !== ctx.query.viewer);
+    if (mutedList.length > 0) {
+      where[Op.and] ||= [];
+      where[Op.and].push({
+        userAddress: {
+          [Op.notIn]: mutedList
+        }
+      });
+    }
   }
 
   const activities = await Activity.findAll({
