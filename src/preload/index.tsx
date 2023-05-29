@@ -10,13 +10,13 @@ import { IVaultAppUser } from 'apis/types';
 import isEmpty from 'lodash/isEmpty';
 import openProfileEditor from 'components/openProfileEditor';
 import openLoginModal from 'components/Wallet/openLoginModal';
+import openGroupInfo from 'components/openGroupInfo';
 import sleep from 'utils/sleep';
 import isJWT from 'utils/isJWT';
 import { useHistory } from 'react-router-dom';
 import { ethers } from 'ethers';
 import * as JsBase64 from 'js-base64';
 import store from 'store2';
-
 
 const Preload = observer(() => {
   const { userStore, groupStore, confirmDialogStore, modalStore, configStore, relationStore } = useStore();
@@ -70,6 +70,7 @@ const Preload = observer(() => {
         }
         tryOpenLoginModal();
         tryOpenProfileModal();
+        tryOpenGroupModal();
         tryLogout();
         tryAutoLogin();
         
@@ -193,6 +194,18 @@ const Preload = observer(() => {
       Query.remove('action');
       await sleep(1000);
       openLoginModal();
+    }
+  }
+
+  const tryOpenGroupModal = async () => {
+    const action = Query.get('action');
+    if (action.startsWith('openGroupModal')) {
+      Query.remove('action');
+      const groupId = action.split(':')[1];
+      if (groupId) {
+        await sleep(1000);
+        openGroupInfo(groupId);
+      }
     }
   }
 

@@ -4,6 +4,7 @@ export interface IConfig {
   version: string
   defaultGroupId: string
   repo: string
+  hasAdmin: boolean
   groupsPageIsOnlyVisibleToAdmin: boolean
   walletProviders: string[]
   enabledActivities: boolean

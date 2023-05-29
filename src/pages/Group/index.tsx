@@ -15,6 +15,9 @@ import openLoginModal from 'components/Wallet/openLoginModal';
 import Button from 'components/Button';
 import { isMobile } from 'utils/env';
 import TopPlaceHolder, { scrollToTop } from 'components/TopPlaceHolder';
+import openGroupInfo from 'components/openGroupInfo';
+import { MdOutlineErrorOutline } from 'react-icons/md';
+import { BiChevronRight } from 'react-icons/bi';
 import { RouteChildrenProps } from 'react-router-dom';
 import { useActivate, useUnactivate } from 'react-activation';
 import sleep from 'utils/sleep';
@@ -25,7 +28,7 @@ import base64 from 'utils/base64';
 import './index.css';
 
 export default observer((props: RouteChildrenProps) => {
-  const { userStore, postStore, groupStore } = useStore();
+  const { userStore, postStore, groupStore, snackbarStore } = useStore();
   const { groupId } = props.match?.params as { groupId: string };
   const state = useLocalObservable(() => ({
     content: '',
@@ -210,6 +213,35 @@ export default observer((props: RouteChildrenProps) => {
                 </div>
                 <div className="z-10 font-bold text-center text-22 md:text-26 text-white w-full py-4 tracking-wider">
                   {state.group.groupName}
+                  <div className="mt-[15px] text-gray-9b flex items-center justify-center cursor-pointer text-[13px]" onClick={async () => {
+                    const result = await openGroupInfo(state.group!.groupId);
+                    if (result === 'removed') {
+                      await sleep(500);
+                      snackbarStore.show({
+                        message: lang.deleted,
+                      });
+                      window.location.href = '/';
+                    }
+                  }}>
+                    {state.group.status === 'connected' && (
+                      <div className="flex items-center">
+                        {lang.connected}<span className="text-emerald-500 font-bold mx-[6px]">{state.group.extra.rawGroup.chainAPIs.length}</span>{lang.nodes}
+                      </div>
+                    )}
+                    {state.group.status === 'disconnected' && (
+                      <div className="flex items-center bg-red-400 text-black p-1 px-2 text-12 rounded-12 mr-2 text-center">
+                        <MdOutlineErrorOutline className="text-16 mr-1" /> {lang.disconnected}
+                      </div>
+                    )}
+                    <div>
+                      {state.group.contentCount > 0 && (
+                        <div>
+                          {state.group.status === 'connected' && '，'}{lang.synced}<span className="text-white/80 font-bold mx-[6px]">{state.group.contentCount}</span>{lang.contents}
+                        </div>
+                      )}
+                    </div>
+                    {(state.group.status === 'connected' || state.group.contentCount > 0) && <BiChevronRight className="text-18 ml-[2px]" />}
+                  </div>
                 </div>
               </div>
               <div className="md:pt-5">

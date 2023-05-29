@@ -24,7 +24,7 @@ interface IModalProps {
 }
 
 const Main = observer((props: IModalProps) => {
-  const { snackbarStore, confirmDialogStore } = useStore();
+  const { snackbarStore, confirmDialogStore, userStore, configStore } = useStore();
   const state = useLocalObservable(() => ({
     group: {} as IGroup,
     loading: true,
@@ -32,6 +32,7 @@ const Main = observer((props: IModalProps) => {
     contents: [] as IContent[],
     hasMoreContent: true,
   }));
+  const allAllowed = !configStore.config.groupsPageIsOnlyVisibleToAdmin || (userStore.isLogin && userStore.user.role === 'admin');
 
   React.useEffect(() => {
     setTimeout(() => {
@@ -156,61 +157,65 @@ const Main = observer((props: IModalProps) => {
                   {state.group.groupId}
                 </div>
               </div>
-              <div className="mt-8">
-                <div className="flex">
-                  <div className="dark:text-white dark:text-opacity-80 text-gray-500 font-bold bg-gray-ec dark:bg-neutral-800 rounded-0 pt-2 pb-3 px-4 rounded-t-12">
-                    {lang.seed}
-                  </div>
-                </div>
-                <div className="-mt-3 justify-center bg-gray-ec dark:bg-neutral-800 rounded-0 pt-3 px-4 md:px-6 pb-3 leading-7 tracking-wide rounded-12 rounded-lt-none">
-                    <Tooltip
-                      enterDelay={300}
-                      enterNextDelay={300}
-                      placement="left"
-                      title={lang.copy}
-                      arrow
-                      interactive
-                    >
-                    <div className="flex items-center py-[2px] cursor-pointer" onClick={() => {
-                      copy(state.group.seedUrl);
-                      snackbarStore.show({
-                        message: lang.copied,
-                      });
-                    }}>
-                      <div className="w-[22px] h-[22px] box-border flex items-center justify-center dark:bg-white bg-black dark:text-black text-white text-12 mr-[10px] rounded-full opacity-90">
-                        <FaSeedling className="text-12" />
+              {allAllowed && (
+                <>
+                  <div className="mt-8">
+                    <div className="flex">
+                      <div className="dark:text-white dark:text-opacity-80 text-gray-500 font-bold bg-gray-ec dark:bg-neutral-800 rounded-0 pt-2 pb-3 px-4 rounded-t-12">
+                        {lang.seed}
                       </div>
-                      <div className="text-12 md:text-13 dark:text-white dark:text-opacity-80 text-gray-88 flex-1 pr-1 truncate">{state.group.seedUrl}</div>
-                      <BiCopy className="mr-2 text-sky-500 text-16" />
                     </div>
-                  </Tooltip>
-                </div>
-              </div>
-              <div className="mt-8">
-                <div className="flex">
-                  <div className="dark:text-white dark:text-opacity-80 text-gray-500 font-bold bg-gray-ec dark:bg-neutral-800 rounded-0 pt-2 pb-3 px-4 rounded-t-12">
-                    {lang.node}
+                    <div className="-mt-3 justify-center bg-gray-ec dark:bg-neutral-800 rounded-0 pt-3 px-4 md:px-6 pb-3 leading-7 tracking-wide rounded-12 rounded-lt-none">
+                        <Tooltip
+                          enterDelay={300}
+                          enterNextDelay={300}
+                          placement="left"
+                          title={lang.copy}
+                          arrow
+                          interactive
+                        >
+                        <div className="flex items-center py-[2px] cursor-pointer" onClick={() => {
+                          copy(state.group.seedUrl);
+                          snackbarStore.show({
+                            message: lang.copied,
+                          });
+                        }}>
+                          <div className="w-[22px] h-[22px] box-border flex items-center justify-center dark:bg-white bg-black dark:text-black text-white text-12 mr-[10px] rounded-full opacity-90">
+                            <FaSeedling className="text-12" />
+                          </div>
+                          <div className="text-12 md:text-13 dark:text-white dark:text-opacity-80 text-gray-88 flex-1 pr-1 truncate">{state.group.seedUrl}</div>
+                          <BiCopy className="mr-2 text-sky-500 text-16" />
+                        </div>
+                      </Tooltip>
+                    </div>
                   </div>
-                </div>
-                <div className="-mt-3 justify-center bg-gray-ec dark:bg-neutral-800 rounded-0 pt-3 px-4 md:px-6 pb-3 leading-7 tracking-wide rounded-12 rounded-lt-none">
-                  {state.group.status === 'disconnected' && (
-                    <div className="flex items-center justify-center bg-red-400 dark:text-black text-white px-2 text-12 rounded-12 mb-2 py-1 leading-none">
-                      <MdOutlineErrorOutline className="mr-1 text-18" /> {lang.disconnected}
+                  <div className="mt-8">
+                    <div className="flex">
+                      <div className="dark:text-white dark:text-opacity-80 text-gray-500 font-bold bg-gray-ec dark:bg-neutral-800 rounded-0 pt-2 pb-3 px-4 rounded-t-12">
+                        {lang.node}
+                      </div>
                     </div>
-                  )}
-                  {state.group.extra.rawGroup.chainAPIs.map((api, i) => (
-                    <div className="flex items-center py-[2px] group" key={api}>
-                      <div className="w-[22px] h-[22px] box-border flex items-center justify-center dark:bg-white bg-black dark:text-black text-white text-12 mr-[10px] rounded-full opacity-90">{i + 1}</div>
-                      <div className="text-12 md:text-13 dark:text-white dark:text-opacity-80 text-gray-88 flex-1 pr-1 truncate cursor-pointer">{api}</div>
-                      {state.group.extra.rawGroup.chainAPIs.length > 1 && (
-                        <div className="pl-1 pr-2 cursor-pointer hidden group-hover:block" onClick={() => removeChainAPI(api)}>
-                          <IoMdClose className="text-red-500 text-16" />
+                    <div className="-mt-3 justify-center bg-gray-ec dark:bg-neutral-800 rounded-0 pt-3 px-4 md:px-6 pb-3 leading-7 tracking-wide rounded-12 rounded-lt-none">
+                      {state.group.status === 'disconnected' && (
+                        <div className="flex items-center justify-center bg-red-400 dark:text-black text-white px-2 text-12 rounded-12 mb-2 py-1 leading-none">
+                          <MdOutlineErrorOutline className="mr-1 text-18" /> {lang.disconnected}
                         </div>
                       )}
+                      {state.group.extra.rawGroup.chainAPIs.map((api, i) => (
+                        <div className="flex items-center py-[2px] group" key={api}>
+                          <div className="w-[22px] h-[22px] box-border flex items-center justify-center dark:bg-white bg-black dark:text-black text-white text-12 mr-[10px] rounded-full opacity-90">{i + 1}</div>
+                          <div className="text-12 md:text-13 dark:text-white dark:text-opacity-80 text-gray-88 flex-1 pr-1 truncate cursor-pointer">{api}</div>
+                          {state.group.extra.rawGroup.chainAPIs.length > 1 && (
+                            <div className="pl-1 pr-2 cursor-pointer hidden group-hover:block" onClick={() => removeChainAPI(api)}>
+                              <IoMdClose className="text-red-500 text-16" />
+                            </div>
+                          )}
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
-              </div>
+                  </div>
+                </>
+              )}
               {state.contents.length > 0 && (
                 <div className="mt-8">
                   <div className="flex">
@@ -245,7 +250,9 @@ const Main = observer((props: IModalProps) => {
                   </div>
                 </div>
               )}
-              <Button className="w-full mt-5" color="red" outline onClick={remove}>{lang.delete}</Button>
+              {(!configStore.config.hasAdmin || (userStore.isLogin && userStore.user.role === 'admin')) && (
+                <Button className="w-full mt-5" color="red" outline onClick={remove}>{lang.delete}</Button>
+              )}
             </div>
           )}
         </div>

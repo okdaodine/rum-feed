@@ -9,6 +9,7 @@ async function get(ctx) {
     logo: config.logo || '',
     defaultGroupId: config.defaultGroupId || '',
     repo: config.repo || '',
+    hasAdmin: config.admins?.length > 0,
     groupsPageIsOnlyVisibleToAdmin: config.groupsPageIsOnlyVisibleToAdmin || false,
     walletProviders: config.walletProviders || [],
     enabledActivities: config.enabledActivities || false,
