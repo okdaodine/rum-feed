@@ -10,7 +10,7 @@ export default async (url: any, options: any = {}) => {
       'X-Address': (window as any).store.userStore.address || ''
     }
   }
-  if (hasEffectMethod) {
+  if (hasEffectMethod && !(options.body instanceof FormData)) {
     options.headers = {
       ...(options.headers || {}),
       'Content-Type': 'application/json',

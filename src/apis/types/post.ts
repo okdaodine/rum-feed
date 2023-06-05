@@ -1,13 +1,11 @@
 import { IProfile } from './profile';
 import { TrxStorage } from '../common';
 
-export interface IPostContent {
+export interface IPost {
   content: string
   title?: string
   images?: string[]
-}
-
-export interface IPost extends IPostContent {
+  video?: IVideo
   userAddress: string
   groupId: string
   trxId: string
@@ -25,4 +23,12 @@ export interface IPostExtra {
   liked?: boolean
   groupName: string
   retweet?: IPost
+}
+
+interface IVideo {
+  url: string
+  poster: string
+  duration: string
+  width: number
+  height: number
 }

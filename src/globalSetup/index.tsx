@@ -154,7 +154,7 @@ export default observer(() => {
   }, []);
 
   React.useEffect(() => {
-    if (userStore.isLogin) {
+    if (userStore.isLogin && configStore.config.enabledV1Migration) {
       (async () => {
         while (true) {
           await sleep(10 * 1000);

@@ -1,8 +1,8 @@
 import React from 'react';
 import { runInAction } from 'mobx';
 import { observer, useLocalObservable } from 'mobx-react-lite';
-import { IPost, IProfile } from 'apis/types';
-import { TrxStorage } from 'apis/common';
+import { IPost, IProfile, IUploadVideoRes } from 'apis/types';
+import { API_ORIGIN, TrxStorage } from 'apis/common';
 import PostItem from 'components/Post/Item';
 import { PostApi, TrxApi } from 'apis';
 import Editor from 'components/Editor';
@@ -18,9 +18,10 @@ import { isMobile } from 'utils/env';
 import TopPlaceHolder from 'components/TopPlaceHolder';
 import { v4 as uuid } from 'uuid';
 import base64 from 'utils/base64';
+import sleep from 'utils/sleep';
 
 export default observer(() => {
-  const { userStore, postStore, groupStore } = useStore();
+  const { userStore, postStore, groupStore, configStore, snackbarStore } = useStore();
   const state = useLocalObservable(() => ({
     content: '',
     profileMap: {} as Record<string, IProfile>,
@@ -116,11 +117,53 @@ export default observer(() => {
     if (retweet) {
       post.extra.retweet = retweet;
     }
+    if (activity.object?.attachment) {
+      const video = (activity.object?.attachment as any)[0];
+      post.video = {
+        url: `${API_ORIGIN}/${video.id}`,
+        poster: `${API_ORIGIN}/${video.id.replace('mp4', 'jpg')}`,
+        duration: video.duration,
+        width: video.width,
+        height: video.height,
+      }
+    }
     postStore.addPost(post);
     userStore.updateUser(userStore.address, {
       postCount: userStore.user.postCount + 1
     });
     state.content = '';
+  }
+
+  const submitVideo = async (video: IUploadVideoRes) => {
+    const manyChunks = video.chunks.length > 1;
+    try {
+      for (const [index, chunk] of Object.entries(video.chunks)) {
+        if (manyChunks) {
+          const percent = Math.round((Number(index) + 1) / video.chunks.length * 100);
+          snackbarStore.show({ message: `处理中 ${percent}%`, duration: 9999999, type: 'loading' })
+        }
+        const activity = {
+          type: 'Create',
+          object: {
+            type: 'Video',
+            id: `${video.fileName}.part${Number(index) + 1}`,
+            content: chunk,
+            mediaType: video.mimetype,
+            duration: video.duration,
+            width: video.width,
+            height: video.height,
+            totalItems: video.chunks.length,
+          }
+        } as IActivity;
+        await TrxApi.createActivity(activity, groupStore.videoGroup.groupId);
+      }
+    } catch (err) {
+      throw err;
+    }
+    if (manyChunks) {
+      await sleep(1000);
+      snackbarStore.close();
+    }
   }
 
   return (
@@ -135,25 +178,36 @@ export default observer(() => {
               placeholder={lang.whatsHappening}
               autoFocusDisabled
               minRows={3}
-              submit={(data) => {
+              submit={async (data) => {
                 const payload: IActivity = {
                   type: 'Create', 
                   object: {
                     type: 'Note',
                     id: uuid(),
                     content: data.content,
-                    ...data.images ? {
-                      image: data.images.map(v => ({
-                        type: 'Image',
-                        mediaType: v.mediaType,
-                        content: v.content,
-                      }))
-                    } : {}
                   }
                 };
+                if (data.images) {
+                  payload.object!.image = data.images.map(v => ({
+                    type: 'Image',
+                    mediaType: v.mediaType,
+                    content: v.content,
+                  }));
+                }
+                if (data.video) {
+                  payload.object!.attachment = [{
+                    type: 'Video',
+                    id: data.video.fileName,
+                    duration: data.video.duration,
+                    width: data.video.width,
+                    height: data.video.height,
+                  }];
+                  await submitVideo(data.video);
+                }
                 return submitPost(payload, data.retweet);
               }}
               enabledImage
+              enabledVideo={configStore.config.enabledVideo}
             />
           </div>
           <div className={classNames({

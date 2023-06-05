@@ -8,6 +8,7 @@ const cors = require('@koa/cors');
 const router = require('koa-router')();
 const serve = require('koa-static');
 const views = require('koa-views');
+const range = require('koa-range');
 const Socket = require('./socket');
 
 const pollingContent = require('./pollingContent');
@@ -35,6 +36,7 @@ const link = require('./routes/link');
 const activity = require('./routes/activity');
 const favorite = require('./routes/favorite');
 const message = require('./routes/message');
+const video = require('./routes/video');
 
 const {
   errorHandler,
@@ -51,7 +53,12 @@ app.use(cors({
   credentials: true
 }));
 app.use(views(__dirname + '/build'));
+app.use(range);
 app.use(serve('build', {
+  maxage: 365 * 24 * 60 * 60,
+  gzip: true
+}));
+app.use(serve('storage', {
   maxage: 365 * 24 * 60 * 60,
   gzip: true
 }));
@@ -80,6 +87,7 @@ router.use('/api/links', link.routes(), link.allowedMethods());
 router.use('/api/activities', activity.routes(), activity.allowedMethods());
 router.use('/api/favorites', favorite.routes(), favorite.allowedMethods());
 router.use('/api/messages', message.routes(), message.allowedMethods());
+router.use('/api/videos', video.routes(), video.allowedMethods());
 
 router.use('(.*)', view.routes(), view.allowedMethods());
 

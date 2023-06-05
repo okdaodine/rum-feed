@@ -19,7 +19,7 @@ router.get('/', async ctx => {
         withExtra: true,
       });
       if (post) {
-        content = post.content;
+        content = escapeHtml(post.content || '');
         userName = post.extra.userProfile.name.replace(/\n/g, '');
         image = post.extra.userProfile.avatar;
         title = `${userName} "${content.replace(/\n/g, '').slice(0, 80)}" - ${siteName}`;
@@ -85,5 +85,16 @@ router.get('/', async ctx => {
     return ctx.render('index');
   }
 });
+
+function escapeHtml(text) {
+  var map = {
+    '<': '&lt;',
+    '>': '&gt;',
+    '&': '&amp;'
+  };
+  return text.replace(/[<>&]/g, function(m) {
+    return map[m];
+  });
+}
 
 module.exports = router;

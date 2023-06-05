@@ -7,6 +7,7 @@ const handleProfile = require('./handleProfile');
 const handleRelation = require('./handleRelation');
 const handleFavorite = require('./handleFavorite');
 const handleDirectMessage = require('./handleDirectMessage');
+const handleVideo = require('./handleVideo');
 const getTrxType = require('../utils/getTrxType');
 const Content = require('../database/sequelize/content');
 const Group = require('../database/sequelize/group');
@@ -86,7 +87,9 @@ const startJob = async (groupId, duration) => {
           }
         }
         const contents = await rumSDK.chain.Content.list(listOptions);
-        console.log(`${moment().format('HH:mm:ss')} ${group.groupName}: fetched and got ${contents.length} contents`);
+        if (process.env.NODE_ENV !== 'development_silent') {
+          console.log(`${moment().format('HH:mm:ss')} ${group.groupName}: fetched and got ${contents.length} contents`);
+        }
         while (jobShareData.handling) {
           await sleep(200);
         }
@@ -144,6 +147,7 @@ const handleContents = async (groupId, contents) => {
             case 'relation': await handleRelation(content, group); break;
             case 'favorite': await handleFavorite(content); break;
             case 'directMessage': await handleDirectMessage(content, group); break;
+            case 'video': await handleVideo(content); break;
             default: break;
           }
           console.log(`${content.TrxId} ✅`);

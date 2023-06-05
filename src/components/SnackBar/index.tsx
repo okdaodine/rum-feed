@@ -1,8 +1,8 @@
-import React from 'react';
 import { observer } from 'mobx-react-lite';
 import { useStore } from 'store';
 import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
 import classNames from 'classnames';
+import Loading from 'components/Loading';
 
 import './index.css';
 
@@ -30,11 +30,9 @@ export default observer(() => {
                 'text-32 flex items-center justify-center pt-1',
               )}
             >
-              {snackbarStore.type === 'error' ? (
-                <FaTimesCircle />
-              ) : (
-                <FaCheckCircle />
-              )}
+              {snackbarStore.type === 'default' && <FaCheckCircle />}
+              {snackbarStore.type === 'error' && <FaTimesCircle />}
+              {snackbarStore.type === 'loading' && <Loading size={24} />}
             </div>
             <div
               className={classNames(

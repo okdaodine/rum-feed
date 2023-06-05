@@ -8,7 +8,7 @@ import TextareaAutosize from 'react-textarea-autosize';
 import TextField from '@material-ui/core/TextField';
 import Tooltip from '@material-ui/core/Tooltip';
 import { BiSmile } from 'react-icons/bi';
-import { BsImage } from 'react-icons/bs';
+import { BsImage, BsPlayCircle } from 'react-icons/bs';
 import Uploady from '@rpldy/uploady';
 import UploadButton from '@rpldy/upload-button';
 import UploadDropZone from '@rpldy/upload-drop-zone';
@@ -25,7 +25,7 @@ import { useStore } from 'store';
 import openPhotoSwipe from 'components/openPhotoSwipe';
 import { v4 as uuid } from 'uuid';
 import sleep from 'utils/sleep';
-import { IPost } from 'apis/types';
+import { IPost, IUploadVideoRes } from 'apis/types';
 import { IImage } from 'apis/types/common';
 import openLoginModal from 'components/Wallet/openLoginModal';
 import { isMobile, isPc } from 'utils/env';
@@ -33,7 +33,8 @@ import LinkCard from 'components/LinkCard';
 import extractUrls from 'utils/extractUrls';
 import RetweetItem from 'components/Post/RetweetItem';
 import isRetweetUrl from 'utils/isRetweetUrl';
-import { PostApi } from 'apis';
+import { PostApi, VideoApi } from 'apis';
+import Video from 'components/Video';
 
 import './index.css';
 
@@ -50,6 +51,7 @@ type ISubmitData = {
   content: string
   images?: IImage[]
   retweet?: IPost
+  video?: IUploadVideoRes
 };
 
 interface IProps {
@@ -66,6 +68,7 @@ interface IProps {
   autoFocusDisabled?: boolean
   hideButtonDefault?: boolean
   enabledImage?: boolean
+  enabledVideo?: boolean
   disabledEmoji?: boolean
   imageLimit?: number
   buttonBorder?: () => void
@@ -108,7 +111,7 @@ const Images = (props: {
             className={classNames({
               'w-6 h-6 right-[12px]': !props.smallSize,
               'w-5 h-5 right-[10px]': props.smallSize,
-            }, 'bg-black bg-opacity-70 dark:text-black text-white opacity-80 text-14 top-[3px] absolute cursor-pointer rounded-full flex items-center justify-center')}
+            }, 'bg-black bg-opacity-70 text-white opacity-80 text-14 top-[3px] absolute cursor-pointer rounded-full flex items-center justify-center')}
             onClick={(e: any) => {
               e.stopPropagation();
               props.removeImage(image.id);
@@ -129,11 +132,13 @@ export default (props: IProps) => {
   const PasteUploadDropZone = withPasteUpload(UploadDropZone);
   if (props.enabledImage) {
     return (
-      <Uploady multiple accept={isPc ? ACCEPT : undefined}>
-        <PasteUploadDropZone>
-          <Editor {...props} />
-        </PasteUploadDropZone>
-      </Uploady>
+      <div>
+        <Uploady multiple accept={isPc ? ACCEPT : undefined}>
+          <PasteUploadDropZone>
+            <Editor {...props} />
+          </PasteUploadDropZone>
+        </Uploady>
+      </div>
     );
   }
   return <Editor {...props} />;
@@ -145,6 +150,7 @@ const Editor = observer((props: IProps) => {
   const state = useLocalObservable(() => ({
     content: '',
     submitting: false,
+    uploadingVideo: false,
     fetchedProfile: false,
     clickedEditor: false,
     emoji: false,
@@ -153,14 +159,16 @@ const Editor = observer((props: IProps) => {
     retweetUrl: '',
     retweet: props.retweet || null as IPost | null,
     lastUrl: '',
-    enabledDraftListener: false
+    enabledDraftListener: false,
+    video: null as null | IUploadVideoRes
   }));
   const emojiButton = React.useRef<HTMLDivElement>(null);
   const textareaRef = React.useRef<HTMLTextAreaElement>(null);
+  const videoInputRef = React.useRef<HTMLInputElement>(null);
   const isPastingFileRef = React.useRef<boolean>(false);
   const imageCount = Object.keys(state.imageMap).length;
   const imageIdSet = React.useMemo(() => new Set(Object.keys(state.imageMap)), [imageCount]);
-  const readyToSubmit = ((state.content.trim() || imageCount > 0) && !state.submitting) || !!props.retweet;
+  const readyToSubmit = ((state.content.trim() || imageCount > 0 || state.video) && !state.submitting) || !!props.retweet;
   const imageLImit = props.imageLimit || 4;
   const alertedPreviewsRef = React.useRef<string[]>([]);
   const enabledLinkPreview = props.editorKey === 'post';
@@ -308,6 +316,9 @@ const Editor = observer((props: IProps) => {
         payload.content += `${payload.content ? ' ' : ''}${window.location.origin}/posts/${props.retweet.id}`;
       }
     }
+    if (state.video) {
+      payload.video = state.video;
+    }
     let _draft = localStorage.getItem(draftKey) || '';
     localStorage.removeItem(draftKey);
     try {
@@ -357,6 +368,46 @@ const Editor = observer((props: IProps) => {
       submit();
     }
   }
+
+  const handleFileChange = async (event: any) => {
+    if (state.uploadingVideo) {
+      return;
+    }
+
+    const file = event.target.files[0];
+    if (!file) {
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    state.uploadingVideo = true;
+    try {
+      const res = await VideoApi.upload(formData);
+      const maybeError = res as any;
+      if (maybeError.code && maybeError.message) {
+        throw new Error(maybeError.message);
+      }
+      console.log('Upload success:', res);
+      state.video = res;
+    } catch (err: any) {
+      let message = err.message;
+      if (message.toLowerCase().includes('large')) {
+        message = '视频太大了，请不要超过 20MB 哦';
+      }
+      console.error('Upload failed:', err);
+      snackbarStore.show({
+        message: message || lang.somethingWrong,
+        type: 'error',
+      });
+      state.video = null;
+      if (videoInputRef.current) {
+        videoInputRef.current.value = videoInputRef.current.defaultValue;
+      }
+    }
+    state.uploadingVideo = false;
+  };
 
   return (
     <div className="w-full">
@@ -423,6 +474,14 @@ const Editor = observer((props: IProps) => {
                 </div>
               </div>
             )}
+            {state.uploadingVideo && (
+              <div className="absolute top-0 left-0 w-full z-10 bg-white text-black/50 dark:bg-[#181818] dark:text-[#999] opacity-70 flex items-center justify-center h-full">
+                <div className="mt-[-6px] flex items-center justify-center">
+                  <div className="mr-2">正在处理视频</div>
+                  <Loading size={16}/>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -446,12 +505,26 @@ const Editor = observer((props: IProps) => {
                 if (!extensions.includes(ext)) {
                   if (!alertedPreviewsRef.current.includes(preview.name)) {
                     alertedPreviewsRef.current.push(preview.name);
+                    let message = `${lang.notSupport} ${ext} (${preview.name})`;
+                    if ((preview.name || '').match(/\.(mp4|avi|mkv|mov)$/i)) {
+                      message = '视频文件请通过点击按钮来上传';
+                    }
                     snackbarStore.show({
-                      message: `${lang.notSupport} ${ext} (${preview.name})`,
+                      message,
                       type: 'error',
                       duration: 3000
                     });
                   }
+                }
+                if (state.video) {
+                  if (!alertedPreviewsRef.current.includes(preview.name)) {
+                    alertedPreviewsRef.current.push(preview.name);
+                    snackbarStore.show({
+                      message: '您已上传了视频，不能同时上传图片哦',
+                      type: 'error',
+                    });
+                  }
+                  return false;
                 }
                 return !state.cacheImageIdSet.has(preview.id) && (extensions.includes(ext));
               });
@@ -500,6 +573,28 @@ const Editor = observer((props: IProps) => {
           />
         </div>
       )}
+      {props.enabledVideo && state.video && (
+        <div className="pt-1 relative">
+          <Video
+            poster={state.video.poster}
+            url={state.video.url}
+            width={state.video.width}
+            height={state.video.height}
+            duration={state.video.duration}
+          />
+          <div
+            className='w-6 h-6 bg-[#888]/50 text-white opacity-90 text-14 left-3 top-3 absolute cursor-pointer rounded-full flex items-center justify-center'
+            onClick={() => {
+              state.video = null;
+              if (videoInputRef.current) {
+                videoInputRef.current.value = videoInputRef.current.defaultValue;
+              }
+            }}
+          >
+            <IoMdClose />
+          </div>
+        </div>
+      )}
       {state.retweet && (
         <div className="pb-1">
           <RetweetItem post={state.retweet} small={isMobile} disabledClick  />
@@ -517,21 +612,29 @@ const Editor = observer((props: IProps) => {
           <div className="mt-1 flex justify-between">
             <div className="flex items-center">
               {!props.disabledEmoji && (
-                <div
-                  className={classNames(
-                    !props.enabledProfile && 'ml-1',
-                    !!props.enabledProfile && 'ml-12',
-                  )}
-                  ref={emojiButton}
-                >
-                  <BiSmile
-                    className="mr-4 text-22 cursor-pointer dark:text-white dark:text-opacity-80 text-gray-af"
-                    onClick={action(() => { state.emoji = true; })}
+                <>
+                  <div
+                    className={classNames(
+                      !props.enabledProfile && 'ml-1',
+                      !!props.enabledProfile && 'ml-12',
+                    )}
+                    ref={emojiButton}
+                  >
+                    <BiSmile
+                      className="mr-4 text-22 cursor-pointer dark:text-white dark:text-opacity-80 text-gray-af"
+                      onClick={action(() => { state.emoji = true; })}
+                    />
+                  </div>
+                  <EmojiPicker
+                    open={state.emoji}
+                    anchorEl={emojiButton.current}
+                    onSelectEmoji={handleInsertEmoji}
+                    onClose={action(() => { state.emoji = false; })}
                   />
-                </div>
+                </>
               )}
               {props.enabledImage && (
-                <div className="flex items-center">
+                <div className="flex items-center mr-4">
                   <UploadButton>
                     <BsImage
                       className="text-18 cursor-pointer dark:text-white dark:text-opacity-80 text-gray-af"
@@ -539,16 +642,25 @@ const Editor = observer((props: IProps) => {
                   </UploadButton>
                 </div>
               )}
-              {!props.disabledEmoji && (
-                <EmojiPicker
-                  open={state.emoji}
-                  anchorEl={emojiButton.current}
-                  onSelectEmoji={handleInsertEmoji}
-                  onClose={action(() => { state.emoji = false; })}
-                />
+              {props.enabledVideo && (
+                <div className="flex items-center mr-4 pl-[2px] md:pl-0 cursor-pointer" onClick={() => {
+                  if (imageCount > 0) {
+                    snackbarStore.show({
+                      message: '您已上传了图片，不能同时上传视频哦',
+                      type: 'error',
+                    });
+                    return;
+                  }
+                  if (videoInputRef.current) {
+                    videoInputRef.current.click();
+                  }
+                }}>
+                  <input ref={videoInputRef} className="hidden" type="file" accept="video/*" onChange={handleFileChange} />
+                  <BsPlayCircle className="text-18 dark:text-white dark:text-opacity-80 text-gray-af" />
+                </div>
               )}
               {groupStore.multiple && props.editorKey === 'post' && (
-                <div className="flex ml-5 mt-[2px] tracking-wider">
+                <div className="flex mt-[2px] tracking-wider">
                   <Tooltip
                     enterDelay={600}
                     enterNextDelay={600}

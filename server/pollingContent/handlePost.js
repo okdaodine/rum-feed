@@ -36,6 +36,7 @@ const pack = async item => {
         name,
         content,
         image,
+        attachment,
         object: retweetObject
       },
       published,
@@ -65,6 +66,11 @@ const pack = async item => {
     if (retweet) {
       post.content += `${content.length > 0 ? ' ' : ''}${config.origin || 'https://rumsystem.net'}/posts/${retweetObject.id}`
     }
+  }
+  if (attachment) {
+    const video = Array.isArray(attachment) ? attachment[0] : attachment;
+    delete video.type;
+    post.video = video;
   }
   return post
 }

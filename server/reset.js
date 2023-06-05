@@ -14,6 +14,8 @@ const Link = require('./database/sequelize/link');
 const Activity = require('./database/sequelize/activity');
 const Favorite = require('./database/sequelize/favorite');
 const Message = require('./database/sequelize/message');
+const VideoChunk = require('./database/sequelize/videoChunk');
+const Video = require('./database/sequelize/video');
 
 (async () => {
   await sleep(2000);
@@ -33,6 +35,8 @@ const Message = require('./database/sequelize/message');
     await Activity.sync({ force: true });
     await Favorite.sync({ force: true });
     await Message.sync({ force: true });
+    await VideoChunk.sync({ force: true });
+    await Video.sync({ force: true });
   } catch (err) {
     console.log(err);
   }

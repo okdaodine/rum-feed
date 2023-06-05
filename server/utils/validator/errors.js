@@ -31,7 +31,7 @@ const errors = {
   },
   ERR_IS_REQUEST_FAILED(message) {
     return {
-      code: 'ERR_NOT_REQUEST_FAILED',
+      code: 'ERR_REQUEST_FAILED',
       message: message || `FAIL TO REQUEST`
     };
   },

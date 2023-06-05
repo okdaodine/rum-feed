@@ -24,6 +24,7 @@ import LinkCard from 'components/LinkCard';
 import extractUrls from 'utils/extractUrls';
 import RetweetItem from './RetweetItem';
 import MutedContent from 'components/MutedContent';
+import Video from 'components/Video';
 
 import './index.css';
 import isRetweetUrl from 'utils/isRetweetUrl';
@@ -363,6 +364,17 @@ export default observer((props: IProps) => {
               {(post.images || []).length > 0 && <div className={classNames({ 'pt-3': !postContent }, "pb-2")}>
                 <Images images={post.images || []} />
               </div>}
+              {post.video && (
+                <div className={classNames({ 'pt-3': !postContent }, "pb-2 mr-4")}>
+                  <Video 
+                    poster={post.video.poster}
+                    url={post.video.url}
+                    width={post.video.width}
+                    height={post.video.height}
+                    duration={post.video.duration}
+                  />
+                </div>
+              )}
               {post.extra!.retweet && (
                 <div className="mr-2 md:mr-0">
                   <RetweetItem post={post.extra!.retweet} />

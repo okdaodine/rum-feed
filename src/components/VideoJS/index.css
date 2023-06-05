@@ -1,0 +1,114 @@
+.video-js .vjs-control-bar {
+  height: 44px !important;
+  box-sizing: border-box !important;
+  padding: 0 6px !important;
+  /* bottom: -1px !important; */
+}
+
+.vjs-progress-control {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: auto !important;
+  padding: 0 10px !important;
+}
+
+.video-js .vjs-progress-control .vjs-progress-holder {
+  margin: 0 !important;
+}
+
+.vjs-button {
+  margin-top: 13px !important;
+}
+
+.vjs-button > .vjs-icon-placeholder:before {
+  font-size: 28px !important;
+  line-height: 20px !important;
+}
+
+.vjs-current-time,
+.vjs-duration,
+.vjs-time-divider {
+  display: flex !important;
+  align-items: center !important;
+  padding-top: 4px !important;
+  font-size: 13px !important;
+  padding: 2px 3px 0 !important;
+  min-width: auto !important;
+  line-height: 1 !important;
+}
+
+.vjs-play-progress::before,
+.vjs-mute-control,
+.vjs-picture-in-picture-control,
+.vjs-remaining-time,
+.vjs-volume-panel,
+.mobile-video-js .vjs-control-bar {
+  display: none !important;
+}
+
+.vjs-custom-control-spacer {
+  display: flex !important;
+  flex: 1 !important;
+}
+
+.vjs-play-control {
+  margin-right: 5px !important;
+}
+
+.vjs-control-bar {
+  background-color: rgba(0, 0, 0, 0.7) !important;
+}
+
+.video-js .vjs-big-play-button {
+  margin-top: -25px !important;
+  margin-left: -25px !important;
+  width: 50px !important;
+  height: 50px !important;
+  border-radius: 100px !important;
+  font-size: 20px !important;
+  line-height: 20px !important;
+  background-color: rgba(0, 0, 0, 0.7) !important;
+}
+
+.video-js .vjs-big-play-button .vjs-icon-placeholder:before {
+  top: 14px !important;  
+  font-size: 38px !important;
+}
+
+.mobile-video-js .vjs-big-play-button {
+  display: flex !important;
+}
+
+.video-js,
+.video-js video {
+  border-radius: 12px !important;
+  outline: none;
+}
+
+.video-js {
+  border: 1px solid rgb(236 236 236 / 0.8);
+}
+
+.dark .video-js {
+  border: 1px solid rgb(255 255 255 / 0.1);
+}
+
+.vjs-poster img {
+  border-radius: 12px !important;
+  background: #000;
+}
+
+.vjs-has-started.vjs-user-inactive.vjs-playing .vjs-control-bar {
+  transition: visibility 0.2s, opacity 0.2s !important;
+}
+
+.video-js.vjs-layout-x-small .vjs-progress-control {
+  display: flex !important;
+}
+
+.vjs-control-bar {
+  border-bottom-right-radius: 12px;
+  border-bottom-left-radius: 12px;
+}

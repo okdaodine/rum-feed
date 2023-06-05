@@ -14,6 +14,8 @@ async function get(ctx) {
     walletProviders: config.walletProviders || [],
     enabledActivities: config.enabledActivities || false,
     supportAccountPubKey: config.supportAccountPubKey || '',
+    enabledV1Migration: config.enabledV1Migration || false,
+    enabledVideo: config.enabledVideo || false,
   };
 }
 

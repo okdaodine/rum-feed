@@ -442,7 +442,7 @@ export default observer(() => {
           {(isHomePage || isMyUserPage || isGroupPage) && userStore.isLogin && (
             <Fade in={true} timeout={350}>
               <div
-                className='fixed bottom-[80px] right-6 w-12 h-12 rounded-full flex items-center justify-center cursor-pointer border border-black dark:bg-white dark:bg-opacity-80 bg-black z-50 ios-safe-area-margin'
+                className='fixed bottom-[80px] right-6 w-12 h-12 rounded-full flex items-center justify-center cursor-pointer border border-white/20 dark:bg-white bg-black z-50 ios-safe-area-margin'
                 onClick={onOpenEditor}
               >
                 <BsPencil className="text-20 opacity-90 dark:text-black text-white" />

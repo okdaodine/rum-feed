@@ -9,4 +9,6 @@ export interface IConfig {
   walletProviders: string[]
   enabledActivities: boolean
   supportAccountPubKey: string
+  enabledV1Migration: boolean
+  enabledVideo: boolean
 }

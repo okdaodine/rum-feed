@@ -26,5 +26,7 @@ yarn-error.log*
 server/node_modules
 server/localStorage
 server/config.js
+server/storage
+server/google-storage-key.json
 
 debug.log

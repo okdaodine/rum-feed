@@ -24,4 +24,7 @@ module.exports = (item) => {
   if (type === 'CreateDirectMessage') {
     return 'directMessage';
   }
+  if (type === 'Create' && object.type === 'Video') {
+    return 'video';
+  }
 };

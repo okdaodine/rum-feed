@@ -14,3 +14,4 @@ export * from './link';
 export * from './activity';
 export * from './favorite';
 export * from './message';
+export * from './video';

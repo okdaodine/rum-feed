@@ -22,6 +22,9 @@ const Post = sequelize.define('posts', {
   images: {
     type: Sequelize.JSON,
   },
+  video: {
+    type: Sequelize.JSON,
+  },
   userAddress: {
     type: Sequelize.STRING,
     allowNull: false

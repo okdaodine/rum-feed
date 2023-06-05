@@ -20,6 +20,10 @@ export function createGroupStore() {
       return Object.values(this.map).find(group => group.groupName.toLowerCase().includes('relations') || group.extra.rawGroup.appKey.includes('relations')) || this.defaultGroup;
     },
 
+    get videoGroup() {
+      return Object.values(this.map).find(group =>  group.groupName.startsWith('Videos') || group.extra.rawGroup.appKey.includes('videos')) || this.defaultGroup;
+    },
+
     get directMessageGroup() {
       return Object.values(this.map).find(group =>  group.groupName.startsWith('DirectMessages') || group.extra.rawGroup.appKey.includes('direct_messages')) || this.defaultGroup;
     },

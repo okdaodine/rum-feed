@@ -41,14 +41,15 @@
     "react-router-dom": "^5.0.1",
     "react-scripts": "5.0.1",
     "react-textarea-autosize": "^8.3.4",
-    "rum-sdk-browser": "2.0.13",
+    "rum-sdk-browser": "2.0.16",
     "scroll-into-view-if-needed": "^2.2.29",
     "socket.io-client": "^4.5.1",
     "store2": "^2.14.2",
     "stream-browserify": "^3.0.0",
     "ts-lib-scaffold": "^0.1.1",
     "typescript": "^4.7.4",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "video.js": "^8.3.0"
   },
   "scripts": {
     "start": "craco start",

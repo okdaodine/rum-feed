@@ -614,12 +614,6 @@ export default observer((props: RouteChildrenProps) => {
               <Loading />
             </div>
           )}
-          {state.fetched && user.postCount > 0 && postStore.userTotal === 0 && (
-            <div>
-              包含某些敏感的内容
-              平台为了规避风险而选择不显示这些内容
-            </div>
-          )}
         </div>
       </div>
       <UserListModal

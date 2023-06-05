@@ -23,7 +23,7 @@ const PostEditor = observer((props: {
   retweet?: IPost
   rs: (result?: any) => void
 }) => {
-  const { userStore, groupStore } = useStore();
+  const { userStore, groupStore, configStore } = useStore();
   const matchedGroupId = window.location.pathname.split('/groups/')[1];
   const groupId = matchedGroupId ? matchedGroupId : groupStore.defaultGroup.groupId;
   const group = groupStore.map[groupId];
@@ -97,6 +97,7 @@ const PostEditor = observer((props: {
             return submit(payload, data.retweet);
           }}
           enabledImage
+          enabledVideo={configStore.config.enabledVideo}
           disabledEmoji={isMobile}
         />
       </div>
