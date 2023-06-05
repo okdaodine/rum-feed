@@ -4268,6 +4268,11 @@ core-js@^3.19.2:
   resolved "https://registry.npmmirror.com/core-js/-/core-js-3.23.2.tgz#e07a60ca8b14dd129cabdc3d2551baf5a01c76f0"
   integrity sha512-ELJOWxNrJfOH/WK4VJ3Qd+fOqZuOuDNDJz0xG6Bt4mGg2eO/UT9CljCrbqDGovjLKUrGajEEBcoTOc0w+yBYeQ==
 
+core-js@^3.26.1:
+  version "3.30.2"
+  resolved "https://registry.npmjs.org/core-js/-/core-js-3.30.2.tgz#6528abfda65e5ad728143ea23f7a14f0dcf503fc"
+  integrity sha512-uBJiDmwqsbJCWHAwjrx3cvjbMXP7xD72Dmsn5LOJpiRmE3WbBbN5rCqQ2Qh6Ek6/eOrjlWngEynBWo4VxerQhg==
+
 core-util-is@~1.0.0:
   version "1.0.3"
   resolved "https://registry.npmmirror.com/core-util-is/-/core-util-is-1.0.3.tgz#a6042d3634c2b27e9328f837b965fac83808db85"
@@ -4596,6 +4601,11 @@ csstype@^3.0.2:
   version "3.1.0"
   resolved "https://registry.npmmirror.com/csstype/-/csstype-3.1.0.tgz#4ddcac3718d787cf9df0d1b7d15033925c8f29f2"
   integrity sha512-uX1KG+x9h5hIJsaKR9xHUeUraxf8IODOwq9JLNPq6BwB04a/xgpq3rcx47l5BZu5zBPlgD342tdke3Hom/nJRA==
+
+custom-event-polyfill@^1.0.7:
+  version "1.0.7"
+  resolved "https://registry.npmjs.org/custom-event-polyfill/-/custom-event-polyfill-1.0.7.tgz#9bc993ddda937c1a30ccd335614c6c58c4f87aee"
+  integrity sha512-TDDkd5DkaZxZFM8p+1I3yAlvM3rSr1wbrOliG4yJiwinMZN8z/iGL7BTlDkrJcYTmgUSb4ywVCc3ZaUtOtC76w==
 
 damerau-levenshtein@^1.0.7:
   version "1.0.8"
@@ -7461,6 +7471,11 @@ loader-utils@^3.2.0:
   resolved "https://registry.npmmirror.com/loader-utils/-/loader-utils-3.2.0.tgz#bcecc51a7898bee7473d4bc6b845b23af8304d4f"
   integrity sha512-HVl9ZqccQihZ7JM85dco1MvO9G+ONvxoGa9rkhzFsneGLKSUg1gJf9bWzhRhcvm2qChhWpebQhP44qxjKIUCaQ==
 
+loadjs@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.npmjs.org/loadjs/-/loadjs-4.2.0.tgz#2a0336376397a6a43edf98c9ec3229ddd5abb6f6"
+  integrity sha512-AgQGZisAlTPbTEzrHPb6q+NYBMD+DP9uvGSIjSUM5uG+0jG15cb8axWpxuOIqrmQjn6scaaH8JwloiP27b2KXA==
+
 locate-path@^2.0.0:
   version "2.0.0"
   resolved "https://registry.npmmirror.com/locate-path/-/locate-path-2.0.0.tgz#2b568b265eec944c6d9c0de9c3dbbbca0354cd8e"
@@ -8338,6 +8353,25 @@ pkg-up@^3.1.0:
   dependencies:
     find-up "^3.0.0"
 
+plyr-react@^5.2.0:
+  version "5.2.0"
+  resolved "https://registry.npmjs.org/plyr-react/-/plyr-react-5.2.0.tgz#6774e0c84caf98b8744aeb0370edafd7a6c82e6e"
+  integrity sha512-Y3wkY8FQQyPw1timhuRbaHo4jqP5csImbAgN7LwaDLwf4ewSdHVpDrO+F0XVDsRAbCzZxMA6NEiStgguos5uYg==
+  dependencies:
+    plyr "^3.7.7"
+    react-aptor "^2.0.0"
+
+plyr@^3.7.7:
+  version "3.7.8"
+  resolved "https://registry.npmjs.org/plyr/-/plyr-3.7.8.tgz#b79bccc23687705b5d9a283b2a88c124bf7471ed"
+  integrity sha512-yG/EHDobwbB/uP+4Bm6eUpJ93f8xxHjjk2dYcD1Oqpe1EcuQl5tzzw9Oq+uVAzd2lkM11qZfydSiyIpiB8pgdA==
+  dependencies:
+    core-js "^3.26.1"
+    custom-event-polyfill "^1.0.7"
+    loadjs "^4.2.0"
+    rangetouch "^2.0.1"
+    url-polyfill "^1.1.12"
+
 popper.js@1.16.1-lts:
   version "1.16.1-lts"
   resolved "https://registry.npmmirror.com/popper.js/-/popper.js-1.16.1-lts.tgz#cf6847b807da3799d80ee3d6d2f90df8a3f50b05"
@@ -9085,6 +9119,11 @@ range-parser@^1.2.1, range-parser@~1.2.1:
   resolved "https://registry.npmmirror.com/range-parser/-/range-parser-1.2.1.tgz#3cf37023d199e1c24d1a55b84800c2f3e6468031"
   integrity sha512-Hrgsx+orqoygnmhFbKaHE6c296J+HTAQXoxEF6gNupROmmGJRoyzfG3ccAveqCBrwr/2yxQ5BVd/GTl5agOwSg==
 
+rangetouch@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.npmjs.org/rangetouch/-/rangetouch-2.0.1.tgz#c01105110fd3afca2adcb1a580692837d883cb70"
+  integrity sha512-sln+pNSc8NGaHoLzwNBssFSf/rSYkqeBXzX1AtJlkJiUaVSJSbRAWJk+4omsXkN+EJalzkZhWQ3th1m0FpR5xA==
+
 raw-body@2.5.1:
   version "2.5.1"
   resolved "https://registry.npmmirror.com/raw-body/-/raw-body-2.5.1.tgz#fe1b1628b181b700215e5fd42389f98b71392857"
@@ -9116,6 +9155,11 @@ react-app-polyfill@^3.0.0:
     raf "^3.4.1"
     regenerator-runtime "^0.13.9"
     whatwg-fetch "^3.6.2"
+
+react-aptor@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.npmjs.org/react-aptor/-/react-aptor-2.0.0.tgz#d78235dbcdf28889dc9a6c179035d6ca8bd7cfa1"
+  integrity sha512-YnCayokuhAwmBBP4Oc0bbT2l6ApfsjbY3DEEVUddIKZEBlGl1npzjHHzWnSqWuboSbMZvRqUM01Io9yiIp1wcg==
 
 react-avatar-editor@^13.0.0:
   version "13.0.0"
@@ -10655,6 +10699,11 @@ uri-js@^4.2.2:
   integrity sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==
   dependencies:
     punycode "^2.1.0"
+
+url-polyfill@^1.1.12:
+  version "1.1.12"
+  resolved "https://registry.npmjs.org/url-polyfill/-/url-polyfill-1.1.12.tgz#6cdaa17f6b022841b3aec0bf8dbd87ac0cd33331"
+  integrity sha512-mYFmBHCapZjtcNHW0MDq9967t+z4Dmg5CJ0KqysK3+ZbyoNOWQHksGCTWwDhxGXllkWlOc10Xfko6v4a3ucM6A==
 
 url-toolkit@^2.2.1:
   version "2.2.5"

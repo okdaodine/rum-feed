@@ -122,7 +122,7 @@ export default observer(() => {
           }
         }
       };
-      body.addEventListener('click', listener);
+      body.addEventListener('click', listener)
     }
   }, []);
 
