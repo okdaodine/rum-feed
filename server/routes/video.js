@@ -44,7 +44,7 @@ router.post('/upload', async (ctx, next) => {
   const { file } = ctx;
   const buffer = file.buffer;
   const hash = bufferToHash(buffer);
-  const fileName = `${hash}${path.extname(file.originalname)}`;
+  const fileName = `${hash}.mp4`;
   const inputFileName = `${hash}.input${path.extname(file.originalname)}`;
 
   const existVideo = await Video.findOne({ where: { fileName } });
@@ -91,7 +91,7 @@ router.post('/upload', async (ctx, next) => {
     ffmpeg(inputFilePath)
       .videoCodec('libx264')
       .audioCodec('aac')
-      .outputOptions('-crf 30')
+      .outputOptions('-crf', '30', '-vf', 'scale=-2:640')
       .save(outputFilePath)
       .on('end', async () => {
         console.log('Video compression complete!');
@@ -105,7 +105,7 @@ router.post('/upload', async (ctx, next) => {
           ffmpeg(outputFilePath)
             .seekInput(0)
             .frames(1)
-            .outputOptions('-vframes 1')
+            .outputOptions('-vframes', '1', '-vf', 'scale=-2:640')
             .output(posterFilePath)
             .on('end', function() {
               console.log(`Poster generated at ${posterFilePath}`);

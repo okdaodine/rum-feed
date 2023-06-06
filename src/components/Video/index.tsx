@@ -4,6 +4,7 @@ import Plyr from "./Plyr";
 import { IoMdClose } from 'react-icons/io';
 import sleep from 'utils/sleep';
 import classNames from 'classnames';
+import { isMobile } from 'utils/env';
 
 interface IProps {
   url: string
@@ -31,8 +32,12 @@ export default observer((props: IProps) => {
 
   return (
     <div className={classNames({
-      'plyr-container': !state.isFullscreen
-    }, 'relative')}
+      'plyr-container': !state.isFullscreen,
+      'rect-md': !isMobile && props.width > props.height,
+      'rect': isMobile && props.width > props.height,
+      'square-md': !isMobile && props.width <= props.height,
+      'square': isMobile && props.width <= props.height
+    }, 'relative rounded-12 overflow-hidden')}
     onClick={async () => {
       await sleep(100);
       if (document.querySelector('.plyr__control--pressed')) {
@@ -46,7 +51,7 @@ export default observer((props: IProps) => {
         height={props.height}
         getPlyr={getPlyr}
       />
-      <div className={`${state.start ? 'hidden' : ''} absolute bottom-2 right-6 py-1 px-2 text-13 bg-black/70 text-white/80 tracking-wide rounded-12 leading-none`}>
+      <div className={`${state.start ? 'hidden' : ''} absolute bottom-2 right-2 py-1 px-2 text-13 bg-black/70 text-white/80 tracking-wide rounded-12 leading-none`}>
         {props.duration}
       </div>
       {state.hasError && (

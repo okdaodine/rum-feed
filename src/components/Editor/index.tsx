@@ -477,7 +477,7 @@ const Editor = observer((props: IProps) => {
             {state.uploadingVideo && (
               <div className="absolute top-0 left-0 w-full z-10 bg-white text-black/50 dark:bg-[#181818] dark:text-[#999] opacity-70 flex items-center justify-center h-full">
                 <div className="mt-[-6px] flex items-center justify-center">
-                  <div className="mr-2">正在处理视频</div>
+                  <div className="mr-2">正在处理视频，可能需要较长的时间</div>
                   <Loading size={16}/>
                 </div>
               </div>
@@ -574,7 +574,7 @@ const Editor = observer((props: IProps) => {
         </div>
       )}
       {props.enabledVideo && state.video && (
-        <div className="pt-1 relative">
+        <div className="pt-1 relative pb-2">
           <Video
             poster={state.video.poster}
             url={state.video.url}

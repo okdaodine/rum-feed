@@ -3,7 +3,6 @@ import { observer } from 'mobx-react-lite';
 import Plyr from "plyr-react";
 import sleep from 'utils/sleep';
 import classNames from 'classnames';
-import { isMobile } from 'utils/env';
 
 import "plyr-react/plyr.css"
 import './index.css';
@@ -33,37 +32,30 @@ export default observer((props: IProps) => {
   }, []);
 
   return (
-    <div className={classNames({
-      'rect-md': !isMobile && props.width > props.height,
-      'rect': isMobile && props.width > props.height,
-      'square-md': !isMobile && props.width <= props.height,
-      'square': isMobile && props.width <= props.height
-    }, 'rounded-12 overflow-hidden')}>
-      <Plyr
-        ref={ref}
-        preload='auto'
-        playsInline
-        source={{
-          type: 'video',
-          sources: [{
-            src: props.src,
-            type: 'video/mp4',
-          }],
-          poster: props.poster,
-        }}
-        options={{
-          controls: [
-            'play-large',
-            'play',
-            'progress',
-            'current-time',
-            'fullscreen'
-          ],
-          iconUrl: 'https://storage.googleapis.com/static.press.one/feed/plyr.svg'
-          // invertTime: false,
-          // displayDuration: true,
-        }}
-      />
-    </div>
+    <Plyr
+      ref={ref}
+      preload='auto'
+      playsInline
+      source={{
+        type: 'video',
+        sources: [{
+          src: props.src,
+          type: 'video/mp4',
+        }],
+        poster: props.poster,
+      }}
+      options={{
+        controls: [
+          'play-large',
+          'play',
+          'progress',
+          'current-time',
+          'fullscreen'
+        ],
+        iconUrl: 'https://storage.googleapis.com/static.press.one/feed/plyr.svg'
+        // invertTime: false,
+        // displayDuration: true,
+      }}
+    />
   )
 });
