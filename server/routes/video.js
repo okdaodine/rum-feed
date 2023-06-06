@@ -7,7 +7,7 @@ const { assert, Errors, throws } = require('../utils/validator');
 const crypto = require('crypto');
 const Video = require('../database/sequelize/video');
 const config = require('../config');
-const sleep = require('../utils/sleep');
+const { trySendSocket } = require('../socket');
 
 const maxMB = 20;
 
@@ -33,6 +33,7 @@ const upload = multer({
 });
 
 router.post('/upload', async (ctx, next) => {
+  const userAddress = ctx.headers['x-address'];
   try {
     await upload.single('file')(ctx, next);
   } catch (err) {
@@ -87,12 +88,12 @@ router.post('/upload', async (ctx, next) => {
 
   await checkFileSize(inputFilePath);
 
+  let hasProgress = false;
   const { chunks, metadata } = await new Promise((resolve, reject) => {
     ffmpeg(inputFilePath)
       .videoCodec('libx264')
       .audioCodec('aac')
       .outputOptions('-crf', '30', '-vf', 'scale=-2:640')
-      .save(outputFilePath)
       .on('end', async () => {
         console.log('Video compression complete!');
   
@@ -124,9 +125,21 @@ router.post('/upload', async (ctx, next) => {
 
         resolve({ chunks, metadata });
       })
+      .on('progress', (progress) => {
+        const percent = Math.round(progress.percent);
+        if (!hasProgress && percent > 50) {
+          return;
+        }
+        hasProgress = true;
+        if (progress.frames > 0) {
+          console.log(`Processing: ${percent}%`);
+          trySendSocket(userAddress, 'videoUploadProgress', percent);
+        }
+      })
       .on('error', (err) => {
         reject(`Error compressing video: ${err.message}`);
-      });
+      })
+      .save(outputFilePath);
   });
 
   const origin = config.serverOrigin || '';

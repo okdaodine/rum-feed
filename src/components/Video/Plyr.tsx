@@ -2,7 +2,6 @@ import React from 'react';
 import { observer } from 'mobx-react-lite';
 import Plyr from "plyr-react";
 import sleep from 'utils/sleep';
-import classNames from 'classnames';
 
 import "plyr-react/plyr.css"
 import './index.css';

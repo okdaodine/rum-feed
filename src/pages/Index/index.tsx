@@ -140,7 +140,7 @@ export default observer(() => {
       for (const [index, chunk] of Object.entries(video.chunks)) {
         if (manyChunks) {
           const percent = Math.round((Number(index) + 1) / video.chunks.length * 100);
-          snackbarStore.show({ message: `处理中 ${percent}%`, duration: 9999999, type: 'loading' })
+          snackbarStore.show({ message: `处理中 ${percent}%`, duration: 9999999, type: 'loading' });
         }
         const activity = {
           type: 'Create',
@@ -161,7 +161,7 @@ export default observer(() => {
       throw err;
     }
     if (manyChunks) {
-      await sleep(1000);
+      await sleep(100);
       snackbarStore.close();
     }
   }
