@@ -59,6 +59,7 @@ export default observer((props: IProps) => {
             'current-time',
             'fullscreen'
           ],
+          iconUrl: 'https://storage.googleapis.com/static.press.one/feed/plyr.svg'
           // invertTime: false,
           // displayDuration: true,
         }}
