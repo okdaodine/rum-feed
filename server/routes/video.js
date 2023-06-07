@@ -89,11 +89,19 @@ router.post('/upload', async (ctx, next) => {
   await checkFileSize(inputFilePath);
 
   let hasProgress = false;
+  const inputMetadata = await getVideoMetadata(inputFilePath);
   const { chunks, metadata } = await new Promise((resolve, reject) => {
-    ffmpeg(inputFilePath)
+    let chain = ffmpeg(inputFilePath)
       .videoCodec('libx264')
-      .audioCodec('aac')
-      .outputOptions('-crf', '30', '-vf', 'scale=-2:640')
+      .audioCodec('aac');
+
+      if (inputMetadata.height > 640) {
+        chain.outputOptions('-crf', '30', '-vf', 'scale=-2:640');
+      } else {
+        chain.outputOptions('-crf', '30');
+      }
+
+      chain
       .on('end', async () => {
         console.log('Video compression complete!');
   
@@ -103,11 +111,17 @@ router.post('/upload', async (ctx, next) => {
 
         const posterFilePath = path.join('storage', `${hash}.jpg`);
         await new Promise((resolve, reject) => {
-          ffmpeg(outputFilePath)
+          let chain = ffmpeg(outputFilePath)
             .seekInput(0)
-            .frames(1)
-            .outputOptions('-vframes', '1', '-vf', 'scale=-2:640')
-            .output(posterFilePath)
+            .frames(1);
+
+          if (inputMetadata.height > 640) {
+            chain.outputOptions('-vframes', '1', '-vf', 'scale=-2:640');
+          } else {
+            chain.outputOptions('-vframes', '1');
+          }
+          
+          chain.output(posterFilePath)
             .on('end', function() {
               console.log(`Poster generated at ${posterFilePath}`);
               resolve();
