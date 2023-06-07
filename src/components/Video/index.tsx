@@ -51,7 +51,7 @@ export default observer((props: IProps) => {
         height={props.height}
         getPlyr={getPlyr}
       />
-      <div className={`${state.start ? 'hidden' : ''} absolute bottom-2 right-2 py-1 px-2 text-13 bg-black/70 text-white/80 tracking-wide rounded-12 leading-none`}>
+      <div className={`${state.start ? 'hidden' : ''} absolute bottom-2 right-2 py-1 px-2 text-12 md:text-13 bg-black/70 text-white/80 tracking-wide rounded-12 leading-none`}>
         {props.duration}
       </div>
       {state.hasError && (
