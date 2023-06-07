@@ -126,13 +126,13 @@ router.post('/upload', async (ctx, next) => {
         resolve({ chunks, metadata });
       })
       .on('progress', (progress) => {
+        console.log(progress);
         const percent = Math.round(progress.percent);
         if (!hasProgress && percent > 50) {
           return;
         }
         hasProgress = true;
-        if (progress.frames > 0) {
-          console.log(`Processing: ${percent}%`);
+        if (percent > 0) {
           trySendSocket(userAddress, 'videoUploadProgress', percent);
         }
       })

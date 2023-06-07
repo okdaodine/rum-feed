@@ -35,6 +35,7 @@ import RetweetItem from 'components/Post/RetweetItem';
 import isRetweetUrl from 'utils/isRetweetUrl';
 import { PostApi, VideoApi } from 'apis';
 import Video from 'components/Video';
+import { getSocket } from 'utils/socket';
 
 import './index.css';
 
@@ -219,6 +220,23 @@ const Editor = observer((props: IProps) => {
     })();
   }, []);
 
+  React.useEffect(() => {
+    const listener = async (percent: number) => {
+      if (!state.uploadingVideo) {
+        return;
+      }
+      snackbarStore.show({ message: `处理中 ${percent}%`, duration: 9999999, type: 'loading' });
+      if (percent === 100) {
+        await sleep(100);
+        snackbarStore.close();
+      }
+    }
+    getSocket().on('videoUploadProgress', listener);
+    return () => {
+      getSocket().off('videoUploadProgress', listener);
+    }
+  }, []);
+
   const saveDraft = React.useCallback(
     debounce((draft: IDraft) => {
       if (state.submitting) {
@@ -391,6 +409,8 @@ const Editor = observer((props: IProps) => {
       }
       console.log('Upload success:', res);
       state.video = res;
+      await sleep(100);
+      snackbarStore.close();
     } catch (err: any) {
       let message = err.message;
       if (message.toLowerCase().includes('large')) {

@@ -20,7 +20,6 @@ export default observer(() => {
     confirmDialogStore,
     configStore,
     groupStore,
-    snackbarStore,
   } = useStore();
   const location = useLocation();
   const history = useHistory();
@@ -74,20 +73,6 @@ export default observer(() => {
     getSocket().on('post', listener);
     return () => {
       getSocket().off('post', listener);
-    }
-  }, []);
-
-  React.useEffect(() => {
-    const listener = async (percent: number) => {
-      snackbarStore.show({ message: `处理中 ${percent}%`, duration: 9999999, type: 'loading' });
-      if (percent === 100) {
-        await sleep(100);
-        snackbarStore.close();
-      }
-    }
-    getSocket().on('videoUploadProgress', listener);
-    return () => {
-      getSocket().off('videoUploadProgress', listener);
     }
   }, []);
 
