@@ -49,9 +49,10 @@ export default observer((props: IProps) => {
           'play',
           'progress',
           'current-time',
-          'fullscreen'
+          'fullscreen',
         ],
-        iconUrl: 'https://storage.googleapis.com/static.press.one/feed/plyr.svg'
+        iconUrl: 'https://storage.googleapis.com/static.press.one/feed/plyr.svg',
+        fullscreen: { enabled: true, fallback: true, iosNative: true }
         // invertTime: false,
         // displayDuration: true,
       }}
