@@ -101,12 +101,6 @@ module.exports = async (item) => {
       width,
       height,
     });
-    if (!existFile && !existPosterFile) {
-      try {
-        fs.unlinkSync(filePath);
-        fs.unlinkSync(posterFilePath);
-      } catch (_) {}
-    }
   } else {
     await VideoChunk.create({
       fileName,
