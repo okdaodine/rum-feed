@@ -15,6 +15,7 @@ import UserName from 'components/UserName';
 import { Images } from './Item'
 import MutedContent from 'components/MutedContent';
 import { BsPlayCircle } from 'react-icons/bs';
+import { useStore } from 'store';
 
 import './index.css';
 
@@ -25,6 +26,7 @@ interface IProps {
 }
 
 export default observer((props: IProps) => {
+  const { modalStore } = useStore();
   const { post } = props;
   const postBoxRef = React.useRef<HTMLDivElement>(null);
   const contentRef = React.useRef<HTMLDivElement>(null);
@@ -111,7 +113,7 @@ export default observer((props: IProps) => {
               </div>
             )}
             {postContent && post.video && (
-              <div className={`relative mr-3 mt-[2px] ${props.small ? 'text-18' : 'text-22'}`}>
+              <div className={`relative mr-3 mt-[2px] ${props.small ? 'text-20' : 'text-36'}`}>
                 <div className={`${props.small ? 'w-[40px] h-[40px]' : 'w-[82px] h-[82px]'} rounded-12 bg-cover bg-center`} style={{ backgroundImage: `url(${post.video.poster})` }} />
                 <div className="absolute inset-1 flex items-center justify-center text-white/80">
                   <BsPlayCircle />
@@ -119,7 +121,7 @@ export default observer((props: IProps) => {
               </div>
             )}
             {!postContent && post.video && (
-              <div className={`pt-1 relative mt-[2px] ${props.small ? 'text-18' : 'text-22'}`}>
+              <div className={`pt-1 relative mt-[2px] ${props.small ? 'text-20' : 'text-36'}`}>
                 <div className={`${props.small ? 'w-[80px] h-[80px]' : 'w-[164px] h-[164px]'} rounded-12 bg-cover bg-center border border-white/10`} style={{ backgroundImage: `url(${post.video.poster})` }} />
                 <div className="absolute inset-1 flex items-center justify-center text-white/80">
                   <BsPlayCircle />
@@ -161,7 +163,11 @@ export default observer((props: IProps) => {
           if (props.disabledClick) {
             return;
           }
-          history.push(`/posts/${post.id}`);
+          if (modalStore.postDetail.open) {
+            window.location.href = `/posts/${post.id}`;
+          } else {
+            history.push(`/posts/${post.id}`);
+          }
         }} />
       </div>
     </Fade>
