@@ -83,6 +83,7 @@ export default observer((props: IMessagesProps) => {
                       </div>
                     )}
                     {toObject && !toObject.content && toObject.images && (<Images images={toObject.images || []} />)}
+                    {toObject && !toObject.content && (toObject as IPost).video && (<Images images={[(toObject as IPost).video?.poster || '']} />)}
                     {!toObject && (
                       <div className="inline-block like-messages-content opacity-60">
                         {lang.notFound(lang.content)}
