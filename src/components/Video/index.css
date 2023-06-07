@@ -39,7 +39,7 @@
 }
 
 .plyr__control--overlaid {
-  background: transparent !important;
+  background: rgba(0,0,0,0.3) !important;
   border: 1px solid #fff;
 }
 
