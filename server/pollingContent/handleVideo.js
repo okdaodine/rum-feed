@@ -22,7 +22,6 @@ module.exports = async (item) => {
     },
     SenderPubkey,
   } = item;
-  console.log(`[handle Video]:`);
   const userAddress = rumSDK.utils.pubkeyToAddress(SenderPubkey);
   const chunkName = id;
   const fileName = id.split('.part')[0];
@@ -40,9 +39,20 @@ module.exports = async (item) => {
   if (exists) {
     return;
   }
+  const existVideo = await Video.findOne({ where: { fileName } });
+  if (existVideo) {
+    return;
+  }
   let chunks = await VideoChunk.findAll({ where: { fileName }});
   chunks = [chunk, ...chunks];
+  console.log(`[handle video]:`, {
+    'chunks.length': chunks.length,
+    totalItems,
+  });
   if (chunks.length === totalItems) {
+    if (!fs.existsSync('storage')) {
+      fs.mkdirSync('storage');
+    }
     const filePath = path.join('storage', fileName);
     if (!fs.existsSync(filePath)) {
       const sortedChunks = chunks.sort((a, b) => a.chunkName.slice(-1) - b.chunkName.slice(-1));
@@ -58,7 +68,7 @@ module.exports = async (item) => {
       });
     }
     const posterFilePath = path.join('storage', fileName.replace('mp4', 'jpg'));
-    if (!fs.existsSync(filePath)) {
+    if (!fs.existsSync(posterFilePath)) {
       ffmpeg(filePath)
       .seekInput(0)
       .frames(1)
@@ -77,8 +87,10 @@ module.exports = async (item) => {
         src: posterFilePath,
         ...config.googleStorage,
       });
-      fs.unlinkSync(filePath);
-      fs.unlinkSync(posterFilePath);
+      try {
+        fs.unlinkSync(filePath);
+        fs.unlinkSync(posterFilePath);
+      } catch (_) {}
     }
     await VideoChunk.destroy({ where: { fileName }});
     await Video.create({
