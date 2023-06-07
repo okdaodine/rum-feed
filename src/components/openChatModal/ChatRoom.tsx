@@ -44,6 +44,9 @@ export default observer((props: IProps) => {
     });
     for (const message of messages) {
       const decryptedItem = decryptedItems.shift()!;
+      if (!decryptedItem) {
+        continue;
+      }
       if (message.fromAddress === userStore.address) {
         message.fromContent = decryptedItem.senderAddress === message.fromAddress ? decryptedItem.message : 'Mismatch address';
       } else {

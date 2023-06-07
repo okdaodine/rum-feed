@@ -57,6 +57,9 @@ const ModalWrapper = observer((props: IModalProps) => {
     });
     for (const item of items) {
       const decryptedItem = decryptedItems.shift()!;
+      if (!decryptedItem) {
+        continue;
+      }
       if (item.fromAddress === userStore.address) {
         item.fromContent = [item.fromAddress, item.toAddress].includes(decryptedItem.senderAddress) ? decryptedItem.message : 'Mismatch address';
       } else {

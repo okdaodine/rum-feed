@@ -43,41 +43,46 @@ const decrypt = async (p: {
   privateKey?: string
   vaultJWT?: string
 }) => {
-  const { encryptedHex, privateKey, vaultJWT } = p;
-  const cacheKey = `${ethers.utils.id(encryptedHex)}`;
-  if (cryptoStore(cacheKey)) {
-    return cryptoStore(cacheKey);
-  }
-  let decryptedString = '';
-  if (privateKey) {
-    const decrypted = await eciesjs.decrypt(
-      privateKey,
-      RumSdkUtils.typeTransform.hexToUint8Array(encryptedHex) as Buffer,
+  try {
+    const { encryptedHex, privateKey, vaultJWT } = p;
+    const cacheKey = `${ethers.utils.id(encryptedHex)}`;
+    if (cryptoStore(cacheKey)) {
+      return cryptoStore(cacheKey);
+    }
+    let decryptedString = '';
+    if (privateKey) {
+      const decrypted = await eciesjs.decrypt(
+        privateKey,
+        RumSdkUtils.typeTransform.hexToUint8Array(encryptedHex) as Buffer,
+      );
+      decryptedString = RumSdkUtils.typeTransform.uint8ArrayToString(decrypted);
+    }
+    if (vaultJWT) {
+      const res = await VaultApi.decrypt({
+        encryptedMessages: [encryptedHex],
+        jwt: vaultJWT,
+      });
+      const decryptedHex = res!.decrypted[0].replace(/^0x/, '');
+      const decryptedU8s = RumSdkUtils.typeTransform.hexToUint8Array(decryptedHex);
+      decryptedString = RumSdkUtils.typeTransform.uint8ArrayToString(decryptedU8s);
+    }
+    const decryptedPayload = JSON.parse(decryptedString);
+    const digest = RumSdkUtils.typeTransform.hexToUint8Array(ethers.utils.id(decryptedPayload.message));
+    const senderPublicKey = ethers.utils.recoverPublicKey(
+        digest,
+        `0x${decryptedPayload.signature}`,
     );
-    decryptedString = RumSdkUtils.typeTransform.uint8ArrayToString(decrypted);
+    const senderAddress = ethers.utils.computeAddress(senderPublicKey);
+    const result = {
+      senderAddress,
+      message: decryptedPayload.message
+    };
+    cryptoStore(cacheKey, result)
+    return result;
+  } catch (err) {
+    console.log(err);
   }
-  if (vaultJWT) {
-    const res = await VaultApi.decrypt({
-      encryptedMessages: [encryptedHex],
-      jwt: vaultJWT,
-    });
-    const decryptedHex = res!.decrypted[0].replace(/^0x/, '');
-    const decryptedU8s = RumSdkUtils.typeTransform.hexToUint8Array(decryptedHex);
-    decryptedString = RumSdkUtils.typeTransform.uint8ArrayToString(decryptedU8s);
-  }
-  const decryptedPayload = JSON.parse(decryptedString);
-  const digest = RumSdkUtils.typeTransform.hexToUint8Array(ethers.utils.id(decryptedPayload.message));
-  const senderPublicKey = ethers.utils.recoverPublicKey(
-      digest,
-      `0x${decryptedPayload.signature}`,
-  );
-  const senderAddress = ethers.utils.computeAddress(senderPublicKey);
-  const result = {
-    senderAddress,
-    message: decryptedPayload.message
-  };
-  cryptoStore(cacheKey, result)
-  return result;
+  return null;
 }
 
 const bulkDecrypt = async (p: {
