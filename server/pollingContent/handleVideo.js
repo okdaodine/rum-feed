@@ -6,6 +6,7 @@ const path = require('path');
 const config = require('../config');
 const googleStorage = require('../utils/googleStorage');
 const ffmpeg = require('fluent-ffmpeg');
+const sleep = require('../utils/sleep');
 
 module.exports = async (item) => {
   const {
@@ -54,7 +55,9 @@ module.exports = async (item) => {
       fs.mkdirSync('storage');
     }
     const filePath = path.join('storage', fileName);
-    if (!fs.existsSync(filePath)) {
+    const existFile = fs.existsSync(filePath);
+    if (!existFile) {
+      await sleep(5 * 1000);
       const sortedChunks = chunks.sort((a, b) => a.chunkName.slice(-1) - b.chunkName.slice(-1));
       const buffers = sortedChunks.map(chunk => Buffer.from(chunk.content, 'base64'));
       const combinedBuffer = Buffer.concat(buffers);
@@ -68,7 +71,8 @@ module.exports = async (item) => {
       });
     }
     const posterFilePath = path.join('storage', fileName.replace('mp4', 'jpg'));
-    if (!fs.existsSync(posterFilePath)) {
+    const existPosterFile = fs.existsSync(posterFilePath);
+    if (!existPosterFile) {
       ffmpeg(filePath)
       .seekInput(0)
       .frames(1)
@@ -87,10 +91,6 @@ module.exports = async (item) => {
         src: posterFilePath,
         ...config.googleStorage,
       });
-      try {
-        fs.unlinkSync(filePath);
-        fs.unlinkSync(posterFilePath);
-      } catch (_) {}
     }
     await VideoChunk.destroy({ where: { fileName }});
     await Video.create({
@@ -101,6 +101,12 @@ module.exports = async (item) => {
       width,
       height,
     });
+    if (!existFile && !existPosterFile) {
+      try {
+        fs.unlinkSync(filePath);
+        fs.unlinkSync(posterFilePath);
+      } catch (_) {}
+    }
   } else {
     await VideoChunk.create({
       fileName,

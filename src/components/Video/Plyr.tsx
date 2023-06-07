@@ -33,7 +33,6 @@ export default observer((props: IProps) => {
   return (
     <Plyr
       ref={ref}
-      loop
       preload='auto'
       playsInline
       source={{

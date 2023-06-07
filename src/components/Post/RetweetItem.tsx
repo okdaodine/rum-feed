@@ -14,6 +14,7 @@ import escapeStringRegexp from 'escape-string-regexp';
 import UserName from 'components/UserName';
 import { Images } from './Item'
 import MutedContent from 'components/MutedContent';
+import { BsPlayCircle } from 'react-icons/bs';
 
 import './index.css';
 
@@ -102,14 +103,27 @@ export default observer((props: IProps) => {
         <MutedContent address={post.userAddress} className="dark:text-white dark:text-opacity-80 text-gray-4a opacity-60 pt-[6px] block"> 
           <div className="flex items-start pt-[6px]">
             {postContent && (post.images || []).length > 0 && (
-              <div className={classNames({
-                "w-[82px] h-[82px]": !props.small,
-                "w-[40px] h-[40px]": props.small,
-              }, "rounded-12 bg-cover bg-center mr-3 mt-[2px]")} style={{ backgroundImage: `url(${(post.images || [])[0]})` }} />
+              <div className={`${props.small ? 'w-[40px] h-[40px]' : 'w-[82px] h-[82px]'} rounded-12 bg-cover bg-center mr-3 mt-[2px]`} style={{ backgroundImage: `url(${(post.images || [])[0]})` }} />
             )}
             {!postContent && (post.images || []).length > 0 && (
               <div className="pt-1">
                 <Images images={post.images || []} />
+              </div>
+            )}
+            {postContent && post.video && (
+              <div className={`relative mr-3 mt-[2px] ${props.small ? 'text-18' : 'text-22'}`}>
+                <div className={`${props.small ? 'w-[40px] h-[40px]' : 'w-[82px] h-[82px]'} rounded-12 bg-cover bg-center`} style={{ backgroundImage: `url(${post.video.poster})` }} />
+                <div className="absolute inset-1 flex items-center justify-center text-white/80">
+                  <BsPlayCircle />
+                </div>
+              </div>
+            )}
+            {!postContent && post.video && (
+              <div className={`pt-1 relative mt-[2px] ${props.small ? 'text-18' : 'text-22'}`}>
+                <div className={`${props.small ? 'w-[80px] h-[80px]' : 'w-[164px] h-[164px]'} rounded-12 bg-cover bg-center border border-white/10`} style={{ backgroundImage: `url(${post.video.poster})` }} />
+                <div className="absolute inset-1 flex items-center justify-center text-white/80">
+                  <BsPlayCircle />
+                </div>
               </div>
             )}
             {postContent && (
