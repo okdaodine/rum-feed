@@ -116,7 +116,7 @@ const notify = async (id) => {
       if (!config.mutedList?.includes(post.userAddress)) {
         Mixin.notifyByBot({
           iconUrl: avatar + (avatar.includes('?') ? `&` : '?') + 'rounded=true',
-          title: (post.content || '').slice(0, 30) || '图片',
+          title: (post.content || '').slice(0, 30) || (post.video ? '视频' : '图片'),
           description: `${truncateByBytes(name, 14)} 发布内容`,
           url: `${config.origin}/posts/${post.id}`
         });
