@@ -37,6 +37,7 @@ const activity = require('./routes/activity');
 const favorite = require('./routes/favorite');
 const message = require('./routes/message');
 const video = require('./routes/video');
+const report = require('./routes/report');
 
 const {
   errorHandler,
@@ -88,6 +89,7 @@ router.use('/api/activities', activity.routes(), activity.allowedMethods());
 router.use('/api/favorites', favorite.routes(), favorite.allowedMethods());
 router.use('/api/messages', message.routes(), message.allowedMethods());
 router.use('/api/videos', video.routes(), video.allowedMethods());
+router.use('/api/reports', report.routes(), report.allowedMethods());
 
 router.use('(.*)', view.routes(), view.allowedMethods());
 
