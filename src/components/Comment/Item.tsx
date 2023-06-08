@@ -21,6 +21,7 @@ import { TrxApi } from 'apis';
 import { FaRegComment } from 'react-icons/fa';
 import { IActivity } from 'rum-sdk-browser';
 import Menu from 'components/ObjectMenu';
+import DOMPurify from 'dompurify';
 
 import './item.css';
 
@@ -238,7 +239,7 @@ export default observer((props: IProps) => {
                         : '：'}
                       <span
                         dangerouslySetInnerHTML={{
-                          __html: replaceContent(`${comment.content}`),
+                          __html: DOMPurify.sanitize(replaceContent(`${comment.content}`)),
                         }}
                       />
                       {comment.images && comment.images.length > 0 && (
@@ -281,7 +282,7 @@ export default observer((props: IProps) => {
                     )}
                     ref={commentRef}
                     dangerouslySetInnerHTML={{
-                      __html: replaceContent(comment.content),
+                      __html: DOMPurify.sanitize(replaceContent(comment.content)),
                     }}
                   />
 

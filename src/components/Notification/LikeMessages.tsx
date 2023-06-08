@@ -12,6 +12,7 @@ import { useHistory } from 'react-router-dom';
 import { isMobile } from 'utils/env';
 import sleep from 'utils/sleep';
 import replaceContent from 'utils/replaceContent';
+import DOMPurify from 'dompurify';
 
 import './index.css';
 
@@ -77,7 +78,7 @@ export default observer((props: IMessagesProps) => {
                       <div
                         className="inline-block like-messages-content"
                         dangerouslySetInnerHTML={{
-                          __html: replaceContent(toObject.content || '')
+                          __html: DOMPurify.sanitize(replaceContent(toObject.content || ''))
                         }}
                       >
                       </div>

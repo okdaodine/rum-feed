@@ -4,6 +4,7 @@ import Button from 'components/Button';
 import { useStore } from 'store';
 import { isPc, isMobile } from 'utils/env';
 import { lang } from 'utils/lang';
+import DOMPurify from 'dompurify';
 
 export default observer(() => {
   const { confirmDialogStore } = useStore();
@@ -35,7 +36,7 @@ export default observer(() => {
           <div className="flex items-center justify-center md:min-h-[60px]">
             <div
               className={`dark:text-white dark:text-opacity-80 text-neutral-500 leading-7 ${contentClassName} md:min-w-[160px] md:max-w-[250px] text-center text-16`}
-              dangerouslySetInnerHTML={{ __html: content }}
+              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content) }}
             />
           </div>
           {isPc && (

@@ -28,6 +28,37 @@ export default observer((props: IProps) => {
         props.getPlyr(plyr);
       }
     })();
+
+    const timer = setInterval(() => {
+      if (!ref.current) {
+        return;
+      }
+      const { plyr } = ref.current;
+      if (!plyr || !plyr.playing || !plyr.elements.wrapper) {
+        return;
+      }
+      
+      if (plyr.playing && !isVisible(plyr.elements.wrapper)) {
+        plyr.pause();
+      }
+    }, 500);
+
+    function isVisible(element: any) {
+      const rect = element.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+      const windowWidth = window.innerWidth;
+
+      return (
+        rect.bottom >= 0 &&
+        rect.right >= 0 &&
+        rect.top <= windowHeight &&
+        rect.left <= windowWidth
+      );
+    }
+
+    return () => {
+      clearInterval(timer);
+    }
   }, []);
 
   return (

@@ -12,6 +12,7 @@ import { useHistory } from 'react-router-dom';
 import { isMobile } from 'utils/env';
 import sleep from 'utils/sleep';
 import replaceContent from 'utils/replaceContent';
+import DOMPurify from 'dompurify';
 
 interface IMessagesProps {
   notifications: INotification[]
@@ -75,7 +76,7 @@ export default observer((props: IMessagesProps) => {
                     {fromObject &&  (
                       <div>
                         <div dangerouslySetInnerHTML={{
-                          __html: replaceContent(fromObject.content || '')
+                          __html: DOMPurify.sanitize(replaceContent(fromObject.content || ''))
                         }}/>
                         {!fromObject.content && fromObject.images && <Images images={fromObject.images || []} />}
                       </div>

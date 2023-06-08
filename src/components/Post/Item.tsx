@@ -25,6 +25,7 @@ import extractUrls from 'utils/extractUrls';
 import RetweetItem from './RetweetItem';
 import MutedContent from 'components/MutedContent';
 import Video from 'components/Video';
+import DOMPurify from 'dompurify';
 
 import './index.css';
 import isRetweetUrl from 'utils/isRetweetUrl';
@@ -312,9 +313,9 @@ export default observer((props: IProps) => {
                       'mt-[4px] dark:text-white dark:text-opacity-80 text-gray-4a break-words whitespace-pre-wrap tracking-wide pr-2 md:pr-0',
                     )}
                     dangerouslySetInnerHTML={{
-                      __html: replaceContent(`${postContent}`, {
+                      __html: DOMPurify.sanitize(replaceContent(`${postContent}`, {
                         disabled: isMobile && !inPostDetail
-                      }) +`${isTweet && isMobile && inPostDetail ? ` <a class="text-sky-400 text-12" href="${(post.title || '').split(' ')[0]}"}>查看原文</a>` : ''}`,
+                      }) +`${isTweet && isMobile && inPostDetail ? ` <a class="text-sky-400 text-12" href="${(post.title || '').split(' ')[0]}"}>查看原文</a>` : ''}`)
                     }}
                     onClick={() => {
                       if (isMobile) {

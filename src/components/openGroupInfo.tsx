@@ -17,6 +17,7 @@ import { BiCopy, BiSearch } from 'react-icons/bi';
 import { IoMdClose } from 'react-icons/io';
 import Button from 'components/Button';
 import sleep from 'utils/sleep';
+import DOMPurify from 'dompurify';
 
 interface IModalProps {
   groupId: string
@@ -289,7 +290,7 @@ const ContentDetail = observer((props: {
       )}
       {!state.loading && (
         <div>
-          {state.content && <pre dangerouslySetInnerHTML={{ __html: JSON.stringify(state.content.Data, null, 2) }} />}
+          {state.content && <pre dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(JSON.stringify(state.content.Data, null, 2)) }} />}
           {!state.content && (
             <div className="text-center py-2 opacity-70">
               {lang.notFound(lang.content)}

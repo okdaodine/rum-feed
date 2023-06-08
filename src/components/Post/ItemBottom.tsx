@@ -18,6 +18,7 @@ import { lang } from 'utils/lang';
 import { TrxApi, PostApi } from 'apis';
 import openEditor from 'components/Post/OpenEditor';
 import { scrollToTop } from 'components/TopPlaceHolder';
+import DOMPurify from 'dompurify';
 
 interface IProps {
   post: IPost
@@ -243,7 +244,7 @@ export default observer((props: IProps) => {
               'mr-6': post.userAddress !== userStore.address,
               '-ml-1 mr-4': post.userAddress === userStore.address,
             }, "md:mr-8")}>
-              <div dangerouslySetInnerHTML={{ __html: ` <a class="text-sky-400/80 text-12 mt-[3px]" href="${(post.title || '').split(' ')[0]}"}>查看原文</a>` }} />
+              <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(` <a class="text-sky-400/80 text-12 mt-[3px]" href="${(post.title || '').split(' ')[0]}"}>查看原文</a>`) }} />
             </div>
           )}
           <div className="mt-[1px]">

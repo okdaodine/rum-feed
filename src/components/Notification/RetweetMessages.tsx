@@ -13,6 +13,7 @@ import { isMobile } from 'utils/env';
 import sleep from 'utils/sleep';
 import replaceContent from 'utils/replaceContent';
 import extractUrls from 'utils/extractUrls';
+import DOMPurify from 'dompurify';
 
 import './index.css';
 
@@ -86,7 +87,7 @@ export default observer((props: IMessagesProps) => {
                   {fromObject && (fromObject.content || fromObject.images) &&  (
                     <div className="mt-[9px] opacity-90 break-words">
                       <div dangerouslySetInnerHTML={{
-                        __html: replaceContent(fromObject.content || '')
+                        __html: DOMPurify.sanitize(replaceContent(fromObject.content || ''))
                       }}/>
                       {!fromObject.content && fromObject.images && <Images images={fromObject.images || []} />}
                       {!fromObject.content && (fromObject as IPost).video && <Images images={[(fromObject as IPost).video?.poster || '']} />}
@@ -99,7 +100,7 @@ export default observer((props: IMessagesProps) => {
                       <div
                         className="inline-block like-messages-content"
                         dangerouslySetInnerHTML={{
-                          __html: replaceContent(toObject.content || '')
+                          __html: DOMPurify.sanitize(replaceContent(toObject.content || ''))
                         }}
                       >
                       </div>

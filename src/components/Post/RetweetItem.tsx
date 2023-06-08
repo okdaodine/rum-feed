@@ -16,6 +16,7 @@ import { Images } from './Item'
 import MutedContent from 'components/MutedContent';
 import { BsPlayCircle } from 'react-icons/bs';
 import { useStore } from 'store';
+import DOMPurify from 'dompurify';
 
 import './index.css';
 
@@ -145,9 +146,9 @@ export default observer((props: IProps) => {
                     'dark:text-white dark:text-opacity-80 text-gray-4a break-all whitespace-pre-wrap tracking-wide',
                   )}
                   dangerouslySetInnerHTML={{
-                    __html: replaceContent(`${postContent}`, {
+                    __html: DOMPurify.sanitize(replaceContent(`${postContent}`, {
                       disabled: isMobile
-                    }),
+                    })),
                   }}
                   onClick={() => {
                     if (isMobile) {

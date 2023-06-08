@@ -19,6 +19,7 @@ import { TrxApi } from 'apis';
 import { BsFillCaretDownFill } from 'react-icons/bs';
 import ContentSyncStatus from 'components/ContentSyncStatus';
 import Menu from 'components/ObjectMenu';
+import DOMPurify from 'dompurify';
 
 import './Item.css';
 
@@ -110,7 +111,7 @@ export default observer((props: IProps) => {
       <div className="pt-[2px]" id={`comment_${commentStore.mobile.topCommentPage.open ? '_xxx_' : ''}${comment.id}`}>
         <span
           className="dark:text-white dark:text-opacity-80 text-gray-1e break-words"
-          dangerouslySetInnerHTML={{ __html: replaceContent(`${previewContentPrefix}${comment.content}`, { disabled: true }) }}
+          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(replaceContent(`${previewContentPrefix}${comment.content}`, { disabled: true })) }}
         />
         {comment.images && comment.images.length > 0 && (
           <span
@@ -269,7 +270,7 @@ export default observer((props: IProps) => {
                 }}
                 ref={commentRef}
                 dangerouslySetInnerHTML={{
-                  __html: replaceContent(`${contentPrefix}${comment.content}`),
+                  __html: DOMPurify.sanitize(replaceContent(`${contentPrefix}${comment.content}`)),
                 }}
               />
 

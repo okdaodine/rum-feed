@@ -16,6 +16,7 @@ import sleep from 'utils/sleep';
 import { lang } from 'utils/lang';
 import { v4 as uuid } from 'uuid';
 import urlify from 'utils/urlify';
+import DOMPurify from 'dompurify';
 
 interface IProps {
   toPubKey: string
@@ -216,13 +217,13 @@ export default observer((props: IProps) => {
                   )}
                   {message.toAddress === userStore.address && (
                     <div className="bg-slate-300/70 text-black/80 dark:bg-slate-300/10 dark:text-white/90 py-[10px] px-[14px] max-w-[80%] inline-block rounded-12 break-words whitespace-pre-wrap">
-                      <div dangerouslySetInnerHTML={{ __html: urlify(message.toContent) }} />
+                      <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(urlify(message.toContent)) }} />
                     </div>
                   )}
                   {message.fromAddress === userStore.address && (
                     <div className="flex justify-end">
                       <div className="bg-black/90 text-white dark:bg-white dark:text-black/90 py-[10px] px-[14px] max-w-[80%] inline-block rounded-12 break-words whitespace-pre-wrap">
-                        <div dangerouslySetInnerHTML={{ __html: urlify(message.fromContent) }} />
+                        <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(urlify(message.fromContent)) }} />
                       </div>
                     </div>
                   )}
