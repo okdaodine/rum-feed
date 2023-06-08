@@ -3,6 +3,7 @@ const fs = require('fs');
 const Post = require('../database/post');
 const Profile = require('../database/profile');
 const config = require('../config');
+const getDefaultProfile = require('../utils/getDefaultProfile');
 
 const siteName = config.siteName;
 
@@ -20,7 +21,7 @@ router.get('/', async ctx => {
       });
       if (post) {
         content = escapeHtml(post.content || '');
-        userName = post.extra.userProfile.name.replace(/\n/g, '');
+        userName = escapeHtml(post.extra.userProfile.name.replace(/\n/g, ''));
         image = post.extra.userProfile.avatar;
         title = `${userName} "${content.replace(/\n/g, '').slice(0, 80)}" - ${siteName}`;
       }
@@ -54,15 +55,15 @@ router.get('/', async ctx => {
       }, {
         withReplacedImage: true,
       });
-      userName = profile ? profile.name.replace('\n', '') : userAddress;
-      image = profile ? profile.avatar : '';
+      userName = escapeHtml(profile ? profile.name.replace('\n', '') : userAddress);
+      image = profile ? profile.avatar : getDefaultProfile(userAddress).avatar;
       const posts = await Post.list({
         where: {
           userAddress,
         },
         limit: 10,
       });
-      content = posts.map(post => `<a href="/posts/${post.id}">${post.content}</a>`).join('');
+      content = posts.map(post => `<a href="/posts/${escapeHtml(post.id)}">${escapeHtml(post.content)}</a>`).join('');
       title = `${userName} - ${siteName}`;
     }
     let html = await fs.promises.readFile('./build/index.html', 'utf-8');
