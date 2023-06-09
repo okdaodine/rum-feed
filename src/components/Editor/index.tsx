@@ -347,6 +347,9 @@ const Editor = observer((props: IProps) => {
           delete state.imageMap[prop];
         }
       }
+      if (props.enabledVideo) {
+        state.video = null;
+      }
     } catch (err: any) {
       state.submitting = false;
       console.error(err);

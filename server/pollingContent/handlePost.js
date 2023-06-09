@@ -10,6 +10,7 @@ const isRetweetUrl = require('../utils/isRetweetUrl');
 const Notification = require('../database/notification');
 const Activity = require('../database/sequelize/activity');
 const { trySendSocket } = require('../socket');
+const ffmpeg = require('fluent-ffmpeg');
 
 module.exports = async (item, group) => {
   const post = await pack(item);
@@ -68,9 +69,13 @@ const pack = async item => {
     }
   }
   if (attachment) {
-    const video = Array.isArray(attachment) ? attachment[0] : attachment;
+    const video = {...(Array.isArray(attachment) ? attachment[0] : attachment)};
     delete video.type;
-    post.video = video;
+    if (video.url) {
+      await tryHandleRemoteVideo(post, video);
+    } else {
+      post.video = video;
+    }
   }
   return post
 }
@@ -101,6 +106,36 @@ const tryHandleRetweetNotification = async (post, group) => {
       trySendSocket(notification.to, 'notification', notification);
     }
   }
+}
+
+const tryHandleRemoteVideo = async (post, video) => {
+  try {
+    const metadata = await new Promise((resolve, reject) => {
+      ffmpeg.ffprobe(video.url, (err, metadata) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        resolve(metadata.streams[0]);
+      });
+    });
+    post.video = {
+      url: video.url,
+      poster: '',
+      duration: formatTime(metadata.duration),
+      width: metadata.width,
+      height: metadata.height,
+    }
+  } catch (err) {
+    console.log(err);
+  }
+
+  function formatTime(seconds) {
+    seconds = Math.max(Math.round(seconds), 1);
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes < 10 ? '0' : ''}${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+  }  
 }
 
 const notify = async (id) => {
