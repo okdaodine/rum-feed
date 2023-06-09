@@ -162,6 +162,9 @@ export const content = {
   needOnePostToUseDM: '您未曾发布过内容，无法使用私信功能哦。请至少发布一条内容。',
   unableToUseDMOfMuted: '您已被 TA 屏蔽，无法发送私信',
   loading: '加载中...',
+  uploadingVideo: '正在处理视频，可能需要较长的时间',
+  uploadVideoByClickingButton: '视频文件请通过点击按钮来上传',
+  noAllowVideoAndImageAtTheSameTime: '您已上传了视频，不能同时上传图片哦'
 };
 
 export type Content = typeof content;

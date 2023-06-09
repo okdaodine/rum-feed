@@ -162,6 +162,9 @@ export const content = {
   needOnePostToUseDM: '您尚未發布任何內容，無法使用私訊功能。請先發布一條內容。',
   unableToUseDMOfMuted: '您已被該用戶屏蔽，無法發送私訊。',
   loading: '正在加載...',
+  uploadingVideo: '正在處理視頻，可能需要較長的時間',
+  uploadVideoByClickingButton: '視頻文件請通過點擊按鈕來上傳',
+  noAllowVideoAndImageAtTheSameTime: '您已上傳了視頻，不能同時上傳圖片哦'
 };
 
 export type Content = typeof content;

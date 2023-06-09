@@ -61,6 +61,7 @@ export const content = {
   delete: 'Delete',
   deleted: 'Deleted',
   deletedFromClient: 'Delete from client',
+  contentNotFound: 'No content found',
   invalid: (name: string) => `invalid ${name.toLowerCase()}`,
   installMetaMaskFirst: 'install MetaMask first',
   gotIt: 'Got it',
@@ -108,6 +109,7 @@ export const content = {
   content: 'Content',
   minimumLikes: 'Minimum likes',
   minimumComments: 'Minimum comments',
+  conditionFilter: 'Filter',
   commentDetail: 'Comment detail',
   filter: 'Filter',
   followed: 'Followed',
@@ -160,4 +162,7 @@ export const content = {
   needOnePostToUseDM: 'You need to create at least one post to use direct messaging. Please create a post first.',
   unableToUseDMOfMuted: 'You cannot send direct messages because the user has muted you.',
   loading: 'Loading...',
+  uploadingVideo: 'Processing',
+  uploadVideoByClickingButton: 'Please upload the video file by clicking on the button.',
+  noAllowVideoAndImageAtTheSameTime: 'You have already uploaded a video, you cannot upload an image at the same time.'
 };

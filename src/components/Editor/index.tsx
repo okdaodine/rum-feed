@@ -225,7 +225,7 @@ const Editor = observer((props: IProps) => {
       if (!state.uploadingVideo) {
         return;
       }
-      snackbarStore.show({ message: `处理中 ${percent}%`, duration: 9999999, type: 'loading' });
+      snackbarStore.show({ message: `${lang.processing} ${percent}%`, duration: 9999999, type: 'loading' });
       if (percent === 100) {
         await sleep(100);
         snackbarStore.close();
@@ -497,7 +497,7 @@ const Editor = observer((props: IProps) => {
             {state.uploadingVideo && (
               <div className="absolute top-0 left-0 w-full z-10 bg-white text-black/50 dark:bg-[#181818] dark:text-[#999] opacity-70 flex items-center justify-center h-full">
                 <div className="mt-[-6px] flex items-center justify-center">
-                  <div className="mr-2">正在处理视频，可能需要较长的时间</div>
+                  <div className="mr-2">{lang.uploadingVideo}</div>
                   <Loading size={16}/>
                 </div>
               </div>
@@ -527,7 +527,7 @@ const Editor = observer((props: IProps) => {
                     alertedPreviewsRef.current.push(preview.name);
                     let message = `${lang.notSupport} ${ext} (${preview.name})`;
                     if ((preview.name || '').match(/\.(mp4|avi|mkv|mov)$/i)) {
-                      message = '视频文件请通过点击按钮来上传';
+                      message = lang.uploadVideoByClickingButton;
                     }
                     snackbarStore.show({
                       message,
@@ -540,7 +540,7 @@ const Editor = observer((props: IProps) => {
                   if (!alertedPreviewsRef.current.includes(preview.name)) {
                     alertedPreviewsRef.current.push(preview.name);
                     snackbarStore.show({
-                      message: '您已上传了视频，不能同时上传图片哦',
+                      message: lang.noAllowVideoAndImageAtTheSameTime,
                       type: 'error',
                     });
                   }

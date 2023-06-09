@@ -1,5 +1,6 @@
 import Loading from 'components/Loading';
 import Tooltip from '@material-ui/core/Tooltip';
+import { lang } from 'utils/lang';
 
 interface IProps {
   url: string | undefined
@@ -31,7 +32,7 @@ export default (props: IProps) => {
         {props.loading && (
           <Tooltip
             placement={size > 50 ? 'top' : 'bottom'}
-            title="正在同步个人资料"
+            title={lang.syncing}
             arrow
           >
             <div className="absolute top-[-4px] right-[-7px] rounded-full dark:bg-white bg-black bg-opacity-70 flex items-center justify-center p-[3px] z-10">
