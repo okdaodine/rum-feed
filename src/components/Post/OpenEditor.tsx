@@ -3,103 +3,21 @@ import { render, unmountComponentAtNode } from 'react-dom';
 import { observer, useLocalObservable } from 'mobx-react-lite';
 import { StoreProvider } from 'store';
 import { ThemeRoot } from 'utils/theme';
-import Editor from 'components/Editor';
-import { lang } from 'utils/lang';
+import Editor from 'components/Post/Editor';
 import Avatar from 'components/Avatar';
-import { IPost, IUploadVideoRes } from 'apis/types';
-import { TrxStorage } from 'apis/common';
-import { TrxApi } from 'apis';
+import { IPost } from 'apis/types';
 import { useStore } from 'store';
-import { toJS } from 'mobx';
 import { isMobile, isPc } from 'utils/env';
 import Modal from 'components/Modal';
-import openLoginModal from 'components/Wallet/openLoginModal';
-import { IActivity } from 'rum-sdk-browser';
-import Base64 from 'utils/base64';
-import { IImage } from 'apis/image';
-import { v4 as uuid } from 'uuid';
-import sleep from 'utils/sleep';
-import { API_ORIGIN } from 'apis/common';
 
 const PostEditor = observer((props: {
   retweet?: IPost
   rs: (result?: any) => void
 }) => {
-  const { userStore, groupStore, configStore, snackbarStore } = useStore();
+  const { userStore, groupStore } = useStore();
   const matchedGroupId = window.location.pathname.split('/groups/')[1];
   const groupId = matchedGroupId ? matchedGroupId : groupStore.defaultGroup.groupId;
   const group = groupStore.map[groupId];
-
-  const submitPost = async (activity: IActivity, retweet?: IPost) => {
-    if (!userStore.isLogin) {
-      openLoginModal();
-      return;
-    }
-    const res = await TrxApi.createActivity(activity, groupId);
-    const post: IPost = {
-      content: activity.object?.content || '',
-      images: ((activity.object?.image as []) || []).map(image => Base64.getUrl(image as any as IImage)),
-      userAddress: userStore.address,
-      groupId,
-      trxId: res.trx_id,
-      id: activity.object?.id ?? '',
-      storage: TrxStorage.cache,
-      commentCount: 0,
-      likeCount: 0,
-      imageCount: ((activity.object?.image as []) || []).length,
-      timestamp: Date.now(),
-      extra: {
-        userProfile: toJS(userStore.profile),
-        groupName: group.groupName
-      }
-    };
-    if (retweet) {
-      post.extra.retweet = retweet;
-    }
-    if (activity.object?.attachment) {
-      const video = (activity.object?.attachment as any)[0];
-      post.video = {
-        url: `${API_ORIGIN}/${video.id}`,
-        poster: `${API_ORIGIN}/${video.id.replace('mp4', 'jpg')}`,
-        duration: video.duration,
-        width: video.width,
-        height: video.height,
-      }
-    }
-    props.rs(post);
-  }
-
-  const submitVideo = async (video: IUploadVideoRes) => {
-    const manyChunks = video.chunks.length > 1;
-    try {
-      for (const [index, chunk] of Object.entries(video.chunks)) {
-        if (manyChunks) {
-          const percent = Math.round((Number(index) + 1) / video.chunks.length * 100);
-          snackbarStore.show({ message: `处理中 ${percent}%`, duration: 9999999, type: 'loading' });
-        }
-        const activity = {
-          type: 'Create',
-          object: {
-            type: 'Video',
-            id: `${video.fileName}.part${Number(index) + 1}`,
-            content: chunk,
-            mediaType: video.mimetype,
-            duration: video.duration,
-            width: video.width,
-            height: video.height,
-            totalItems: video.chunks.length,
-          }
-        } as IActivity;
-        await TrxApi.createActivity(activity, groupStore.videoGroup.groupId);
-      }
-    } catch (err) {
-      throw err;
-    }
-    if (manyChunks) {
-      await sleep(100);
-      snackbarStore.close();
-    }
-  }
 
   return (
     <div className="w-full md:w-[600px] box-border px-5 md:px-8 py-5 ">
@@ -117,41 +35,10 @@ const PostEditor = observer((props: {
         <Editor
           retweet={props.retweet}
           groupId={group.groupId}
-          editorKey="post"
-          placeholder={lang.whatsHappening}
           autoFocus={isPc}
           autoFocusDisabled={isMobile}
           minRows={isPc ? 3 : 5}
-          submit={async (data) => {
-            const payload: IActivity = {
-              type: 'Create', 
-              object: {
-                type: 'Note',
-                id: uuid(),
-                content: data.content,
-              }
-            };
-            if (data.images) {
-              payload.object!.image = data.images.map(v => ({
-                type: 'Image',
-                mediaType: v.mediaType,
-                content: v.content,
-              }));
-            }
-            if (data.video) {
-              payload.object!.attachment = [{
-                type: 'Video',
-                id: data.video.fileName,
-                duration: data.video.duration,
-                width: data.video.width,
-                height: data.video.height,
-              }];
-              await submitVideo(data.video);
-            }
-            return submitPost(payload, data.retweet);
-          }}
-          enabledImage
-          enabledVideo={configStore.config.enabledVideo}
+          callback={props.rs}
           disabledEmoji={isMobile}
         />
       </div>
@@ -174,13 +61,13 @@ const ModalWrapper = observer((props: {
     });
   }, []);
 
-  const close = (result?: any) => {
+  const close = React.useCallback((result?: any) => {
     if (PostEditorRef.current) {
       PostEditorRef.current.style.height = `${PostEditorRef.current?.offsetHeight}px`;
     }
     state.open = false;
     props.close(result);
-  }
+  }, [])
 
   return (
     <Modal open={state.open} onClose={() => close()} hideCloseButton>
