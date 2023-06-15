@@ -386,6 +386,21 @@ export default observer((props: IProps) => {
                   <LinkCard url={lastUrl} />
                 </div>
               )}
+              {post.quote && (
+                <div className="relative rounded-12 py-4 px-5 mb-2 outline-hidden mt-[2px] mr-2">
+                  <div className="absolute top-0 left-0 w-full h-full overflow-hidden bg-cover dark:bg-[left_33px] rounded-12 bg-slate-500/10">
+                    <div className="absolute inset-0 rounded-12" />
+                  </div>
+                  <div className="relative z-10 text-gray-4a/90 dark:text-white/70">
+                    <div className="tracking-wider leading-[1.75]">
+                      {post.quote.content}
+                    </div>
+                    <div className="text-13 mt-3 opacity-70 dark:opacity-60">
+                      / {post.quote.author}《{post.quote.book}》
+                    </div>
+                  </div>
+                </div>
+              )}
               {groupStore.multiple && (
                 <div className="flex pt-2 pb-2 tracking-wider">
                   <div className="bg-[#EFF3F4] bg-opacity-100 dark:bg-opacity-10 text-12 py-[2px] px-2 flex items-center rounded-full cursor-pointer" onClick={() => {

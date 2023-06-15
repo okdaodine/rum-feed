@@ -11,9 +11,13 @@ const Notification = require('../database/notification');
 const Activity = require('../database/sequelize/activity');
 const { trySendSocket } = require('../socket');
 const ffmpeg = require('fluent-ffmpeg');
+const { pick } = require('lodash');
 
 module.exports = async (item, group) => {
   const post = await pack(item);
+  if (!post.content && !post.images && !post.video) {
+    return;
+  }
   if (!post.id) {
     return;
   }
@@ -38,7 +42,8 @@ const pack = async item => {
         content,
         image,
         attachment,
-        object: retweetObject
+        quote,
+        object: retweetObject,
       },
       published,
     },
@@ -76,6 +81,13 @@ const pack = async item => {
     } else {
       post.video = video;
     }
+  }
+  if (quote && quote.content && quote.book && quote.author) {
+    post.quote = pick(quote, [
+      'content',
+      'book',
+      'author',
+    ]);
   }
   return post
 }

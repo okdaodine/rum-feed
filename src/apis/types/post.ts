@@ -6,6 +6,7 @@ export interface IPost {
   title?: string
   images?: string[]
   video?: IVideo
+  quote?: IQuote
   userAddress: string
   groupId: string
   trxId: string
@@ -31,4 +32,10 @@ interface IVideo {
   duration: string
   width: number
   height: number
+}
+
+interface IQuote {
+  content: string
+  book: string
+  author: string
 }

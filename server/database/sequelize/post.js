@@ -25,6 +25,9 @@ const Post = sequelize.define('posts', {
   video: {
     type: Sequelize.JSON,
   },
+  quote: {
+    type: Sequelize.JSON,
+  },
   userAddress: {
     type: Sequelize.STRING,
     allowNull: false

@@ -204,7 +204,7 @@ export default observer((props: RouteChildrenProps) => {
             <div>
               <div className="flex items-stretch overflow-hidden relative p-6 pb-5 md:pb-6 px-5 md:px-8 md:rounded-12 md:mt-5">
                 <div
-                  className="absolute top-0 left-0 w-full h-full overflow-hidden bg-cover bg-center md:rounded-12"
+                  className="absolute top-0 left-0 w-full h-full overflow-hidden bg-cover dark:bg-[left_33px] md:rounded-12"
                   style={{
                     backgroundImage: `url('${DEFAULT_BG_GRADIENT}')`,
                   }}
