@@ -623,7 +623,7 @@ const Editor = observer((props: IProps) => {
           <RetweetItem post={state.retweet} small={isMobile} disabledClick  />
         </div>
       )}
-      {!state.retweetUrl && !state.retweet && state.lastUrl && (
+      {!state.retweetUrl && !state.retweet && state.content && state.lastUrl && (
         <LinkCard url={state.lastUrl} />
       )}
       {(state.clickedEditor
