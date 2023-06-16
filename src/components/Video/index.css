@@ -9,14 +9,14 @@
 .plyr-container.rect video,
 .plyr-container.rect .plyr__video-wrapper {
   width: 290px !important;
-  height: 163.125px !important;
+  height: 163px !important;
 }
 
 .plyr-container.rect-md,
 .plyr-container.rect-md video,
 .plyr-container.rect-md .plyr__video-wrapper {
   width: 460px !important;
-  height: 258.75px !important;
+  height: 258px !important;
 }
 
 .plyr-container.square,

@@ -46,7 +46,7 @@ export default observer((props: { url: string }) => {
             scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"
             src="//www.bilibili.com/blackboard/html5mobileplayer.html?bvid=${DOMPurify.sanitize(BVideo.getId(props.url))}&danmaku=0"
             width="${isMobile ? 290 : 460}"
-            height="${isMobile ? 163.125 : 258.75}"
+            height="${isMobile ? 163 : 258}"
           />
         `
       }}/>
