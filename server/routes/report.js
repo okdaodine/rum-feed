@@ -1,8 +1,10 @@
 const router = require('koa-router')();
 const Report = require('../database/sequelize/report');
 const { assert, Errors } = require('../utils/validator');
+const config = require('../config');
 
 router.get('/', list);
+router.get('/reasons', listReasons);
 router.get('/:id', get);
 router.post('/', create);
 
@@ -10,6 +12,7 @@ async function create(ctx) {
   const payload = ctx.request.body;
   assert(payload, Errors.ERR_IS_REQUIRED('reason'));
   assert(payload.reason, Errors.ERR_IS_REQUIRED('reason'));
+  assert(payload.objectId, Errors.ERR_IS_REQUIRED('objectId'));
   await Report.create(payload);
   ctx.body = true;
 }
@@ -20,6 +23,11 @@ async function list(ctx) {
     offset: ctx.query.offset || 0,
   })
   ctx.body = reports;
+}
+
+async function listReasons(ctx) {
+  const reasons = config.reportReasons || [];
+  ctx.body = reasons;
 }
 
 async function get(ctx) {

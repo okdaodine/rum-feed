@@ -12,6 +12,10 @@ const Report = sequelize.define('reports', {
     type: Sequelize.STRING,
     allowNull: false
   },
+  objectId: {
+    type: Sequelize.STRING,
+    defaultValue: '',
+  },
 }, {
   charset: 'utf8mb4',
   timestamps: false,
