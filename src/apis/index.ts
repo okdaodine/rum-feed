@@ -17,3 +17,4 @@ export { default as ActivityApi } from './activity';
 export { default as FavoriteApi } from './favorite';
 export { default as MessageApi } from './message';
 export { default as VideoApi } from './video';
+export { default as RedirectApi } from './redirect';

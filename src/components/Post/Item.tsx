@@ -27,7 +27,6 @@ import MutedContent from 'components/MutedContent';
 import Video from 'components/Video';
 import DOMPurify from 'dompurify';
 import { RiDoubleQuotesL, RiDoubleQuotesR } from 'react-icons/ri';
-import * as BVideo from 'utils/bVideo';
 
 import './index.css';
 import isRetweetUrl from 'utils/isRetweetUrl';

@@ -4,9 +4,8 @@ import { LinkApi } from 'apis';
 import { ILink } from 'apis/types';
 import { AiOutlineLink } from 'react-icons/ai';
 import Fade from '@material-ui/core/Fade';
-import * as BVideo from 'utils/bVideo';
-import DOMPurify from 'dompurify';
-import { isMobile } from 'utils/env';
+import BVideo from 'components/BVideo';
+import * as BVideoUtils from 'components/BVideo/utils';
 
 export default observer((props: { url: string }) => {
   const state = useLocalObservable(() => ({
@@ -14,10 +13,27 @@ export default observer((props: { url: string }) => {
     link: null as ILink | null,
   }));
   const isInternalUrl = props.url && new URL(props.url).pathname.startsWith('/posts/');
-  const isBVideo = props.url && BVideo.isUrl(props.url);
+  const isBVideo = props.url && BVideoUtils.isUrl(props.url);
 
   React.useEffect(() => {
-    if (isInternalUrl || !props.url || state.loading || isBVideo) {
+    if (isInternalUrl || !props.url || state.loading || isBVideo ) {
+      return;
+    }
+    (async () => {
+      state.loading = true;
+      state.link = null;
+      try {
+        state.link = await LinkApi.get(props.url);
+      } catch (err) {
+        console.log(err);
+        state.link = null;
+      }
+      state.loading = false;
+    })();
+  }, [props.url]);
+
+  React.useEffect(() => {
+    if (isBVideo) {
       return;
     }
     (async () => {
@@ -39,17 +55,7 @@ export default observer((props: { url: string }) => {
 
   if (isBVideo) {
     return (
-      <div dangerouslySetInnerHTML={{
-        __html: `
-          <iframe
-            class="rounded-12 overflow-hidden"
-            scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"
-            src="//www.bilibili.com/blackboard/html5mobileplayer.html?bvid=${DOMPurify.sanitize(BVideo.getId(props.url))}&danmaku=0"
-            width="${isMobile ? 290 : 460}"
-            height="${isMobile ? 163 : 258}"
-          />
-        `
-      }}/>
+      <BVideo url={props.url} />
     )
   }
 

@@ -38,6 +38,7 @@ const favorite = require('./routes/favorite');
 const message = require('./routes/message');
 const video = require('./routes/video');
 const report = require('./routes/report');
+const redirect = require('./routes/redirect');
 
 const {
   errorHandler,
@@ -90,6 +91,7 @@ router.use('/api/favorites', favorite.routes(), favorite.allowedMethods());
 router.use('/api/messages', message.routes(), message.allowedMethods());
 router.use('/api/videos', video.routes(), video.allowedMethods());
 router.use('/api/reports', report.routes(), report.allowedMethods());
+router.use('/api/redirect', redirect.routes(), redirect.allowedMethods());
 
 router.use('(.*)', view.routes(), view.allowedMethods());
 
