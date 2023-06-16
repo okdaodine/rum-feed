@@ -28,6 +28,7 @@ export default observer((props: { url: string }) => {
           runInAction(() => {
             state.fetched = true;
           });
+          return;
         }
         runInAction(() => {
           state.url = redirectUrl;
@@ -35,7 +36,6 @@ export default observer((props: { url: string }) => {
         });
       } catch (err) {
         console.log(err);
-        state.url = '';
         state.fetched = true;
       }
     })();
