@@ -27,7 +27,6 @@ import MutedContent from 'components/MutedContent';
 import Video from 'components/Video';
 import DOMPurify from 'dompurify';
 import { RiDoubleQuotesL, RiDoubleQuotesR } from 'react-icons/ri';
-import * as BVideo from 'utils/bVideo';
 
 import './index.css';
 import isRetweetUrl from 'utils/isRetweetUrl';
@@ -384,23 +383,9 @@ export default observer((props: IProps) => {
                 </div>
               )}
               {lastUrl && !post.extra!.retweet && (
-                <>
-                  {!BVideo.isUrl(lastUrl) && (
-                    <div className="mr-2 md:mr-0">
-                      <LinkCard url={lastUrl} />
-                    </div>
-                  )}
-                  {BVideo.isUrl(lastUrl) && (
-                    <div className="py-2">
-                      <iframe
-                        src={`https://player.bilibili.com/player.html?bvid=${BVideo.getId(lastUrl)}&autoplay=0&high_quality=1`}
-                        title="b.video"
-                        width={isMobile ? 280 : 460}
-                        height={isMobile ? 157.5 : 258.75} allowFullScreen
-                      />
-                    </div>
-                  )}
-                </>
+                <div className="mr-2 md:mr-0">
+                  <LinkCard url={lastUrl} />
+                </div>
               )}
               {post.quote && (
                 <div className="relative rounded-12 pt-[26px] pb-4 pl-5 pr-3 md:pt-6 md:pb-4 md:pl-10 md:pr-6 mb-2 outline-hidden mt-[2px] mr-2 text-gray-4a/80 dark:text-white/60">
