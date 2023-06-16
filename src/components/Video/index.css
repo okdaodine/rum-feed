@@ -8,8 +8,8 @@
 .plyr-container.rect,
 .plyr-container.rect video,
 .plyr-container.rect .plyr__video-wrapper {
-  width: 280px !important;
-  height: 157.5px !important;
+  width: 290px !important;
+  height: 163.125px !important;
 }
 
 .plyr-container.rect-md,
@@ -22,8 +22,8 @@
 .plyr-container.square,
 .plyr-container.square video,
 .plyr-container.square .plyr__video-wrapper {
-  width: 280px !important;
-  height: 280px !important;
+  width: 290px !important;
+  height: 290px !important;
 }
 
 .plyr-container.square-md,
