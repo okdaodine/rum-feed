@@ -5,14 +5,16 @@ const config = require('../config');
 
 router.get('/', list);
 router.get('/reasons', listReasons);
-router.get('/:id', get);
 router.post('/', create);
 
 async function create(ctx) {
   const payload = ctx.request.body;
   assert(payload, Errors.ERR_IS_REQUIRED('reason'));
-  assert(payload.reason, Errors.ERR_IS_REQUIRED('reason'));
+  assert(payload.reasonId, Errors.ERR_IS_REQUIRED('reasonId'));
   assert(payload.objectId, Errors.ERR_IS_REQUIRED('objectId'));
+  const reportReasons = config.reportReasons || {};
+  const ids = reportReasons.map(item => item.id);
+  assert(ids.includes(payload.reasonId), Errors.ERR_IS_INVALID('reasonId'));
   await Report.create(payload);
   ctx.body = true;
 }
@@ -26,18 +28,8 @@ async function list(ctx) {
 }
 
 async function listReasons(ctx) {
-  const reasons = config.reportReasons || [];
-  ctx.body = reasons;
-}
-
-async function get(ctx) {
-  const report = await Report.findOne({
-    where: {
-      id: ctx.params.id
-    }
-  });
-  assert(report, Errors.ERR_NOT_FOUND('report'));
-  ctx.body = report;
+  const reportReasons = config.reportReasons || {};
+  ctx.body = reportReasons;
 }
 
 module.exports = router;

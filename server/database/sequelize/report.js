@@ -8,11 +8,15 @@ const Report = sequelize.define('reports', {
     primaryKey: true,
     autoIncrement: true
   },
-  reason: {
+  reasonId: {
     type: Sequelize.STRING,
-    allowNull: false
+    allowNull: false,
   },
   objectId: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+  detail: {
     type: Sequelize.STRING,
     defaultValue: '',
   },
