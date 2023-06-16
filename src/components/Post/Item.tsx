@@ -26,6 +26,7 @@ import RetweetItem from './RetweetItem';
 import MutedContent from 'components/MutedContent';
 import Video from 'components/Video';
 import DOMPurify from 'dompurify';
+import { RiDoubleQuotesL, RiDoubleQuotesR } from 'react-icons/ri';
 
 import './index.css';
 import isRetweetUrl from 'utils/isRetweetUrl';
@@ -387,18 +388,20 @@ export default observer((props: IProps) => {
                 </div>
               )}
               {post.quote && (
-                <div className="relative rounded-12 py-4 px-5 mb-2 outline-hidden mt-[2px] mr-2">
+                <div className="relative rounded-12 pt-[26px] pb-4 pl-5 pr-3 md:pt-6 md:pb-4 md:pl-10 md:pr-6 mb-2 outline-hidden mt-[2px] mr-2 text-gray-4a/80 dark:text-white/60">
                   <div className="absolute top-0 left-0 w-full h-full overflow-hidden bg-cover dark:bg-[left_33px] rounded-12 bg-slate-500/10">
                     <div className="absolute inset-0 rounded-12" />
                   </div>
-                  <div className="relative z-10 text-gray-4a/90 dark:text-white/70">
+                  <div className="relative z-10">
                     <div className="tracking-wider leading-[1.75]">
                       {post.quote.content}
                     </div>
-                    <div className="text-13 mt-3 opacity-70 dark:opacity-60">
-                      / {post.quote.author}《{post.quote.book}》
+                    <div className="text-13 mt-3 opacity-70 dark:opacity-50 pr-10 flex">
+                      <div className="mr-1">/</div>{post.quote.author}《{post.quote.book}》
                     </div>
                   </div>
+                  <RiDoubleQuotesL className="text-20 md:text-24 opacity-40 dark:opacity-30 absolute top-[6px] md:top-[10px] left-[10px]" />
+                  <RiDoubleQuotesR className="text-20 md:text-24 opacity-40 dark:opacity-30 absolute bottom-[14px] md:bottom-[14px] right-[10px]" />
                 </div>
               )}
               {groupStore.multiple && (
