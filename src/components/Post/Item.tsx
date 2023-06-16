@@ -27,6 +27,7 @@ import MutedContent from 'components/MutedContent';
 import Video from 'components/Video';
 import DOMPurify from 'dompurify';
 import { RiDoubleQuotesL, RiDoubleQuotesR } from 'react-icons/ri';
+import * as BVideo from 'utils/bVideo';
 
 import './index.css';
 import isRetweetUrl from 'utils/isRetweetUrl';
@@ -383,7 +384,9 @@ export default observer((props: IProps) => {
                 </div>
               )}
               {lastUrl && !post.extra!.retweet && (
-                <div className="mr-2 md:mr-0">
+                <div className={classNames({
+                  'pt-2': !postContent && !post.images && !post.video
+                }, "mr-2 md:mr-0 pb-2")}>
                   <LinkCard url={lastUrl} />
                 </div>
               )}

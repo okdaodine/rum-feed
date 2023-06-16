@@ -624,7 +624,9 @@ const Editor = observer((props: IProps) => {
         </div>
       )}
       {!state.retweetUrl && !state.retweet && state.content && state.lastUrl && (
-        <LinkCard url={state.lastUrl} />
+        <div className="py-2">
+          <LinkCard url={state.lastUrl} />
+        </div>
       )}
       {(state.clickedEditor
         || imageCount > 0
