@@ -5,6 +5,7 @@ import { IoMdClose } from 'react-icons/io';
 import sleep from 'utils/sleep';
 import classNames from 'classnames';
 import { isMobile } from 'utils/env';
+import { lang } from 'utils/lang';
 
 interface IProps {
   url: string
@@ -58,7 +59,7 @@ export default observer((props: IProps) => {
         <div className="absolute inset-0 z-20 bg-gray-600 text-white/80 flex items-center justify-center rounded-12">
           <div className="flex items-center">
             <IoMdClose className="text-20 mr-1" />
-            视频无法播放
+            {lang.videoCannotBePlayed}
           </div>
         </div>
       )}

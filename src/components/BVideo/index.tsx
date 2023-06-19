@@ -5,6 +5,7 @@ import * as BVideoUtils from './utils';
 import DOMPurify from 'dompurify';
 import { isMobile } from 'utils/env';
 import { runInAction } from 'mobx';
+import { lang } from 'utils/lang';
 
 export default observer((props: { url: string }) => {
   const isShortBVideo = BVideoUtils.isShortUrl(props.url);
@@ -47,7 +48,7 @@ export default observer((props: { url: string }) => {
         width,
         height,
       }}>
-        {state.fetched ? '视频无法播放' : ''}
+        {state.fetched ? lang.videoCannotBePlayed : ''}
       </div>
     )
   }

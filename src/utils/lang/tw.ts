@@ -164,7 +164,8 @@ export const content = {
   loading: '正在加載...',
   uploadingVideo: '正在處理視頻，可能需要較長的時間',
   uploadVideoByClickingButton: '視頻文件請通過點擊按鈕來上傳',
-  noAllowVideoAndImageAtTheSameTime: '您已上傳了視頻，不能同時上傳圖片哦'
+  noAllowVideoAndImageAtTheSameTime: '您已上傳了視頻，不能同時上傳圖片哦',
+  videoCannotBePlayed: '無法播放視頻"的繁体化为 "無法播放影片',
 };
 
 export type Content = typeof content;

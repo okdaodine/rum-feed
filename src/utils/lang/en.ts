@@ -164,5 +164,6 @@ export const content = {
   loading: 'Loading...',
   uploadingVideo: 'Processing',
   uploadVideoByClickingButton: 'Please upload the video file by clicking on the button.',
-  noAllowVideoAndImageAtTheSameTime: 'You have already uploaded a video, you cannot upload an image at the same time.'
+  noAllowVideoAndImageAtTheSameTime: 'You have already uploaded a video, you cannot upload an image at the same time.',
+  videoCannotBePlayed: 'Video cannot be played',
 };

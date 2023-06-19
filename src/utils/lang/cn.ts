@@ -164,7 +164,8 @@ export const content = {
   loading: '加载中...',
   uploadingVideo: '正在处理视频，可能需要较长的时间',
   uploadVideoByClickingButton: '视频文件请通过点击按钮来上传',
-  noAllowVideoAndImageAtTheSameTime: '您已上传了视频，不能同时上传图片哦'
+  noAllowVideoAndImageAtTheSameTime: '您已上传了视频，不能同时上传图片哦',
+  videoCannotBePlayed: '无法播放视频',
 };
 
 export type Content = typeof content;
