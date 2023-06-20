@@ -95,8 +95,8 @@ router.post('/upload', async (ctx, next) => {
       .videoCodec('libx264')
       .audioCodec('aac');
 
-      if (inputMetadata.height > 640) {
-        chain.outputOptions('-crf', '30', '-vf', 'scale=-2:640');
+      if (inputMetadata.height > 480) {
+        chain.outputOptions('-crf', '30', '-vf', 'scale=-2:480');
       } else {
         chain.outputOptions('-crf', '30');
       }
@@ -115,8 +115,8 @@ router.post('/upload', async (ctx, next) => {
             .seekInput(0)
             .frames(1);
 
-          if (inputMetadata.height > 640) {
-            chain.outputOptions('-vframes', '1', '-vf', 'scale=-2:640');
+          if (inputMetadata.height > 480) {
+            chain.outputOptions('-vframes', '1', '-vf', 'scale=-2:480');
           } else {
             chain.outputOptions('-vframes', '1');
           }
