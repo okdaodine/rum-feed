@@ -60,7 +60,7 @@ module.exports = async (item) => {
       await sleep(5 * 1000);
       const sortedChunks = chunks.sort((a, b) => a.chunkName.slice(-5).match(/\d+/)?.shift() - b.chunkName.slice(-5).match(/\d+/)?.shift());
       console.log('Video chunks: ');
-      console.log(sortedChunks.map(chuck => chuck.chunkName).join('\n'));
+      console.log(sortedChunks.map(chunk => chunk.chunkName).join('\n'));
       const buffers = sortedChunks.map(chunk => Buffer.from(chunk.content, 'base64'));
       const combinedBuffer = Buffer.concat(buffers);
       await fs.promises.writeFile(filePath, combinedBuffer);
