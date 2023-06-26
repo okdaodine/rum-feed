@@ -25,7 +25,7 @@ import { useStore } from 'store';
 import openPhotoSwipe from 'components/openPhotoSwipe';
 import { v4 as uuid } from 'uuid';
 import sleep from 'utils/sleep';
-import { IPost, IUploadVideoRes } from 'apis/types';
+import { IPost, IUploadVideoRes, IQuote } from 'apis/types';
 import { IImage } from 'apis/types/common';
 import openLoginModal from 'components/Wallet/openLoginModal';
 import { isMobile, isPc } from 'utils/env';
@@ -36,6 +36,9 @@ import isRetweetUrl from 'utils/isRetweetUrl';
 import { PostApi, VideoApi } from 'apis';
 import Video from 'components/Video';
 import { getSocket } from 'utils/socket';
+import Query from 'utils/query';
+import Quote from 'components/Post/Quote';
+import { AiOutlineCloseCircle } from 'react-icons/ai';
 
 import './index.css';
 
@@ -53,6 +56,7 @@ type ISubmitData = {
   images?: IImage[]
   retweet?: IPost
   video?: IUploadVideoRes
+  quote?: IQuote
 };
 
 interface IProps {
@@ -146,7 +150,7 @@ export default (props: IProps) => {
 };
 
 const Editor = observer((props: IProps) => {
-  const { snackbarStore, userStore, groupStore } = useStore();
+  const { snackbarStore, userStore, groupStore, confirmDialogStore } = useStore();
   const draftKey = `${props.editorKey.toUpperCase()}_DRAFT_${props.groupId}` + (props.retweet ? `_${props.retweet.id}` : '');
   const state = useLocalObservable(() => ({
     content: '',
@@ -161,7 +165,8 @@ const Editor = observer((props: IProps) => {
     retweet: props.retweet || null as IPost | null,
     lastUrl: '',
     enabledDraftListener: false,
-    video: null as null | IUploadVideoRes
+    video: null as null | IUploadVideoRes,
+    quote: null as null | IQuote,
   }));
   const emojiButton = React.useRef<HTMLDivElement>(null);
   const textareaRef = React.useRef<HTMLTextAreaElement>(null);
@@ -234,6 +239,35 @@ const Editor = observer((props: IProps) => {
     getSocket().on('videoUploadProgress', listener);
     return () => {
       getSocket().off('videoUploadProgress', listener);
+    }
+  }, []);
+
+  React.useEffect(() => {
+    try {
+      const queryQuote = Query.get('quote');
+      if (queryQuote) {
+        console.log({ queryQuote });
+        Query.remove('quote');
+        const quote: IQuote = JSON.parse(queryQuote);
+        if (quote.content.length > 2000) {
+          confirmDialogStore.show({
+            content: lang.maxQuoteLength,
+            cancelDisabled: true,
+            okText: lang.gotIt,
+            ok: async () => {
+              confirmDialogStore.hide();
+            },
+          });
+          return;
+        }
+        state.quote = {
+          content: quote.content,
+          name: quote.name || '',
+          url: quote.url || '',
+        };
+      }
+    } catch (err) {
+      console.log(err)
     }
   }, []);
 
@@ -337,11 +371,19 @@ const Editor = observer((props: IProps) => {
     if (state.video) {
       payload.video = state.video;
     }
+    if (state.quote) {
+      payload.quote = {
+        content: state.quote.content,
+        name: state.quote.name,
+        url: state.quote.url,
+      };
+    }
     let _draft = localStorage.getItem(draftKey) || '';
     localStorage.removeItem(draftKey);
     try {
       await props.submit(payload);
       state.content = '';
+      state.quote = null;
       if (props.enabledImage) {
         for (const prop of Object.keys(state.imageMap)) {
           delete state.imageMap[prop];
@@ -626,6 +668,17 @@ const Editor = observer((props: IProps) => {
       {!state.retweetUrl && !state.retweet && state.content && state.lastUrl && (
         <div className="py-2">
           <LinkCard url={state.lastUrl} />
+        </div>
+      )}
+      {state.quote && (
+        <div className="py-2 relative">
+          <Quote quote={state.quote} />
+          <div
+            className="absolute p-2 top-2 right-0 text-gray-400/60 dark:text-gray-400/25 z-20 rounded-full cursor-pointer"
+            onClick={() => { state.quote = null; }}
+          >
+            <AiOutlineCloseCircle className="text-20 md:text-20" />
+          </div>
         </div>
       )}
       {(state.clickedEditor

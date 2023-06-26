@@ -166,4 +166,5 @@ export const content = {
   uploadVideoByClickingButton: 'Please upload the video file by clicking on the button.',
   noAllowVideoAndImageAtTheSameTime: 'You have already uploaded a video, you cannot upload an image at the same time.',
   videoCannotBePlayed: 'Video cannot be played',
+  maxQuoteLength: 'The length of quoted text exceeds the limit, please try with less text',
 };

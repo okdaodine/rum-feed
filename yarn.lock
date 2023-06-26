@@ -9640,10 +9640,10 @@ rollup@^2.43.1:
   optionalDependencies:
     fsevents "~2.3.2"
 
-rum-sdk-browser@2.0.16:
-  version "2.0.16"
-  resolved "https://registry.npmjs.org/rum-sdk-browser/-/rum-sdk-browser-2.0.16.tgz#38db06726dcf5a92699bbb340db89ed6b65f90eb"
-  integrity sha512-49psz3ylV8NENAMuNZCsL1QPNRZZhHpQv8RpO6OJ0zj1rF57NuEl2zTRiuqIoG2AejvePAH0f/hPadzh2sS8FA==
+rum-sdk-browser@2.0.18:
+  version "2.0.18"
+  resolved "https://registry.npmjs.org/rum-sdk-browser/-/rum-sdk-browser-2.0.18.tgz#906c75fc20cf7097c13217fb048572d8c6d26362"
+  integrity sha512-bMUNT/deuC7OjcMKrSwIJE2PNBEexKpdxhZeuhGNW4GoHNxp7EXn64pHkTIk5WMfOT0EkSwwoPkDIJgRe+8fEQ==
   dependencies:
     "@types/crypto-js" "^4.1.1"
     "@types/node-localstorage" "^1.3.0"

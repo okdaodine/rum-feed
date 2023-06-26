@@ -34,8 +34,10 @@ interface IVideo {
   height: number
 }
 
-interface IQuote {
+export interface IQuote {
   content: string
-  book: string
-  author: string
+  book?: string
+  author?: string
+  name?: string
+  url?: string
 }

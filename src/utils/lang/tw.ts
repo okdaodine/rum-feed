@@ -166,6 +166,7 @@ export const content = {
   uploadVideoByClickingButton: '視頻文件請通過點擊按鈕來上傳',
   noAllowVideoAndImageAtTheSameTime: '您已上傳了視頻，不能同時上傳圖片哦',
   videoCannotBePlayed: '無法播放視頻"的繁体化为 "無法播放影片',
+  maxQuoteLength: '引用文本超過字数限製，請嘗試縮短引用的文字',
 };
 
 export type Content = typeof content;
