@@ -159,7 +159,11 @@ const Preload = observer(() => {
     try {
       const config = await ConfigApi.get();
       configStore.set(config);
-      if (config.defaultGroupId) {
+      const queryDefaultGroupId = Query.get('defaultGroupId');
+      if (queryDefaultGroupId) {
+        groupStore.setDefaultGroupId(queryDefaultGroupId);
+        Query.remove('defaultGroupId');
+      } else if (config.defaultGroupId) {
         groupStore.setDefaultGroupId(config.defaultGroupId);
       }
     } catch (err) {
