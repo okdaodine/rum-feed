@@ -112,7 +112,6 @@ const Preload = observer(() => {
       ...vaultAppUser,
       eth_pub_key: publicKey,
       access_token: _accessToken || jwt,
-      provider: isJWT(token) ? 'web3' : (vaultUser.mixin ? 'mixin' : 'github')
     });
     try {
       const profileExist = await ProfileApi.exist(userStore.address);

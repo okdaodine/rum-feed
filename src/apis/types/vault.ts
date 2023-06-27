@@ -28,7 +28,6 @@ export interface IVaultAppUser {
   eth_address: string
   eth_pub_key: string
   access_token: string
-  provider: 'mixin' | 'github' | 'web3'
   status: 'allow' | 'no_allow' | 'no_nft' | 'token_expired'
   nft_info?: {
     name: string

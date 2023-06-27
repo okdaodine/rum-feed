@@ -68,7 +68,7 @@ export default observer((props: RouteChildrenProps) => {
   const { profile } = state;
   const user = userStore.userMap[userAddress]!;
   const isMyself = userStore.address === userAddress;
-  const DEFAULT_BG_GRADIENT = '/default_cover.png';
+  const DEFAULT_BG_GRADIENT = '/default-cover.png';
   const isTweet = (profile.name || '').includes('\n@');
   const fromWeibo = isTweet && (profile.name || '').includes('\n@weibo');
   const fromTwitter = isTweet && !fromWeibo;

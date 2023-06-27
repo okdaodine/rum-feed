@@ -167,4 +167,12 @@ export const content = {
   noAllowVideoAndImageAtTheSameTime: 'You have already uploaded a video, you cannot upload an image at the same time.',
   videoCannotBePlayed: 'Video cannot be played',
   maxQuoteLength: 'The length of quoted text exceeds the limit, please try with less text',
+  otherLoginMethods: 'Others',
+  phone: 'Phone',
+  email: 'Email',
+  loginWithPhone: 'Login with phone',
+  loginWithEmail: 'Login with email',
+  verificationCode: 'Login code',
+  getVerificationCode: 'Get login code',
+  resentAfter: (countdown: number) => `Resend after ${countdown}s`,
 };

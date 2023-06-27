@@ -167,6 +167,14 @@ export const content = {
   noAllowVideoAndImageAtTheSameTime: '您已上傳了視頻，不能同時上傳圖片哦',
   videoCannotBePlayed: '無法播放視頻"的繁体化为 "無法播放影片',
   maxQuoteLength: '引用文本超過字数限製，請嘗試縮短引用的文字',
+  otherLoginMethods: '其他登入方式',
+  phone: '手機號碼',
+  email: '電子郵件',
+  loginWithPhone: '使用手機號碼登入',
+  loginWithEmail: '使用電子郵件登入',
+  verificationCode: '驗證碼',
+  getVerificationCode: '獲取驗證碼',
+  resentAfter: (countdown: number) => `${countdown} 秒後重新發送`,
 };
 
 export type Content = typeof content;

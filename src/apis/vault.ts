@@ -77,5 +77,43 @@ export default {
       address: string
       decrypted: string[]
     };
+  },
+
+  async sendSmsCode(p: { mobile: string }) {
+    await request('/sms/send/code', {
+      base: VAULT_API_BASE_URL,
+      method: 'POST',
+      body: p,
+    });
+  },
+
+  async verifySmsCode(p: { mobile: string, code: number }) {
+    const res = await request('/sms/verify/code', {
+      base: VAULT_API_BASE_URL,
+      method: 'POST',
+      body: p,
+    });
+    return res as {
+      token: string
+    };
+  },
+
+  async sendMailCode(p: { email: string }) {
+    await request('/mail/send/code', {
+      base: VAULT_API_BASE_URL,
+      method: 'POST',
+      body: p,
+    });
+  },
+
+  async verifyMailCode(p: { email: string, code: number }) {
+    const res = await request('/mail/verify/code', {
+      base: VAULT_API_BASE_URL,
+      method: 'POST',
+      body: p,
+    });
+    return res as {
+      token: string
+    };
   }
 }

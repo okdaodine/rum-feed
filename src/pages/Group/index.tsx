@@ -48,7 +48,7 @@ export default observer((props: RouteChildrenProps) => {
       return this.fetchedGroup && this.fetchedPosts
     },
   }));
-  const DEFAULT_BG_GRADIENT = '/default_cover.png';
+  const DEFAULT_BG_GRADIENT = '/default-cover.png';
 
   useActivate(() => {
     if (state.fetched) {

@@ -62,7 +62,7 @@ export const content = {
   deleted: '已删除',
   deletedFromClient: '已从界面上移除',
   contentNotFound: '没有找到内容',
-  invalid: (name: string) => `${name} 错误了`,
+  invalid: (name: string) => `${name}错误`,
   installMetaMaskFirst: '请先安装 MetaMask 插件',
   gotIt: '我知道了',
   install: '安装',
@@ -70,7 +70,7 @@ export const content = {
   redirecting: '跳转中',
   createWallet: '创建密钥',
   importWallet: '导入密钥',
-  connectWallet: '连接钱包',
+  connectWallet: '登录',
   submitContentToHere: '您的内容将发送到这里',
   shortcut: '快捷键',
   notSupport: '不支持',
@@ -167,6 +167,14 @@ export const content = {
   noAllowVideoAndImageAtTheSameTime: '您已上传了视频，不能同时上传图片哦',
   videoCannotBePlayed: '无法播放视频',
   maxQuoteLength: '引用文本超过字数限制，请尝试缩短引用的文字',
+  otherLoginMethods: '其他登录方式',
+  phone: '手机号',
+  email: '邮箱',
+  loginWithPhone: '手机号登录',
+  loginWithEmail: '邮箱登录',
+  verificationCode: '验证码',
+  getVerificationCode: '获取验证码',
+  resentAfter: (countdown: number) => `${countdown} 秒后重新发送`,
 };
 
 export type Content = typeof content;
