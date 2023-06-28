@@ -88,7 +88,7 @@ const Main = observer(() => {
     try {
       const { typeTransform } = RumSdkUtils;
       const PREFIX = '\x19Ethereum Signed Message:\n';
-      const message = `Session: ${Math.round(Date.now() / 1000)}`;
+      const message = `Session | ${Math.round(Date.now() / 1000)}`;
       const provider = new ethers.providers.Web3Provider((window as any).ethereum);
       const accounts = await provider.send("eth_requestAccounts", []);
       const address = accounts[0];
