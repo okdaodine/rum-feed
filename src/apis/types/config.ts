@@ -7,7 +7,6 @@ export interface IConfig {
   hasAdmin: boolean
   groupsPageIsOnlyVisibleToAdmin: boolean
   walletProviders: string[]
-  enabledActivities: boolean
   supportAccountPubKey: string
   enabledV1Migration: boolean
   enabledVideo: boolean

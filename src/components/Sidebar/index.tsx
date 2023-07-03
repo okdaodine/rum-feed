@@ -239,7 +239,7 @@ export default observer(() => {
                   <AiOutlineStar className="text-22 dark:text-white dark:text-opacity-80 text-neutral-400 opacity-80" />
                 </div>
               )}
-              {isPc && configStore.config.enabledActivities && (
+              {isPc && (
                 <div
                   className="p-1 cursor-pointer mr-4"
                   onClick={async () => {
@@ -471,28 +471,26 @@ export default observer(() => {
                   </div>
                   <div className="transform scale-90">{lang.home}</div>
                 </div>
-                {configStore.config.enabledActivities && (
-                  <div
-                    className={classNames(
-                      {
-                        'dark:text-white dark:text-opacity-80 text-black': isActivitiesPage,
-                      },
-                      'px-4 text-center flex flex-col items-center',
-                    )}
-                    onClick={async () => {
-                      if (location.pathname === '/activities') {
-                        return;
-                      }
-                      await aliveController.drop('activities');
-                      history.push('/activities');
-                    }}
-                  >
-                    <div className="flex items-center justify-center text-24 h-6 w-6">
-                      {isActivitiesPage ? <TbActivity /> : <TbActivity />}
-                    </div>
-                    <div className="transform scale-90">{lang.activities}</div>
+                <div
+                  className={classNames(
+                    {
+                      'dark:text-white dark:text-opacity-80 text-black': isActivitiesPage,
+                    },
+                    'px-4 text-center flex flex-col items-center',
+                  )}
+                  onClick={async () => {
+                    if (location.pathname === '/activities') {
+                      return;
+                    }
+                    await aliveController.drop('activities');
+                    history.push('/activities');
+                  }}
+                >
+                  <div className="flex items-center justify-center text-24 h-6 w-6">
+                    {isActivitiesPage ? <TbActivity /> : <TbActivity />}
                   </div>
-                )}
+                  <div className="transform scale-90">{lang.activities}</div>
+                </div>
                 <div
                   className={classNames(
                     {

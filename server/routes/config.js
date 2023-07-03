@@ -12,7 +12,6 @@ async function get(ctx) {
     hasAdmin: config.admins?.length > 0,
     groupsPageIsOnlyVisibleToAdmin: config.groupsPageIsOnlyVisibleToAdmin || false,
     walletProviders: config.walletProviders || [],
-    enabledActivities: config.enabledActivities || false,
     supportAccountPubKey: config.supportAccountPubKey || '',
     enabledV1Migration: config.enabledV1Migration || false,
     enabledVideo: config.enabledVideo || false,
