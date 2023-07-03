@@ -12,7 +12,6 @@ const { trySendSocket } = require('../socket');
 const maxMB = 20;
 
 const checkFileSize = async (filePath) => {
-  const maxMB = 20;
   const stats = fs.statSync(filePath);
   const fileSizeInBytes = stats.size;
   const mb = 1024 * 1024;
