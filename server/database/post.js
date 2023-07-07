@@ -131,7 +131,7 @@ const bulkAppendExtra = async (items, options = {}) => {
 
   items = items.map(item => {
     if (item.video && !item.video.url) {
-      const origin = config.googleStorage ? `https://storage.googleapis.com/${config.googleStorage.bucketName}/${config.googleStorage.dest}`.slice(0, -1) : config.serverOrigin;
+      const origin = config.googleStorage ? `https://storage.googleapis.com/${config.googleStorage.bucketName}/${config.googleStorage.dest}`.slice(0, -1) : config.serverOrigin || '';
       item.video.url = `${origin}/${item.video.id}`;
       item.video.poster = item.video.url.replace('mp4', 'jpg');
       delete item.video.id;
