@@ -9,7 +9,7 @@ export interface ICommentReplyData {
   postUserAddress: string
   comment: IComment
   submit: (payload: IActivity) => void
-  where: 'postList' | 'postDetail' | 'postDetailModal'
+  where: 'postList' | 'postDetail' | 'postDetailModal' | 'myComments'
 }
 
 export function createModalStore() {

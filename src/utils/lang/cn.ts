@@ -175,6 +175,7 @@ export const content = {
   verificationCode: '验证码',
   getVerificationCode: '获取验证码',
   resentAfter: (countdown: number) => `${countdown} 秒后重新发送`,
+  myComments: '我的评论',
 };
 
 export type Content = typeof content;

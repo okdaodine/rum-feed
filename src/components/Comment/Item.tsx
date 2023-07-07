@@ -22,6 +22,7 @@ import { FaRegComment } from 'react-icons/fa';
 import { IActivity } from 'rum-sdk-browser';
 import Menu from 'components/ObjectMenu';
 import DOMPurify from 'dompurify';
+import { GoChevronRight } from 'react-icons/go';
 
 import './item.css';
 
@@ -29,7 +30,7 @@ interface IProps {
   comment: IComment
   postUserAddress: string
   submit: (payload: IActivity) => void
-  where: 'postList' | 'postDetail' | 'postDetailModal'
+  where: 'postList' | 'postDetail' | 'postDetailModal' | 'myComments'
   selectComment?: any
   highlight?: boolean
   isTopComment?: boolean
@@ -311,54 +312,66 @@ export default observer((props: IProps) => {
                     {ago(comment.timestamp, { trimmed: true })}
                   </div>
                 )}
-                <div
-                  className={classNames(
-                    {
-                      'dark:text-white dark:text-opacity-80 text-black text-opacity-50 font-bold': comment.extra.liked
-                    },
-                    'flex items-center cursor-pointer pr-6 tracking-wide leading-none',
-                  )}
-                  onClick={() => updateCounter(comment.id)}
-                >
-                  <span className="flex items-center text-14 pr-[3px]">
-                    {comment.extra.liked ? (
-                      <RiThumbUpFill className={classNames({ "animate-scale": state.likeAnimating })} />
-                    ) : (
-                      <RiThumbUpLine />
+                {props.where !== 'myComments' && (
+                  <>
+                    <div
+                      className={classNames(
+                        {
+                          'dark:text-white dark:text-opacity-80 text-black text-opacity-50 font-bold': comment.extra.liked
+                        },
+                        'flex items-center cursor-pointer pr-6 tracking-wide leading-none',
+                      )}
+                      onClick={() => updateCounter(comment.id)}
+                    >
+                      <span className="flex items-center text-14 pr-[3px]">
+                        {comment.extra.liked ? (
+                          <RiThumbUpFill className={classNames({ "animate-scale": state.likeAnimating })} />
+                        ) : (
+                          <RiThumbUpLine />
+                        )}
+                      </span>
+                      <span className="text-12 mr-[1px] dark:opacity-90">
+                        {comment.likeCount || ''}
+                      </span>
+                    </div>
+                    {!props.disabledReply && !(isSubComment && comment.userAddress === userStore.address) && (
+                      <span
+                        className='flex items-center cursor-pointer pr-6 tracking-wide'
+                        onClick={() => {
+                          modalStore.commentReply.show({
+                            postUserAddress: props.postUserAddress,
+                            comment,
+                            submit: props.submit,
+                            where: props.where
+                          });
+                        }}
+                      >
+                        <span className="flex items-center text-14">
+                          <FaRegComment />
+                        </span>
+                      </span>
                     )}
-                  </span>
-                  <span className="text-12 mr-[1px] dark:opacity-90">
-                    {comment.likeCount || ''}
-                  </span>
-                </div>
-                {!props.disabledReply && !(isSubComment && comment.userAddress === userStore.address) && (
-                  <span
-                    className='flex items-center cursor-pointer pr-6 tracking-wide'
-                    onClick={() => {
-                      modalStore.commentReply.show({
-                        postUserAddress: props.postUserAddress,
-                        comment,
-                        submit: props.submit,
-                        where: props.where
-                      });
-                    }}
-                  >
-                    <span className="flex items-center text-14">
-                      <FaRegComment />
-                    </span>
-                  </span>
-                )}
-                <div className='ml-[2px] mt-[2px]'>
-                  <ContentSyncStatus
-                    storage={comment.storage}
-                    SyncedComponent={() => (
-                      <Menu
-                        type="comment"
-                        data={comment}
+                    <div className='ml-[2px] mt-[2px]'>
+                      <ContentSyncStatus
+                        storage={comment.storage}
+                        SyncedComponent={() => (
+                          <Menu
+                            type="comment"
+                            data={comment}
+                          />
+                        )}
                       />
-                    )}
-                  />
-                </div>
+                    </div>
+                  </>
+                )}
+                {props.where === 'myComments' && (
+                  <div className="cursor-pointer text-sky-500  flex items-center text-12" onClick={() => {
+                    window.open(`/posts/${comment.objectId}?commentId=${comment.id}`);
+                  }}>
+                    {lang.open}
+                    <GoChevronRight className="text-12 opacity-90 ml-[-1px]" />
+                  </div>
+                )}
               </div>
             </div>
           </div>

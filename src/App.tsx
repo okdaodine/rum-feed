@@ -8,6 +8,7 @@ import PostDetail from './pages/PostDetail';
 import User from './pages/User';
 import Activities from './pages/Activities';
 import Favorites from './pages/Favorites';
+import MyComments from './pages/MyComments';
 import SnackBar from 'components/SnackBar';
 import ConfirmDialog from './components/ConfirmDialog';
 import { AliveScope } from 'react-activation';
@@ -67,6 +68,7 @@ const App = observer(() => {
                     <Favorites />
                   </KeepAlive>
                 )} />
+                <Route path="/comments" exact component={MyComments} />
                 <PostDetailModal />
                 {userStore.isLogin && <CommentReplyModal />}
               </>}

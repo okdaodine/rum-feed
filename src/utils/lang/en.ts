@@ -175,4 +175,5 @@ export const content = {
   verificationCode: 'Login code',
   getVerificationCode: 'Get login code',
   resentAfter: (countdown: number) => `Resend after ${countdown}s`,
+  myComments: 'My Comments',
 };

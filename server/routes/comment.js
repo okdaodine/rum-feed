@@ -7,6 +7,7 @@ const { groupBy } = require('lodash');
 
 router.get('/:id', get);
 router.get('/', list);
+router.get('/user/:userAddress', listByUserAddress);
 
 async function get(ctx) {
   const id = ctx.params.id;
@@ -58,6 +59,30 @@ async function list(ctx) {
     const subItemsMap = groupBy(subComments, 'threadId');
     if (subItemsMap[item.id]) {
       item.extra.comments = subItemsMap[item.id];
+    }
+    return item;
+  });
+  ctx.body = comments;
+}
+
+async function listByUserAddress(ctx) {
+  const query = {
+    where: {
+      userAddress: ctx.params.userAddress,
+    },
+    limit: Math.min(~~ctx.query.limit || 10, 100),
+    offset: ctx.query.offset || 0,
+    order: [
+      ['timestamp', 'DESC']
+    ],
+  };
+  let comments = await Comment.list(query, {
+    withReplacedImage: true,
+    withExtra: true,
+  });
+  comments = comments.map((item) => {
+    if (ctx.query.truncatedLength) {
+      item.content = truncate(item.content, ~~ctx.query.truncatedLength)
     }
     return item;
   });

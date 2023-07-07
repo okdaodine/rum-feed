@@ -12,5 +12,13 @@ export default {
   }) {
     const items: IComment[] = await request(`${API_BASE_URL}/comments?${qs.stringify(options)}`);
     return items;
+  },
+
+  async listMy(userAddress: string, options: {
+    offset?: number
+    limit?: number
+  }) {
+    const items: IComment[] = await request(`${API_BASE_URL}/comments/user/${userAddress}?${qs.stringify(options)}`);
+    return items;
   }
 }

@@ -20,12 +20,13 @@ import { BsFillCaretDownFill } from 'react-icons/bs';
 import ContentSyncStatus from 'components/ContentSyncStatus';
 import Menu from 'components/ObjectMenu';
 import DOMPurify from 'dompurify';
+import { GoChevronRight } from 'react-icons/go';
 
 import './Item.css';
 
 interface IProps {
   comment: IComment
-  post: IPost
+  post?: IPost
   replyTo: (comment: IComment) => void
   highlight?: boolean
   selectComment?: any
@@ -94,8 +95,8 @@ export default observer((props: IProps) => {
   }, []);
 
   const isOwner = comment.userAddress === userStore.address;
-  const isFromAuthor = props.post.userAddress === comment.userAddress;
-  const isAuthor = props.post.userAddress === userStore.address;
+  const isFromAuthor = props.post?.userAddress === comment.userAddress;
+  const isAuthor = props.post?.userAddress === userStore.address;
 
   const contentPrefix =
     comment.threadId && comment.extra.replyComment && comment.threadId !== comment.extra.replyComment.id
@@ -290,47 +291,57 @@ export default observer((props: IProps) => {
                 </div>
               )}
 
-              <div className="flex items-center dark:text-white dark:text-opacity-40 text-gray-9b leading-none mt-3">
-                <div
-                  className={classNames({
-                    'dark:text-white dark:text-opacity-80 text-black text-opacity-60 font-bold': comment.extra.liked
-                  }, 'flex items-center cursor-pointer pr-6')}
-                  onClick={() => updateCounter(comment.id)}
-                >
-                  <span className="flex items-center text-16 pr-1 md">
-                    {comment.extra.liked ? (
-                      <RiThumbUpFill className={classNames({ "animate-scale": state.likeAnimating })} />
-                    ) : (
-                      <RiThumbUpLine />
-                    )}
-                  </span>
-                  <span className={classNames({
-                    'dark:opacity-90': comment.extra.liked
-                  }, "text-12")}>{Number(comment.likeCount) || ''}</span>
-                </div>
-                {(isTopComment || comment.userAddress !== userStore.address) && (  
+              {window.location.pathname !== '/comments' && (
+                <div className="flex items-center dark:text-white dark:text-opacity-40 text-gray-9b leading-none mt-3">
                   <div
-                    className="flex items-center justify-center cursor-pointer pr-6"
-                    onClick={() => replyTo(comment)}
+                    className={classNames({
+                      'dark:text-white dark:text-opacity-80 text-black text-opacity-60 font-bold': comment.extra.liked
+                    }, 'flex items-center cursor-pointer pr-6')}
+                    onClick={() => updateCounter(comment.id)}
                   >
-                    <span className="flex items-center text-16">
-                      <FaRegComment />
+                    <span className="flex items-center text-16 pr-1 md">
+                      {comment.extra.liked ? (
+                        <RiThumbUpFill className={classNames({ "animate-scale": state.likeAnimating })} />
+                      ) : (
+                        <RiThumbUpLine />
+                      )}
                     </span>
+                    <span className={classNames({
+                      'dark:opacity-90': comment.extra.liked
+                    }, "text-12")}>{Number(comment.likeCount) || ''}</span>
                   </div>
-                )}
-                <div className='ml-[2px] mt-[2px]'>
-                  <ContentSyncStatus
-                    alwaysShow
-                    storage={comment.storage}
-                    SyncedComponent={() => (
-                      <Menu
-                        type="comment"
-                        data={comment}
-                      />
-                    )}
-                  />
+                  {(isTopComment || comment.userAddress !== userStore.address) && (  
+                    <div
+                      className="flex items-center justify-center cursor-pointer pr-6"
+                      onClick={() => replyTo(comment)}
+                    >
+                      <span className="flex items-center text-16">
+                        <FaRegComment />
+                      </span>
+                    </div>
+                  )}
+                  <div className='ml-[2px] mt-[2px]'>
+                    <ContentSyncStatus
+                      alwaysShow
+                      storage={comment.storage}
+                      SyncedComponent={() => (
+                        <Menu
+                          type="comment"
+                          data={comment}
+                        />
+                      )}
+                    />
+                  </div>
                 </div>
-              </div>
+              )}
+              {window.location.pathname === '/comments' && (
+                <div className="mt-1 cursor-pointer text-sky-500  flex items-center text-12" onClick={() => {
+                  window.location.href = `/posts/${comment.objectId}?commentId=${comment.id}`;
+                }}>
+                  {lang.open}
+                  <GoChevronRight className="text-12 opacity-90 ml-[-1px]" />
+                </div>
+              )}
             </div>
           </div>
         </div>

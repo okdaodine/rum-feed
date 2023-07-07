@@ -38,6 +38,7 @@ import { TbActivity } from 'react-icons/tb';
 import { FiMail } from 'react-icons/fi';
 import sum from 'lodash/sum';
 import openChatModal from 'components/openChatModal';
+import { FaRegComment } from 'react-icons/fa';
 
 export default observer(() => {
   const {
@@ -229,6 +230,20 @@ export default observer(() => {
                 <div
                   className="p-1 cursor-pointer pl-1 pr-3 mr-4"
                   onClick={async () => {
+                    if (location.pathname === '/comments') {
+                      return;
+                    }
+                    state.anchorEl = null;
+                    await aliveController.drop('comments');
+                    history.push('/comments');
+                  }}>
+                  <FaRegComment className="text-18 dark:text-white dark:text-opacity-80 text-neutral-400 opacity-80" />
+                </div>
+              )}
+              {(isMobile && isMyUserPage) && (
+                <div
+                  className="p-1 cursor-pointer pl-1 pr-3 mr-4"
+                  onClick={async () => {
                     if (location.pathname === '/favorites') {
                       return;
                     }
@@ -254,7 +269,7 @@ export default observer(() => {
               )}
               {(isPc || isMyUserPage) && (
                 <div
-                  className="p-1 cursor-pointer mr-1 md:mr-4"
+                  className="p-1 cursor-pointer mr-5 md:mr-4"
                   onClick={() => {
                     settingStore.setTheme(settingStore.isDarkMode ? 'light' : 'dark');
                   }}>
@@ -297,43 +312,47 @@ export default observer(() => {
                   </div>
                 </>
               )}
-              <div
-                className="py-2 cursor-pointer relative ml-3 pl-3 pr-1 md:pr-1 md:mr-[14px] md:ml-0 md:pl-1"
-                onClick={async () => {
-                  state.chatUnreadCount = 0;
-                  await openChatModal();
-                  fetchChatUnreadCount();
-                }}
-              >
-                <div className="absolute top-[-1px] right-[2px] z-10">
-                  <Badge
-                    badgeContent={state.chatUnreadCount}
-                    className='cursor-pointer scale-90'
-                    color="error"
-                    overlap='rectangular'
-                  />
-                </div>
-                <FiMail className="text-20 dark:text-white dark:text-opacity-80 text-neutral-400 opacity-80 md:opacity-90" />
-              </div>
-              <div
-                className="px-2 mx-4 md:mx-0 md:mr-5 md:px-1 py-2 cursor-pointer"
-                onClick={() => { 
-                  state.openMessageModal = true;
-                }}>
-                <Badge
-                  badgeContent={state.notificationUnreadCount}
-                  className='transform cursor-pointer scale-90 lower'
-                  color="error"
-                  overlap='rectangular'
-                  onClick={() => { 
-                    state.openMessageModal = true;
-                  }}
-                >
-                  <div className="cursor-pointer transform scale-110">
-                    <MdNotificationsNone className="text-24 dark:text-white dark:text-opacity-80 text-neutral-400 opacity-80 md:opacity-90" />
+              {!(isMobile && isMyUserPage) && (
+                <>
+                  <div
+                    className="py-2 cursor-pointer relative ml-3 pl-3 pr-1 md:pr-1 md:mr-[14px] md:ml-0 md:pl-1"
+                    onClick={async () => {
+                      state.chatUnreadCount = 0;
+                      await openChatModal();
+                      fetchChatUnreadCount();
+                    }}
+                  >
+                    <div className="absolute top-[-1px] right-[2px] z-10">
+                      <Badge
+                        badgeContent={state.chatUnreadCount}
+                        className='cursor-pointer scale-90'
+                        color="error"
+                        overlap='rectangular'
+                      />
+                    </div>
+                    <FiMail className="text-20 dark:text-white dark:text-opacity-80 text-neutral-400 opacity-80 md:opacity-90" />
                   </div>
-                </Badge>
-              </div>
+                  <div
+                    className="px-2 mx-4 md:mx-0 md:mr-5 md:px-1 py-2 cursor-pointer"
+                    onClick={() => { 
+                      state.openMessageModal = true;
+                    }}>
+                    <Badge
+                      badgeContent={state.notificationUnreadCount}
+                      className='transform cursor-pointer scale-90 lower'
+                      color="error"
+                      overlap='rectangular'
+                      onClick={() => { 
+                        state.openMessageModal = true;
+                      }}
+                    >
+                      <div className="cursor-pointer transform scale-110">
+                        <MdNotificationsNone className="text-24 dark:text-white dark:text-opacity-80 text-neutral-400 opacity-80 md:opacity-90" />
+                      </div>
+                    </Badge>
+                  </div>
+                </>
+              )}
               {isPc && (
                 <div>
                   <Avatar
@@ -374,6 +393,18 @@ export default observer(() => {
                       }}>
                       <div className="py-1 px-3 flex items-center">
                         {lang.favorites}
+                      </div>
+                    </MenuItem>
+                    <MenuItem 
+                      onClick={async () => {
+                        if (location.pathname === '/comments') {
+                          return;
+                        }
+                        state.anchorEl = null;
+                        history.push('/comments');
+                      }}>
+                      <div className="py-1 px-3 flex items-center">
+                        {lang.comment}
                       </div>
                     </MenuItem>
                     <MenuItem onClick={() => {
