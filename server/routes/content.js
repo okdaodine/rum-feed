@@ -5,6 +5,7 @@ const path = require('path');
 const fs = require('fs');
 const archiver = require('archiver');
 const rumSDK = require('rum-sdk-nodejs');
+const config = require('../config');
 
 router.get('/:userPubKey/export', exportContents);
 router.get('/:groupId', list);
@@ -54,7 +55,7 @@ async function exportContents(ctx) {
   } catch (err) {
     console.log(err);
   }
-  const limit = 100;
+  const limit = config.exportLimit || 100;
   let index = 1;
   let exported = false;
   let offset = 0;
