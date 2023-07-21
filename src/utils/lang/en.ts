@@ -176,4 +176,6 @@ export const content = {
   getVerificationCode: 'Get login code',
   resentAfter: (countdown: number) => `Resend after ${countdown}s`,
   myComments: 'My Comments',
+  exportedAndDownload: 'The file has been exported, please click to download',
+  download: 'Download',
 };

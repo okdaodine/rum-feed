@@ -122,7 +122,7 @@ export const content = {
   language: '语言',
   save: '保存',
   openExternalLink: '打开外部链接',
-  processing: '正在处理',
+  processing: '处理中',
   done: '完成',
   close: '关闭',
   saved: '已保存',
@@ -176,6 +176,8 @@ export const content = {
   getVerificationCode: '获取验证码',
   resentAfter: (countdown: number) => `${countdown} 秒后重新发送`,
   myComments: '我的评论',
+  exportedAndDownload: '文件已导出，请点击下载',
+  download: '下载',
 };
 
 export type Content = typeof content;

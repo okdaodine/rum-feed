@@ -35,6 +35,7 @@ import openWalletModal from 'components/Wallet/openWalletModal';
 import MutedContent from 'components/MutedContent';
 import openLanguageModal from 'components/openLanguageModal';
 import openChatModal from 'components/openChatModal';
+import { API_ORIGIN } from 'apis/common';
 
 import './index.css';
 
@@ -62,7 +63,6 @@ export default observer((props: RouteChildrenProps) => {
     submitting: false,
     userListType: 'following' as ('following' | 'followers' | 'muted'),
     userAddressChanged: false,
-    exporting: false,
   }));
   const { userAddress } = props.match?.params as any;
   const { profile } = state;
@@ -244,51 +244,51 @@ export default observer((props: RouteChildrenProps) => {
     state.submitting = false;
   }
 
-  const exportData = async () => {
-    try {
-      if (state.exporting) {
-        return;
-      }
-      if (isMobile) {
-        confirmDialogStore.show({
-          content: lang.pleaseExportDataOnDesktop,
-          ok: () => {
-            confirmDialogStore.hide();
-          },
-        });
-        return; 
-      }
-      state.exporting = true;
-      const exportedContents = [];
-      const limit = 50;
-      while (true) {
-        const contents: any = await ContentApi.export(userStore.pubKey, {
-          offset: exportedContents.length,
-          limit,
-        });
-        exportedContents.push(...contents);
-        await sleep(500);
-        if (contents.length < limit) {
-          break;
-        }
-      }
+  const exportData = React.useCallback(() => {
+    state.anchorEl = null;
+    if (isMobile) {
       confirmDialogStore.show({
-        content: `<a id="download-export-data" href='data:plain/text,${JSON.stringify(exportedContents)}' download='${userStore.profile.name}_${userStore.pubKey}.json'>${lang.youAreSureTo(lang.exportData)}</a>`,
+        content: lang.pleaseExportDataOnDesktop,
         ok: () => {
-          (document.querySelector('#download-export-data') as any).click();
           confirmDialogStore.hide();
         },
       });
-    } catch (err) {
-      console.log(err);
-      snackbarStore.show({
-        message: lang.somethingWrong,
-        type: 'error',
-      });
+      return; 
     }
-    state.exporting = false;
-    state.anchorEl = null;
-  }
+    confirmDialogStore.show({
+      content: lang.youAreSureTo(lang.exportData),
+      ok: async () => {
+        try {
+          if (confirmDialogStore.loading) {
+            return;
+          }
+          confirmDialogStore.setLoading(true);
+          confirmDialogStore.okText = lang.processing;
+          const res = await ContentApi.export(userStore.pubKey);
+          await sleep(1000);
+          confirmDialogStore.setLoading(false);
+          confirmDialogStore.hide();
+          await sleep(500);
+          confirmDialogStore.show({
+            content: lang.exportedAndDownload,
+            cancelText: lang.close,
+            okText: lang.download,
+            ok: () => {
+              const url = `${API_ORIGIN}/${res.fileName}`;
+              window.open(url);
+            }
+          });
+        } catch (err) {
+          confirmDialogStore.hide();
+          console.log(err);
+          snackbarStore.show({
+            message: lang.somethingWrong,
+            type: 'error',
+          });
+        }
+      },
+    });
+  }, []);
 
   if (!state.fetched || !user) {
     return (
@@ -476,7 +476,6 @@ export default observer((props: RouteChildrenProps) => {
                         }}>  
                           <div className="py-1 pl-1 pr-3 flex items-center dark:text-white dark:text-opacity-80 text-neutral-700">
                             <BiExport className="mr-2 text-16" /> {lang.exportData}
-                            {state.exporting && <div className="ml-2"><Loading size={12} /></div>}
                           </div>
                         </MenuItem>
                       )}

@@ -122,7 +122,7 @@ export const content = {
   language: '語言',
   save: '保存',
   openExternalLink: '打開外部鏈接',
-  processing: '正在處理',
+  processing: '處理中',
   done: '完成',
   close: '關閉',
   saved: '已保存',
@@ -176,6 +176,8 @@ export const content = {
   getVerificationCode: '獲取驗證碼',
   resentAfter: (countdown: number) => `${countdown} 秒後重新發送`,
   myComments: '我的評論',
+  exportedAndDownload: '檔案已匯出，請點擊下載',
+  download: '下載'
 };
 
 export type Content = typeof content;
