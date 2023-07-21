@@ -12,7 +12,8 @@ export default observer((props: { url: string }) => {
     loading: false,
     link: null as ILink | null,
   }));
-  const isInternalUrl = props.url && new URL(props.url).pathname.startsWith('/posts/');
+  const pathname = props.url ? new URL(props.url).pathname : '';
+  const isInternalUrl = props.url && pathname.startsWith('/posts/') && pathname.length === 43;
   const isBVideo = props.url && BVideoUtils.isUrl(props.url);
 
   React.useEffect(() => {
