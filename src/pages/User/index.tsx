@@ -278,11 +278,15 @@ export default observer((props: RouteChildrenProps) => {
               window.open(url);
             }
           });
-        } catch (err) {
-          confirmDialogStore.hide();
+        } catch (err: any) {
           console.log(err);
+          confirmDialogStore.hide();
+          let message = '';
+          if (err.message.includes('not found')) {
+            message = lang.notExist(lang.content);
+          }
           snackbarStore.show({
-            message: lang.somethingWrong,
+            message: message || lang.somethingWrong,
             type: 'error',
           });
         }
