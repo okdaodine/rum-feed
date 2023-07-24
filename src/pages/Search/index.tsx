@@ -146,7 +146,7 @@ export default observer(() => {
     state.fetched = false;
     state.page = 1;
     history.replace(`/search?${qs.stringify({
-      q: state.q,
+      q: state.q.trim(),
       minLike: state.minLike,
       minComment: state.minComment,
     }, {
@@ -178,7 +178,7 @@ export default observer(() => {
                   placeholder={lang.search}
                   value={state.q}
                   onChange={(e) => {
-                    state.q = e.target.value.trim();
+                    state.q = e.target.value;
                   }}
                   onKeyDown={onKeyDown}
                   variant="outlined"

@@ -57,7 +57,7 @@ const Main = observer((props: IModalProps) => {
           label={lang.search}
           value={state.q}
           onChange={(e) => {
-            state.q = e.target.value.trim();
+            state.q = e.target.value;
           }}
           onKeyDown={onKeyDown}
           variant="outlined"
