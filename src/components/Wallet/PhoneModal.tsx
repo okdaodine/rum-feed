@@ -33,7 +33,7 @@ const Main = observer(() => {
         mobile: state.phone,
         code: Number(state.code)
       });
-      window.location.href = `?token=${res.token}`;
+      window.location.href = `/?token=${res.token}`;
     } catch (err: any) {
       let message = '';
       if (err.message.includes('invalid')) {

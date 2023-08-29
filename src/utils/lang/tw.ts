@@ -119,7 +119,7 @@ export const content = {
   allContentsComeFromTwitterUser: '本號所有內容來自推特用戶',
   allContentsComeFromWeiboUser: '本號所有內容來自微博用戶',
   mutedList: '屏蔽列表',
-  language: '語言',
+  language: '切換語言',
   save: '保存',
   openExternalLink: '打開外部鏈接',
   processing: '處理中',
@@ -177,7 +177,8 @@ export const content = {
   resentAfter: (countdown: number) => `${countdown} 秒後重新發送`,
   myComments: '我的評論',
   exportedAndDownload: '檔案已匯出，請點擊下載',
-  download: '下載'
+  download: '下載',
+  addAccount: '添加帳號',
 };
 
 export type Content = typeof content;

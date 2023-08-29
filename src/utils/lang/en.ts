@@ -178,4 +178,5 @@ export const content = {
   myComments: 'My Comments',
   exportedAndDownload: 'The file has been exported, please click to download',
   download: 'Download',
+  addAccount: 'Add Account',
 };

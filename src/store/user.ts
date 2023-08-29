@@ -1,6 +1,7 @@
-import { IProfile, IUser, IVaultAppUser } from 'apis/types';
+import { IProfile, IUser, IVaultAppUser, IStorageUser } from 'apis/types';
 import store from 'store2';
 import pubKeyUtils from 'utils/pubKeyUtils';
+import { ethers } from 'ethers';
 
 export function createUserStore() {
   return {
@@ -9,6 +10,8 @@ export function createUserStore() {
     privateKey: store('privateKey') || '',
  
     jwt: store('jwt') || '',
+
+    storageUsers: (store('storageUsers') || []) as IStorageUser[],
 
     vaultAppUser: (store('vaultAppUser') || {}) as IVaultAppUser,
     
@@ -38,11 +41,9 @@ export function createUserStore() {
       return '';
     },
 
-    saveAddress(address: string) {
-      store('address', address);
-    },
-
     savePrivateKey(privateKey: string) {
+      const address = ethers.utils.computeAddress(privateKey);
+      store('address', address);
       store('privateKey', privateKey);
     },
 
@@ -61,19 +62,57 @@ export function createUserStore() {
       }
     },
 
-    setJwt(jwt: string) {
+    setVaultAppUser(jwt: string, vaultAppUser: IVaultAppUser) {
       this.jwt = jwt;
-      store('jwt', jwt);
+      this.vaultAppUser = vaultAppUser;
+      this.saveVaultAppUser(jwt, vaultAppUser);
     },
 
-    setVaultAppUser(vaultAppUser: IVaultAppUser | null) {
-      if (vaultAppUser) {
-        this.vaultAppUser = vaultAppUser;
-        store('vaultAppUser', vaultAppUser);
-      } else {
-        this.vaultAppUser = {} as IVaultAppUser;
-        store.remove('vaultAppUser');
+    saveVaultAppUser(jwt: string, vaultAppUser: IVaultAppUser) {
+      store('jwt', jwt);
+      store('vaultAppUser', vaultAppUser);
+    },
+
+    addStorageUser(storageUser: IStorageUser) {
+      if (this.storageUsers.length === 0) {
+        this.storageUsers.push({
+          address: this.address,
+          privateKey: this.privateKey,
+          jwt: this.jwt,
+          vaultAppUser: this.vaultAppUser,
+        });
       }
+      for (const _storageUser of this.storageUsers) {
+        if (this.getStorageUserAddress(_storageUser) === this.getStorageUserAddress(storageUser)) {
+          return;
+        }
+      }
+      this.storageUsers.push(storageUser);
+      store('storageUsers', this.storageUsers);
+    },
+
+    removeStorageUser(address: string) {
+      this.storageUsers = this.storageUsers.filter(storageUser => this.getStorageUserAddress(storageUser) !== address);
+      store('storageUsers', this.storageUsers);
+    },
+
+    getStorageUserAddress(storageUser: IStorageUser) {
+      return storageUser.address || storageUser.vaultAppUser?.eth_address || '';
+    },
+
+    clearActiveUser() {
+      this._address = '';
+      this.privateKey = '';
+      this.jwt = '';
+      this.vaultAppUser = {} as IVaultAppUser;
+      this.clearActiveUserStorage();
+    },
+
+    clearActiveUserStorage() {
+      store.remove('address');
+      store.remove('privateKey');
+      store.remove('jwt');
+      store.remove('vaultAppUser');
     },
 
     clear() {

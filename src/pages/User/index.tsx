@@ -14,11 +14,11 @@ import Loading from 'components/Loading';
 import useInfiniteScroll from 'react-infinite-scroll-hook';
 import openEditor from 'components/Post/OpenEditor';
 import sleep from 'utils/sleep';
-import { RiMoreFill } from 'react-icons/ri';
+import { RiMoreFill, RiShutDownLine } from 'react-icons/ri';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import { BsFillMicMuteFill } from 'react-icons/bs';
-import { BiLogOutCircle, BiExport } from 'react-icons/bi';
+import { BiExport } from 'react-icons/bi';
 import { MdOutlineMail } from 'react-icons/md';
 import { MdLanguage } from 'react-icons/md';
 import UserListModal from './UserListModal';
@@ -36,6 +36,10 @@ import MutedContent from 'components/MutedContent';
 import openLanguageModal from 'components/openLanguageModal';
 import openChatModal from 'components/openChatModal';
 import { API_ORIGIN } from 'apis/common';
+import { useAliveController } from 'react-activation';
+import { useHistory } from 'react-router-dom';
+import { AiOutlineStar } from 'react-icons/ai';
+import { FaRegComment } from 'react-icons/fa';
 
 import './index.css';
 
@@ -64,6 +68,8 @@ export default observer((props: RouteChildrenProps) => {
     userListType: 'following' as ('following' | 'followers' | 'muted'),
     userAddressChanged: false,
   }));
+  const aliveController = useAliveController();
+  const history = useHistory();
   const { userAddress } = props.match?.params as any;
   const { profile } = state;
   const user = userStore.userMap[userAddress]!;
@@ -294,6 +300,34 @@ export default observer((props: RouteChildrenProps) => {
     });
   }, []);
 
+  const logout = async () => {
+    confirmDialogStore.show({
+      content: lang.youAreSureTo(lang.exit),
+      ok: async () => {
+        confirmDialogStore.hide();
+        await sleep(400);
+
+        if (userStore.storageUsers.length <= 1) {
+          userStore.clear();
+          modalStore.pageLoading.show();
+          window.location.href = `/`;
+          return;
+        }
+
+        userStore.removeStorageUser(userStore.address);
+        const storageUser = userStore.storageUsers[0];
+        const address = userStore.getStorageUserAddress(storageUser);
+        userStore.clearActiveUserStorage();
+        if (storageUser.privateKey) {
+          userStore.savePrivateKey(storageUser.privateKey);
+        } else {
+          userStore.saveVaultAppUser(storageUser.jwt!, storageUser.vaultAppUser!);
+        }
+        window.location.href = `/users/${address}`;
+      },
+    });
+  }
+
   if (!state.fetched || !user) {
     return (
       <div className="pt-[30vh] flex justify-center">
@@ -444,6 +478,27 @@ export default observer((props: RouteChildrenProps) => {
                       anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                       transformOrigin={{ vertical: 'top', horizontal: 'right' }}>
                       {isMyself && (
+                        <MenuItem onClick={async () => {
+                          state.anchorEl = null;
+                          await aliveController.drop('favorites');
+                          history.push('/favorites');
+                        }}>  
+                          <div className="py-1 pl-1 pr-3 flex items-center dark:text-white dark:text-opacity-80 text-neutral-700">
+                            <AiOutlineStar className="mr-2 text-16" /> {lang.favorites}
+                          </div>
+                        </MenuItem>
+                      )}
+                      {isMyself && (
+                        <MenuItem onClick={() => {
+                          state.anchorEl = null;
+                          history.push('/comments');
+                        }}>  
+                          <div className="py-1 pl-1 pr-3 flex items-center dark:text-white dark:text-opacity-80 text-neutral-700">
+                            <FaRegComment className="mr-2 text-15" /> {lang.myComments}
+                          </div>
+                        </MenuItem>
+                      )}
+                      {isMyself && (
                         <MenuItem onClick={() => {
                           state.anchorEl = null;
                           state.userListType = 'muted';
@@ -483,22 +538,13 @@ export default observer((props: RouteChildrenProps) => {
                           </div>
                         </MenuItem>
                       )}
-                      {isMyself && isMobile && (
+                      {isMyself && (
                         <MenuItem onClick={() => {
                           state.anchorEl = null;
-                          confirmDialogStore.show({
-                            content: lang.youAreSureTo(lang.exit),
-                            ok: async () => {
-                              confirmDialogStore.hide();
-                              await sleep(400);
-                              userStore.clear();
-                              modalStore.pageLoading.show();
-                              window.location.href = `/`;
-                            },
-                          });
+                          logout();
                         }}>  
                           <div className="py-1 pl-1 pr-3 flex items-center text-red-400">
-                            <BiLogOutCircle className="mr-2 text-16" /> {lang.exit}
+                            <RiShutDownLine className="mr-2 text-16" /> {lang.exit}
                           </div>
                         </MenuItem>
                       )}
@@ -542,17 +588,19 @@ export default observer((props: RouteChildrenProps) => {
                     </div>
                   )}
                   {isMyself && (
-                    <Button
-                      outline
-                      color="white"
-                      size={isMobile ? 'small' : 'normal'}
-                      onClick={openProfileEditor}
-                    >
-                      <div className="flex items-center text-16 mr-1">
-                        <BiEditAlt />
-                      </div>
-                      {isMobile ? lang.edit : lang.editProfile}
-                    </Button>
+                    <div className="opacity-80">
+                      <Button
+                        outline
+                        color="white"
+                        size={isMobile ? 'small' : 'normal'}
+                        onClick={openProfileEditor}
+                      >
+                        <div className="flex items-center text-16 mr-1">
+                          <BiEditAlt />
+                        </div>
+                        {isMobile ? lang.edit : lang.editProfile}
+                      </Button>
+                    </div>
                   )}
                   {!isMyself && user.muted && (
                     <Button

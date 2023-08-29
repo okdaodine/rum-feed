@@ -5,7 +5,6 @@ import Fade from '@material-ui/core/Fade';
 import { BsPencil } from 'react-icons/bs';
 import openEditor from 'components/Post/OpenEditor';
 import { MdNotificationsNone } from 'react-icons/md';
-import Avatar from 'components/Avatar';
 import sleep from 'utils/sleep';
 import { MdArrowUpward, MdOutlineDarkMode, MdOutlineLightMode } from 'react-icons/md';
 import { BiArrowBack } from 'react-icons/bi';
@@ -13,7 +12,7 @@ import { useLocation } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
 import { isPc, isMobile } from 'utils/env';
 import { RiSearchLine, RiSearchFill } from 'react-icons/ri';
-import { AiOutlineHome, AiFillHome, AiOutlineSearch, AiOutlineGithub, AiOutlineLink, AiOutlineStar } from 'react-icons/ai';
+import { AiOutlineHome, AiFillHome, AiOutlineSearch, AiOutlineGithub, AiOutlineLink } from 'react-icons/ai';
 import { TiArrowForwardOutline } from 'react-icons/ti';
 import Badge from '@material-ui/core/Badge';
 import classNames from 'classnames';
@@ -26,26 +25,20 @@ import qs from 'query-string';
 import { useAliveController } from 'react-activation';
 import { IoPersonOutline, IoPerson } from 'react-icons/io5';
 import Button from 'components/Button';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
+import Menu from './Menu';
 import Tabs from './Tabs';
 import { scrollToTop } from 'components/TopPlaceHolder';
 import copy from 'copy-to-clipboard';
 import { lang } from 'utils/lang';
-import store from 'store2';
-import openLanguageModal from 'components/openLanguageModal';
 import { TbActivity } from 'react-icons/tb';
 import { FiMail } from 'react-icons/fi';
 import sum from 'lodash/sum';
 import openChatModal from 'components/openChatModal';
-import { FaRegComment } from 'react-icons/fa';
 
 export default observer(() => {
   const {
     userStore,
     postStore,
-    confirmDialogStore,
-    modalStore,
     pathStore,
     settingStore,
     configStore,
@@ -178,19 +171,6 @@ export default observer(() => {
     }
   };
 
-  const logout = async () => {
-    confirmDialogStore.show({
-      content: lang.youAreSureTo(lang.exit),
-      ok: async () => {
-        confirmDialogStore.hide();
-        await sleep(400);
-        store.clear();
-        modalStore.pageLoading.show();
-        window.location.href = `/`;
-      },
-    });
-  }
-
   return (
     <div>
       <div className={classNames({
@@ -226,34 +206,6 @@ export default observer(() => {
           )}
           {userStore.isLogin && (
             <div className="flex items-center">
-              {(isMobile && isMyUserPage) && (
-                <div
-                  className="p-1 cursor-pointer pl-1 pr-3 mr-4"
-                  onClick={async () => {
-                    if (location.pathname === '/comments') {
-                      return;
-                    }
-                    state.anchorEl = null;
-                    await aliveController.drop('comments');
-                    history.push('/comments');
-                  }}>
-                  <FaRegComment className="text-18 dark:text-white dark:text-opacity-80 text-neutral-400 opacity-80" />
-                </div>
-              )}
-              {(isMobile && isMyUserPage) && (
-                <div
-                  className="p-1 cursor-pointer pl-1 pr-3 mr-4"
-                  onClick={async () => {
-                    if (location.pathname === '/favorites') {
-                      return;
-                    }
-                    state.anchorEl = null;
-                    await aliveController.drop('favorites');
-                    history.push('/favorites');
-                  }}>
-                  <AiOutlineStar className="text-22 dark:text-white dark:text-opacity-80 text-neutral-400 opacity-80" />
-                </div>
-              )}
               {isPc && (
                 <div
                   className="p-1 cursor-pointer mr-4"
@@ -274,7 +226,7 @@ export default observer(() => {
                     settingStore.setTheme(settingStore.isDarkMode ? 'light' : 'dark');
                   }}>
                   <MdOutlineDarkMode className="dark:hidden text-22 dark:text-white/80 text-neutral-500 opacity-60 dark:opacity-100" />
-                  <MdOutlineLightMode className="hidden dark:block text-22 dark:text-white/80 text-neutral-500 opacity-60 dark:opacity-100" />
+                  <MdOutlineLightMode className="hidden dark:block text-22 dark:text-white/60 md:dark:text-white/80 text-neutral-500 opacity-60 dark:opacity-100" />
                 </div>
               )}
               {isPc && (
@@ -353,79 +305,7 @@ export default observer(() => {
                   </div>
                 </>
               )}
-              {isPc && (
-                <div>
-                  <Avatar
-                    className="cursor-pointer"
-                    url={userStore.profile.avatar}
-                    size={30}
-                    onClick={(e) => {
-                      state.anchorEl = e.currentTarget
-                    }}
-                  />
-                  <Menu
-                    anchorEl={state.anchorEl}
-                    getContentAnchorEl={null}
-                    open={Boolean(state.anchorEl)}
-                    onClose={() => {
-                      state.anchorEl = null;
-                    }}
-                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                    transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-                  >
-                    <MenuItem 
-                      onClick={() => {
-                        state.anchorEl = null;
-                        history.push(`/users/${userStore.address}`);
-                      }}>
-                      <div className="py-1 px-3 flex items-center">
-                        {lang.me}
-                      </div>
-                    </MenuItem>
-                    <MenuItem 
-                      onClick={async () => {
-                        if (location.pathname === '/favorites') {
-                          return;
-                        }
-                        state.anchorEl = null;
-                        await aliveController.drop('favorites');
-                        history.push('/favorites');
-                      }}>
-                      <div className="py-1 px-3 flex items-center">
-                        {lang.favorites}
-                      </div>
-                    </MenuItem>
-                    <MenuItem 
-                      onClick={async () => {
-                        if (location.pathname === '/comments') {
-                          return;
-                        }
-                        state.anchorEl = null;
-                        history.push('/comments');
-                      }}>
-                      <div className="py-1 px-3 flex items-center">
-                        {lang.comment}
-                      </div>
-                    </MenuItem>
-                    <MenuItem onClick={() => {
-                      openLanguageModal();
-                      state.anchorEl = null;
-                    }}>
-                      <div className="py-1 px-3 flex items-center">
-                        {lang.language}
-                      </div>
-                    </MenuItem>
-                    <MenuItem onClick={() => {
-                      state.anchorEl = null;
-                      logout();
-                    }}>
-                      <div className="py-1 px-3 flex items-center text-red-400">
-                        {lang.exit}
-                      </div>
-                    </MenuItem>
-                  </Menu>
-                </div>
-              )}
+              {(isPc || (isMobile && isMyUserPage)) && <Menu />}
             </div>
           )}
         </div>

@@ -119,7 +119,7 @@ export const content = {
   allContentsComeFromTwitterUser: '本号所有内容来自推特用户',
   allContentsComeFromWeiboUser: '本号所有内容来自微博用户',
   mutedList: '屏蔽列表',
-  language: '语言',
+  language: '切换语言',
   save: '保存',
   openExternalLink: '打开外部链接',
   processing: '处理中',
@@ -156,7 +156,7 @@ export const content = {
   favorite: '加入收藏',
   unfavorite: '取消收藏',
   favorited: '已收藏',
-  favorites: '收藏',
+  favorites: '我的收藏',
   onChainInfo: '链上信息',
   directMessage: '私信',
   needOnePostToUseDM: '您未曾发布过内容，无法使用私信功能哦。请至少发布一条内容。',
@@ -178,6 +178,7 @@ export const content = {
   myComments: '我的评论',
   exportedAndDownload: '文件已导出，请点击下载',
   download: '下载',
+  addAccount: '添加帐号',
 };
 
 export type Content = typeof content;

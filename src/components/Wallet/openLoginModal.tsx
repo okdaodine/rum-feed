@@ -39,7 +39,12 @@ const Main = observer(() => {
 
 
   const connectWallet = (address: string, privateKey: string) => {
-    userStore.saveAddress(address);
+    if (userStore.isLogin) {
+      userStore.addStorageUser({
+        address,
+        privateKey,
+      });
+    }
     userStore.savePrivateKey(privateKey);
   }
 
@@ -52,7 +57,7 @@ const Main = observer(() => {
     await Vault.saveCryptoKeyToLocalStorage(aesKey);
     window.location.href = Vault.getMixinOauthUrl({
       state: keyInHex,
-      return_to: encodeURIComponent(window.location.href),
+      return_to: encodeURIComponent(window.location.origin),
       scope: 'PROFILE:READ'
     });
   };
@@ -66,7 +71,7 @@ const Main = observer(() => {
     await Vault.saveCryptoKeyToLocalStorage(aesKey);
     window.location.href = Vault.getGithubOauthUrl({
       state: keyInHex,
-      return_to: encodeURIComponent(window.location.href)
+      return_to: encodeURIComponent(window.location.origin)
     });
   };
 
@@ -174,7 +179,8 @@ const Main = observer(() => {
             state.creatingWallet = false;
             if (done) {
               connectWallet(wallet.address, wallet.privateKey);
-              window.location.href += '?action=openProfileEditor';
+              await sleep(400);
+              window.location.href = '/?action=openProfileEditor';
             }
           }}
         >

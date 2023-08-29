@@ -72,7 +72,6 @@ const Preload = observer(() => {
         tryOpenProfileModal();
         tryOpenGroupModal();
         tryLogout();
-        tryAutoLogin();
         
         if (userStore.isLogin) {
           initRelation(userStore.address);
@@ -95,7 +94,6 @@ const Preload = observer(() => {
     const jwt = isJWT(token) ? token : await Vault.decryptByCryptoKey(token);
     const _accessToken = accessToken ? (isJWT(accessToken) ? accessToken : await Vault.decryptByCryptoKey(accessToken)) : '';
     Vault.removeCryptoKeyFromLocalStorage();
-    userStore.setJwt(jwt);
     const vaultUser = await VaultApi.getUser(jwt);
     console.log({ vaultUser });
     let vaultAppUser = {} as IVaultAppUser;
@@ -108,7 +106,18 @@ const Preload = observer(() => {
     console.log({ vaultAppUser });
     const compressedPublicKey = ethers.utils.arrayify(ethers.utils.computePublicKey(vaultAppUser.eth_pub_key, true));
     const publicKey = JsBase64.fromUint8Array(compressedPublicKey, true);
-    userStore.setVaultAppUser({
+    if (userStore.isLogin) {
+      userStore.addStorageUser({
+        jwt,
+        vaultAppUser: {
+          ...vaultAppUser,
+          eth_pub_key: publicKey,
+          access_token: _accessToken || jwt,
+        },
+      });
+      userStore.clearActiveUser();
+    };
+    userStore.setVaultAppUser(jwt, {
       ...vaultAppUser,
       eth_pub_key: publicKey,
       access_token: _accessToken || jwt,
@@ -227,21 +236,6 @@ const Preload = observer(() => {
           window.location.href = `/?action=openLoginModal`;
         },
       });
-    }
-  }
-
-  const tryAutoLogin = async () => {
-    const action = Query.get('action');
-    if (action.startsWith('login')) {
-      Query.remove('action');
-      const privateKey = action.split(':')[1];
-      if (privateKey) {
-        store.clear();
-        const wallet = new ethers.Wallet(privateKey);
-        userStore.saveAddress(wallet.address);
-        userStore.savePrivateKey(wallet.privateKey);
-        window.location.reload();
-      }
     }
   }
 

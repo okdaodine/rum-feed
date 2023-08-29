@@ -23,13 +23,18 @@ const Main = observer((props: IProps) => {
   const importWallet = async (privateKey: string) => {
     try {
       const wallet = new ethers.Wallet(privateKey);
-      userStore.saveAddress(wallet.address);
+      if (userStore.isLogin) {
+        userStore.addStorageUser({
+          address: wallet.address,
+          privateKey,
+        });
+      }
       userStore.savePrivateKey(wallet.privateKey);
       snackbarStore.show({
         message: lang.done,
       });
       await sleep(1000);
-      window.location.reload();
+      window.location.href = `/`;
     } catch (err) {
       console.log(err);
       snackbarStore.show({
