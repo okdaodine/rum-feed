@@ -44,6 +44,7 @@ const Main = observer(() => {
         address,
         privateKey,
       });
+      userStore.clearActiveUserStorage();
     }
     userStore.savePrivateKey(privateKey);
   }

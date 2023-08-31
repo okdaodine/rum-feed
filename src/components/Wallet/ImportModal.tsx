@@ -28,6 +28,7 @@ const Main = observer((props: IProps) => {
           address: wallet.address,
           privateKey,
         });
+        userStore.clearActiveUserStorage();
       }
       userStore.savePrivateKey(wallet.privateKey);
       snackbarStore.show({
